@@ -28,6 +28,19 @@ const editCategory = async(id: string, payload: {name: string})=>{
         payload,
         {new: true}
     )
+    if(!result){
+        throw createHttpError("Category not found", 404);
+    }
+    return result;
+}
+
+
+
+const deleteCategory = async(id: string)=>{
+    const result = await Category.findByIdAndDelete(id);
+    if(!result){
+        throw createHttpError("Category not found", 404);
+    }
     return result;
 }
 
@@ -35,5 +48,6 @@ const editCategory = async(id: string, payload: {name: string})=>{
 export const categoryService = {
     addCategory,
     getAllCategory,
-    editCategory
+    editCategory,
+    deleteCategory
 }

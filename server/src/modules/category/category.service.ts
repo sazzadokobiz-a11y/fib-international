@@ -1,7 +1,9 @@
+import { ObjectId } from "mongodb";
 import { Category } from "../../models/category/categorySchema"
+import { SubCategory } from "../../models/subCategory/subCategorySchema";
 
 
-const createHttpError = (message: string, statusCode: number) => {
+const createHttpError = (statusCode: number, message: string) => {
   const error = new Error(message) as Error & { statusCode: number };
   error.statusCode = statusCode;
   return error;
@@ -29,7 +31,7 @@ const editCategory = async(id: string, payload: {name: string})=>{
         {new: true}
     )
     if(!result){
-        throw createHttpError("Category not found", 404);
+        throw createHttpError(404, "Category not found");
     }
     return result;
 }
@@ -37,10 +39,16 @@ const editCategory = async(id: string, payload: {name: string})=>{
 
 
 const deleteCategory = async(id: string)=>{
-    const result = await Category.findByIdAndDelete(id);
-    if(!result){
-        throw createHttpError("Category not found", 404);
+    const category = await Category.findById(id);
+    if (!category) {
+        throw createHttpError(404, "Category not found");
     }
+
+    const subCategoryExists = await SubCategory.exists({categoryId: id});
+    if(subCategoryExists){
+        throw createHttpError(400, "Category has sub-category, delete sub-category first");
+    }
+    const result = await Category.findByIdAndDelete(id);
     return result;
 }
 

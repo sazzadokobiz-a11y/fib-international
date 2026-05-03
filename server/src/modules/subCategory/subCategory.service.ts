@@ -22,8 +22,16 @@ const updatedSubCategory = async(id: string, payload: {name: string})=>{
 
 
 
+const deleteSubCategory = async(id: string)=>{
+    const result = await SubCategory.findByIdAndDelete(id);
+    return result;
+}
+
+
+
 export const subCategoryService = {
     createSubCategory,
     getAllSubCategory,
-    updatedSubCategory
+    updatedSubCategory,
+    deleteSubCategory
 }

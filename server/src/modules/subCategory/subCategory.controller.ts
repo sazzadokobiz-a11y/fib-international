@@ -49,8 +49,25 @@ const updatedSubCategory = async (req: Request, res: Response, next: NextFunctio
 
 
 
+const deleteSubCategory = async(req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const result = await subCategoryService.deleteSubCategory(req.params.id as string);
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Sub category deleted successfully",
+            data: result
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+
 export const subCategoryController = {
     createSubCategory,
     getAllSubCategory,
-    updatedSubCategory
+    updatedSubCategory,
+    deleteSubCategory
 }

@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser"
 import cors from 'cors';
 import express, { type Application, type Request, type Response } from 'express';
 import router from './routes/index.js';
@@ -8,6 +9,7 @@ const app: Application = express();
 // Parsers
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser())
 
 // Application routes
 app.use('/api/v1', router);

@@ -17,6 +17,23 @@ const addCategory = async (req: Request, res: Response, next: NextFunction)=>{
 }
 
 
+
+const getAllCategory = async(req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const result = await categoryService.getAllCategory();
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "category fetched successfully",
+            data: result
+        })
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+
 const editCategory = async(req: Request, res: Response, next: NextFunction)=>{
     try {
         const result = await categoryService.editCategory(req.params.id as string, req.body);
@@ -34,5 +51,6 @@ const editCategory = async(req: Request, res: Response, next: NextFunction)=>{
 
 export const categoryController = {
     addCategory,
+    getAllCategory,
     editCategory
 }

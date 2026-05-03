@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express, { type Application, type Request, type Response } from 'express';
 import router from './routes/index.js';
+import { notFound } from './middleware/notFound.js';
 
 const app: Application = express();
 
@@ -17,11 +18,6 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Not found route
-app.use((req: Request, res: Response) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found',
-  });
-});
+app.use(notFound);
 
 export default app;

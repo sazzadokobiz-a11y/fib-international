@@ -15,6 +15,18 @@ const addCategory = async (payload: {name: string})=>{
 }
 
 
+
+const editCategory = async(id: string, payload: {name: string})=>{
+    const result = await Category.findByIdAndUpdate(
+        id,
+        payload,
+        {new: true}
+    )
+    return result;
+}
+
+
 export const categoryService = {
-    addCategory
+    addCategory,
+    editCategory
 }

@@ -17,6 +17,22 @@ const addCategory = async (req: Request, res: Response, next: NextFunction)=>{
 }
 
 
+const editCategory = async(req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const result = await categoryService.editCategory(req.params.id as string, req.body);
+        sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: "category updated successfully",
+        data: result
+      })
+    } catch (error) {
+        next(error);
+    }
+}
+
+
 export const categoryController = {
-    addCategory
+    addCategory,
+    editCategory
 }

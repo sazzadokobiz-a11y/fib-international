@@ -32,7 +32,25 @@ const getAllSubCategory = async (req: Request, res: Response, next: NextFunction
 }
 
 
+
+const updatedSubCategory = async (req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const result = await subCategoryService.updatedSubCategory(req.params.id as string, req.body);
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Sub category updated successfully",
+            data: result
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+
 export const subCategoryController = {
     createSubCategory,
-    getAllSubCategory
+    getAllSubCategory,
+    updatedSubCategory
 }

@@ -1,12 +1,6 @@
 import { SubCategory } from "../../models/subCategory/subCategorySchema"
 
 
-const createHttpError = (message: string, statusCode: number) => {
-  const error = new Error(message) as Error & { statusCode: number };
-  error.statusCode = statusCode;
-  return error;
-};
-
 const createSubCategory = async(payload: {name: string, categoryId: string})=>{
     const subCategory = new SubCategory(payload);
     const result = await subCategory.save();
@@ -21,8 +15,15 @@ const getAllSubCategory = async()=>{
 }
 
 
+const updatedSubCategory = async(id: string, payload: {name: string})=>{
+    const result = await SubCategory.findByIdAndUpdate(id, payload, { new: true });
+    return result;
+}
+
+
 
 export const subCategoryService = {
     createSubCategory,
-    getAllSubCategory
+    getAllSubCategory,
+    updatedSubCategory
 }

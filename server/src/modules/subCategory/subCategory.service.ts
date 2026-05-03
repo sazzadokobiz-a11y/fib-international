@@ -13,6 +13,16 @@ const createSubCategory = async(payload: {name: string, categoryId: string})=>{
     return result;
 }
 
+
+
+const getAllSubCategory = async()=>{
+    const result = await SubCategory.find();
+    return result;
+}
+
+
+
 export const subCategoryService = {
-    createSubCategory
+    createSubCategory,
+    getAllSubCategory
 }

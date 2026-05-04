@@ -11,21 +11,21 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-              <p className="text-gray-500 mt-2">Welcome back! Here&apos;s an overview of your business</p>
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-gray-500 mt-2 text-sm md:text-base">Welcome back! Here&apos;s an overview of your business</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <div key={index} className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+            <div key={index} className="bg-white rounded-lg border border-gray-200 p-4 md:p-6 hover:shadow-lg transition-shadow">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-500 text-sm font-medium">{stat.title}</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-2">{stat.value}</p>
+                <div className="min-w-0">
+                  <p className="text-gray-500 text-xs md:text-sm font-medium truncate">{stat.title}</p>
+                  <p className="text-xl md:text-2xl font-bold text-gray-900 mt-2">{stat.value}</p>
                 </div>
-                <div className={`${stat.color} p-3 rounded-lg`}>
+                <div className={`${stat.color} p-3 rounded-lg flex-shrink-0`}>
                   <Icon className={`${stat.iconColor}`} size={24} />
                 </div>
               </div>
@@ -34,44 +34,36 @@ export default function DashboardPage() {
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200 p-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+        <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200 p-4 md:p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Orders</h2>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <div>
-                <p className="font-medium text-gray-900">Order #2089</p>
-                <p className="text-sm text-gray-500">March 15, 2024</p>
+          <div className="space-y-3 overflow-x-auto">
+            {[1, 2, 3].map((_, idx) => (
+              <div key={idx} className="flex items-center justify-between p-3 md:p-4 bg-gray-50 rounded-lg flex-col sm:flex-row gap-3">
+                <div className="w-full sm:flex-1">
+                  <p className="font-medium text-gray-900 text-sm md:text-base">Order #{2089 - idx}</p>
+                  <p className="text-xs md:text-sm text-gray-500">March {15 - idx}, 2024</p>
+                </div>
+                <span className={`text-xs md:text-sm font-semibold px-2 md:px-3 py-1 rounded-full flex-shrink-0 ${
+                  idx === 0 ? "text-green-600 bg-green-50" : idx === 1 ? "text-yellow-600 bg-yellow-50" : "text-blue-600 bg-blue-50"
+                }`}>
+                  {idx === 0 ? "Completed" : idx === 1 ? "Pending" : "Processing"}
+                </span>
               </div>
-              <span className="text-sm font-semibold text-green-600">Completed</span>
-            </div>
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <div>
-                <p className="font-medium text-gray-900">Order #2088</p>
-                <p className="text-sm text-gray-500">March 14, 2024</p>
-              </div>
-              <span className="text-sm font-semibold text-yellow-600">Pending</span>
-            </div>
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <div>
-                <p className="font-medium text-gray-900">Order #2087</p>
-                <p className="text-sm text-gray-500">March 13, 2024</p>
-              </div>
-              <span className="text-sm font-semibold text-blue-600">Processing</span>
-            </div>
+            ))}
           </div>
         </div>
 
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white rounded-lg border border-gray-200 p-4 md:p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
           <div className="space-y-3">
-            <button className="w-full py-2 px-4 rounded-lg border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+            <button className="w-full py-2 px-4 rounded-lg border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors text-sm md:text-base">
               + Add Product
             </button>
-            <button className="w-full py-2 px-4 rounded-lg border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+            <button className="w-full py-2 px-4 rounded-lg border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors text-sm md:text-base">
               + Add Category
             </button>
-            <button className="w-full py-2 px-4 rounded-lg border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+            <button className="w-full py-2 px-4 rounded-lg border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors text-sm md:text-base">
               + Create Quote
             </button>
           </div>
@@ -80,4 +72,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
 

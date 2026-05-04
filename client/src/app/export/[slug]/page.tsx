@@ -26,13 +26,70 @@ const featureItems = [
     { text: "Flexible Trade & Payment Terms", icon: CheckCircle2 },
 ]
 
+function Magnifier({ src, alt }: { src: string; alt: string }) {
+    const [showZoom, setShowZoom] = useState(false)
+    const [position, setPosition] = useState({ x: 0, y: 0 })
+    const [size, setSize] = useState({ width: 1, height: 1 })
+
+    const lensSize = 150
+    const zoomLevel = 2.5
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect()
+        const x = e.clientX - rect.left
+        const y = e.clientY - rect.top
+
+        setPosition({ x, y })
+        setSize({ width: rect.width, height: rect.height })
+    }
+
+    return (
+        <div
+            className="relative w-full aspect-square rounded-xl overflow-hidden shadow-lg bg-[#f5f0e6]"
+            onMouseMove={handleMouseMove}
+            onMouseEnter={() => setShowZoom(true)}
+            onMouseLeave={() => setShowZoom(false)}
+        >
+            <Image
+                src={src}
+                alt={alt}
+                width={800}
+                height={800}
+                className="w-full h-full object-cover shadow-2xl shadow-gray-700 rounded-xl"
+            />
+
+            {showZoom && (
+                <div
+                    className="absolute border-2 border-white rounded-full pointer-events-none"
+                    style={{
+                        width: lensSize,
+                        height: lensSize,
+                        top: position.y - lensSize / 2,
+                        left: position.x - lensSize / 2,
+                        backgroundImage: `url(${src})`,
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: `${zoomLevel * 300}%`,
+                        backgroundPosition: `
+                            ${(position.x / size.width) * 100}% 
+                            ${(position.y / size.height) * 100}%
+                        `
+                    }}
+                />
+            )}
+        </div>
+    )
+}
+
 export default function ExportDetailsPage() {
 
     const params = useParams()
     const slug = params.slug as string
 
-    // ✅ FIX: array lookup
     const product = products.find(p => p.slug === slug)
+    const [quantity, setQuantity] = useState(product?.moq ?? 0)
+    const [selectedImage, setSelectedImage] = useState(
+        product?.images?.[0] || product?.image || ""
+    )
 
     if (!product) {
         return (
@@ -42,11 +99,6 @@ export default function ExportDetailsPage() {
         )
     }
 
-    const [quantity, setQuantity] = useState(product.moq)
-    const [selectedImage, setSelectedImage] = useState(
-        product.images?.[0] || product.image
-    )
-
     const handleQuoteSubmit = async (formData: QuoteFormData) => {
         console.log('Quote:', {
             ...formData,
@@ -54,61 +106,6 @@ export default function ExportDetailsPage() {
             quantity
         })
         alert('Quote request submitted successfully!')
-    }
-
-    // 🔍 Magnifier Component
-    function Magnifier({ src, alt }: { src: string; alt: string }) {
-        const [showZoom, setShowZoom] = useState(false)
-        const [position, setPosition] = useState({ x: 0, y: 0 })
-        const [size, setSize] = useState({ width: 0, height: 0 })
-
-        const lensSize = 150
-        const zoomLevel = 2.5
-
-        const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-            const rect = e.currentTarget.getBoundingClientRect()
-            const x = e.clientX - rect.left
-            const y = e.clientY - rect.top
-
-            setPosition({ x, y })
-            setSize({ width: rect.width, height: rect.height })
-        }
-
-        return (
-            <div
-                className="relative w-full aspect-square rounded-xl overflow-hidden shadow-lg bg-[#f5f0e6]"
-                onMouseMove={handleMouseMove}
-                onMouseEnter={() => setShowZoom(true)}
-                onMouseLeave={() => setShowZoom(false)}
-            >
-                <Image
-                    src={src}
-                    alt={alt}
-                    width={800}
-                    height={800}
-                    className="w-full h-full object-cover shadow-2xl shadow-gray-700 rounded-xl"
-                />
-
-                {showZoom && (
-                    <div
-                        className="absolute border-2 border-white rounded-full pointer-events-none"
-                        style={{
-                            width: lensSize,
-                            height: lensSize,
-                            top: position.y - lensSize / 2,
-                            left: position.x - lensSize / 2,
-                            backgroundImage: `url(${src})`,
-                            backgroundRepeat: 'no-repeat',
-                            backgroundSize: `${zoomLevel * 300}%`,
-                            backgroundPosition: `
-                                ${(position.x / size.width) * 100}% 
-                                ${(position.y / size.height) * 100}%
-                            `
-                        }}
-                    />
-                )}
-            </div>
-        )
     }
 
     return (

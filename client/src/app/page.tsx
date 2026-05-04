@@ -1,5 +1,3 @@
-import Navbar from "@/components/shared/Navbar";
-import Footer from "@/components/shared/Footer";
 import { Banner } from "@/components/landing/Banner";
 import ExportSection from "@/components/landing/ExportSection";
 import ImportSection from "@/components/landing/ImportSection";

@@ -3,10 +3,18 @@ import React, { useState } from 'react'
 import Container from '@/components/shared/Container'
 import { TruckElectric } from 'lucide-react'
 
+type TrackingResult = {
+    status: string;
+    location: string;
+    eta: string;
+    progress: number;
+    shipmentId: string;
+}
+
 function TrackCargo() {
     const [trackingId, setTrackingId] = useState('')
     const [loading, setLoading] = useState(false)
-    const [result, setResult] = useState<any>(null)
+    const [result, setResult] = useState<TrackingResult | null>(null)
 
     const handleTrack = () => {
         setLoading(true)

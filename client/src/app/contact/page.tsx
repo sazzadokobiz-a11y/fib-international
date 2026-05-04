@@ -45,7 +45,7 @@ const ContactPage = () => {
                         </h1>
                         <p className="text-slate-600">
                             Get in touch with JV Family International for inquiries,
-                            partnerships, or support. We're here to help you.
+                            partnerships, or support. We&apos;re here to help you.
                         </p>
                     </div>
                 </Container>
@@ -146,7 +146,7 @@ const ContactPage = () => {
                             target="_blank"
                             className="mt-4 block text-center text-green-600 hover:underline"
                         >
-                            Or send directly via WhatsApp →
+                            Or send directly via WhatsApp -&gt;
                         </a>
                     </div>
 

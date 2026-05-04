@@ -12,10 +12,12 @@ import {
 } from "@/components/ui/native-select"
 import { SearchIcon, Globe, Truck, ShieldCheck, Package } from 'lucide-react'
 import { products } from "@/data/products"
-import { getSubCategories } from '@/services/subCategory';
+import { getSubCategories, type SubCategory } from '@/services/subCategory';
+
+export const dynamic = "force-dynamic";
 
 const ImportPage = async () => {
-    const {data: allSubCategories, success} = await getSubCategories("Import");
+    const { data: allSubCategories } = await getSubCategories("Import");
 
     return (
         <div className="pb-20">
@@ -84,7 +86,7 @@ const ImportPage = async () => {
                     <div className="flex gap-3">
                         <NativeSelect className="bg-gray-50 rounded-lg">
                             <NativeSelectOption value="">All Categories</NativeSelectOption>
-                            {allSubCategories.map((subCategory: {categoryId: string, _id: string, name: string, __v: number}) => (
+                            {allSubCategories.map((subCategory: SubCategory) => (
                                 <NativeSelectOption key={subCategory._id} value={subCategory.name.toLowerCase()}>
                                     {subCategory.name}
                                 </NativeSelectOption>

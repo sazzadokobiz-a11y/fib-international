@@ -23,8 +23,10 @@ import {
 } from "@/components/ui/pagination"
 import { getSubCategories } from '@/services/subCategory';
 
+export const dynamic = "force-dynamic";
+
 const ExportPage = async () => {
-    const {data: allSubCategories, success} = await getSubCategories("Export");
+    const { data: allSubCategories } = await getSubCategories("Export");
 
     return (
         <div className='pb-10'>
@@ -59,7 +61,7 @@ const ExportPage = async () => {
                         {/* Category */}
                         <NativeSelect className='bg-white rounded-lg w-full sm:w-auto'>
                             <NativeSelectOption value="">Select All Category</NativeSelectOption>
-                            {allSubCategories.map((subCategory: {categoryId: string, _id: string, name: string, __v: number}) => (
+                            {allSubCategories.map((subCategory) => (
                                 <NativeSelectOption key={subCategory._id} value={subCategory.name.toLowerCase()}>
                                     {subCategory.name}
                                 </NativeSelectOption>

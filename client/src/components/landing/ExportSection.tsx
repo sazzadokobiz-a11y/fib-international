@@ -27,7 +27,7 @@ const ExportSection = () => {
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHCo7OxekQmPm8cqQ4rOO4wNshO7ZLF5NlD7j-BZA-Zzsnd4IR8XPAGR2NT2lCFYlFFmezP8VUUoS-lEWBgCLsdVOd8aRsp6zmPcRxYBRcYDTrJkVH1WBT8logljVYJEgEmYFYqWgJiQ2neACD5vM-l6bQ_gbBjTjIpSD_fG8fWQhfHuYH7FCIJL_wZmLD70WLqR6Ez2dWP3wEl_2bYcoobSiXNL9_SVZrUDv6ssHCtalSU0DPrLU-zy3u3Ocl24MrARO1bAbyerc"
                                 height={800}
                                 width={800}
-                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
 
                         </div>
@@ -40,8 +40,10 @@ const ExportSection = () => {
                     {/* Card 2 */}
                     <div className="group bg-[#fcf9f4] rounded-xl overflow-hidden cursor-pointer transition-transform duration-500 hover:-translate-y-2 mt-0 lg:mt-8">
                         <div className="h-64 overflow-hidden">
-                            <img
-                                alt=""
+                            <Image
+                                alt="Close up detail of woven textile fabric"
+                                width={800}
+                                height={800}
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                 data-alt="Close up detail of intricate woven textile fabric showing rich texture and vibrant interwoven threads"
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNjlrKGgIub_SPrH8jEFnIFvz_MBQu0GmoimWqvE0y5pwzor_v_liUFG5uiK9v2BVJt01CtXEGZe7MufFiMLh0Zr76wOujrMPj-qlNrcgDqmfXsXWlG0mTY-m5zWiEg35JqhJPzmzcaMn-wz5gFVNflc76OSlpgW2oNXray2ywLk7NDJRRRsTK-Fkg_hZsrSd4FdWm0tHaARZ5dhO7MJnyzj0V8x-M7QtxwfA6hqZy2ZTmbBnhU_aamN69s6s2Usuofb7ESUDVUaY"
@@ -56,8 +58,10 @@ const ExportSection = () => {
                     {/* Card 3 */}
                     <div className="group bg-[#fcf9f4] rounded-xl overflow-hidden cursor-pointer transition-transform duration-500 hover:-translate-y-2">
                         <div className="h-64 overflow-hidden">
-                            <img
-                                alt=""
+                            <Image
+                                alt="Precision welding machinery in an industrial facility"
+                                width={800}
+                                height={800}
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                 data-alt="Sparks flying from precision welding machinery in a dark modern industrial manufacturing facility"
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiFn05pSltqU4FTBEMFIxUTnURUNvjjBUf0QINYEb4_pt-FEZqvF_JEaoZpkjSpgW5YoPg0HmNruJnwBGFJmR3FjaJALYR-WM3G3Emz25Pq3pxDZcC-NUul6HDZqenvv7vo0su6soUiD9d3vYKe3F0mrjJqUlylkRksbAGvm7Q72Wp1wGIGb-Cfxf10yFFg_CVg5LY9Mlj9WwXfd7wLJtbAyjGW9IkBhpD9fOVcStoFfChH02XW68Po3wJ2Sk26wh6Fw73CJB5Sns"
@@ -72,8 +76,10 @@ const ExportSection = () => {
                     {/* Card 4 */}
                     <div className="group bg-[#fcf9f4] rounded-xl overflow-hidden cursor-pointer transition-transform duration-500 hover:-translate-y-2 mt-0 lg:mt-8">
                         <div className="h-64 overflow-hidden">
-                            <img
+                            <Image
                                 alt="image of raw materials"
+                                width={800}
+                                height={800}
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                 data-alt="Stack of polished raw metallic ingots catching dramatic studio lighting against a dark background"
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvtz7xXWSJ8WitnaIOb-hbHMznX9HkLKMY4nO2FiWtNqdVpmX6aylG6AFSPXaMJ3uzUaaHK9NxyUsgmJFknbOddBXkfE_nFrawmNONRGs3oM6R4Q5ibfHOYY4pON6dOxey1aPVnFKmegDHEQHj-TSiobInuqc1tKGHeIfyJY0IcnpsYWWMMZnAx1FiXfAP8F8ch5owWWEL99FZGPrADdZ5wxynOqCFoqtTl3kgPV4Rei9_XktM5zI7iMrj87RwRMGuWZQ9WpSV7Yc"

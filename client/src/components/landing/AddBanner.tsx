@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight, Globe, Truck, ShieldCheck } from "lucide-react"
+import { ChevronLeft, ChevronRight, Globe, Truck, ShieldCheck, type LucideIcon } from "lucide-react"
 
 type Banner = {
     id: number
@@ -103,6 +103,7 @@ function AddBanner() {
                             src={active.image}
                             alt={active.title}
                             fill
+                            sizes="(max-width: 1024px) 100vw, 50vw"
                             className="object-cover"
                         />
 
@@ -180,7 +181,7 @@ function AddBanner() {
 export default AddBanner
 
 /* SMALL STAT COMPONENT */
-function Stat({ icon: Icon, label }: { icon: any, label: string }) {
+function Stat({ icon: Icon, label }: { icon: LucideIcon, label: string }) {
     return (
         <div className="bg-white border rounded-lg p-2 text-center shadow-sm">
             <Icon size={16} className="mx-auto text-primary mb-1" />

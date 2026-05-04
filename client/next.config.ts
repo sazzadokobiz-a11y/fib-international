@@ -1,14 +1,24 @@
-// next.config.js
 import type { NextConfig } from "next";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
+  experimental: {
+    workerThreads: true,
+  },
+  turbopack: {
+    root: projectRoot,
+  },
   images: {
-    domains: [
-      'lh3.googleusercontent.com',
-      'via.placeholder.com',
-      'images.unsplash.com',
-      'upload.wikimedia.org',
-      'randomuser.me',
+    unoptimized: true,
+    remotePatterns: [
+      { protocol: "https", hostname: "lh3.googleusercontent.com", pathname: "/**" },
+      { protocol: "https", hostname: "via.placeholder.com", pathname: "/**" },
+      { protocol: "https", hostname: "images.unsplash.com", pathname: "/**" },
+      { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/**" },
+      { protocol: "https", hostname: "randomuser.me", pathname: "/**" },
     ],
   },
 };

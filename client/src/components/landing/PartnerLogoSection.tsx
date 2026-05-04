@@ -55,7 +55,7 @@ const PartnerLogoSection = () => {
                                     alt={logo.name}
                                     width={120}
                                     height={60}
-                                    className="object-contain h-10"
+                                    className="object-contain h-10 w-auto"
                                 />
                             </div>
                         ))}

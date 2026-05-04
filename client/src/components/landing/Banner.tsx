@@ -11,6 +11,7 @@ export const Banner = () => {
                     width={500}
                     height={500}
                     alt="heroimg"
+                    priority
                     className="w-full h-full object-cover opacity-60"
                     data-alt="Massive container ship navigating through misty ocean waters at dawn with dramatic golden light hitting the steel cargo boxes"
                 />

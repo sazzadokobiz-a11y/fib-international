@@ -54,7 +54,15 @@ const getExportProduct = async ({
 }
 
 
+
+const updateExportProduct = async(id: string, payload: any)=>{
+    const result = await ExportProduct.findByIdAndUpdate(id, payload, {new: true});
+    return result;
+}
+
+
 export const exportProductService = {
     addExportProduct,
-    getExportProduct
+    getExportProduct,
+    updateExportProduct
 }

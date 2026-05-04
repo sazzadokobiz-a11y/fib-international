@@ -46,7 +46,26 @@ const getExportProduct = async (req: Request, res: Response, next: NextFunction)
 
 
 
+
+const updatedExportProduct = async(req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const { id } = req.params;
+        const result = await exportProductService.updateExportProduct(id as string, req.body);
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "product updated successfully",
+            data: result
+        })
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+
 export const exportProductController = {
     addExportProduct,
-    getExportProduct
+    getExportProduct,
+    updatedExportProduct
 }

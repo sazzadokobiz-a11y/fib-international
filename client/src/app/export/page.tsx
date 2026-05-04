@@ -25,7 +25,6 @@ import { getSubCategories } from '@/services/subCategory';
 
 const ExportPage = async () => {
     const {data: allSubCategories, success} = await getSubCategories("Export");
-    console.log(allSubCategories);
 
     return (
         <div className='pb-10'>

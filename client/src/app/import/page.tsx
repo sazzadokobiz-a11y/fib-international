@@ -1,5 +1,3 @@
-'use client'
-
 import React from 'react'
 import Container from '@/components/shared/Container'
 import ProductCard from '@/components/cards/ProductCard'
@@ -14,15 +12,16 @@ import {
 } from "@/components/ui/native-select"
 import { SearchIcon, Globe, Truck, ShieldCheck, Package } from 'lucide-react'
 import { products } from "@/data/products"
+import { getSubCategories } from '@/services/subCategory';
 
-const ImportPage = () => {
-    const uniqueCategories = Array.from(new Set(products.map(p => p.category)))
+const ImportPage = async () => {
+    const {data: allSubCategories, success} = await getSubCategories("Import");
 
     return (
         <div className="pb-20">
 
             {/* HERO */}
-            <div className="bg-gradient-to-br from-secondary/20 via-secondary/10 to-transparent py-16">
+            <div className="bg-linear-to-br from-secondary/20 via-secondary/10 to-transparent py-16">
                 <Container>
                     <div className="grid md:grid-cols-2 gap-10 items-center">
                         <div>
@@ -85,8 +84,10 @@ const ImportPage = () => {
                     <div className="flex gap-3">
                         <NativeSelect className="bg-gray-50 rounded-lg">
                             <NativeSelectOption value="">All Categories</NativeSelectOption>
-                            {uniqueCategories.map(cat => (
-                                <NativeSelectOption key={cat}>{cat}</NativeSelectOption>
+                            {allSubCategories.map((subCategory: {categoryId: string, _id: string, name: string, __v: number}) => (
+                                <NativeSelectOption key={subCategory._id} value={subCategory.name.toLowerCase()}>
+                                    {subCategory.name}
+                                </NativeSelectOption>
                             ))}
                         </NativeSelect>
 
@@ -127,7 +128,7 @@ const ImportPage = () => {
                 </div>
 
                 {/* TRUST SECTION */}
-                <div className="mt-20 bg-gradient-to-r from-secondary/10 to-transparent p-10 rounded-2xl">
+                <div className="mt-20 bg-linear-to-r from-secondary/10 to-transparent p-10 rounded-2xl">
                     <h2 className="text-2xl font-semibold mb-6 text-center">
                         Trusted by Businesses Worldwide
                     </h2>

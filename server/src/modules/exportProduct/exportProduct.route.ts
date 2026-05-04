@@ -11,4 +11,7 @@ router.get("/get-all", exportProductController.getExportProduct);
 
 router.put("/update/:id", exportProductController.updatedExportProduct);
 
+
+router.delete("/delete/:id", exportProductController.deleteExportProduct);
+
 export const exportProductRoute = router;

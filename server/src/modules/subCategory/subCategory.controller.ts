@@ -19,7 +19,8 @@ const createSubCategory = async (req: Request, res: Response, next: NextFunction
 
 const getAllSubCategory = async (req: Request, res: Response, next: NextFunction)=>{
     try {
-        const result = await subCategoryService.getAllSubCategory();
+        const queryString = req.query.parent;
+        const result = await subCategoryService.getAllSubCategory(queryString as string);
         sendResponse(res, {
             statusCode: 200,
             success: true,

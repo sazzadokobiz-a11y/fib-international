@@ -21,9 +21,11 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
+import { getSubCategories } from '@/services/subCategory';
 
-const ExportPage = () => {
-    const uniqueCategories = Array.from(new Set(products.map(p => p.category)))
+const ExportPage = async () => {
+    const {data: allSubCategories, success} = await getSubCategories("Export");
+    console.log(allSubCategories);
 
     return (
         <div className='pb-10'>
@@ -58,9 +60,9 @@ const ExportPage = () => {
                         {/* Category */}
                         <NativeSelect className='bg-white rounded-lg w-full sm:w-auto'>
                             <NativeSelectOption value="">Select All Category</NativeSelectOption>
-                            {uniqueCategories.map(category => (
-                                <NativeSelectOption key={category} value={category.toLowerCase()}>
-                                    {category}
+                            {allSubCategories.map((subCategory: {categoryId: string, _id: string, name: string, __v: number}) => (
+                                <NativeSelectOption key={subCategory._id} value={subCategory.name.toLowerCase()}>
+                                    {subCategory.name}
                                 </NativeSelectOption>
                             ))}
                         </NativeSelect>

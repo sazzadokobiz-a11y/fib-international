@@ -1,3 +1,4 @@
+import { Category } from "../../models/category/categorySchema";
 import { SubCategory } from "../../models/subCategory/subCategorySchema"
 
 
@@ -9,8 +10,16 @@ const createSubCategory = async(payload: {name: string, categoryId: string})=>{
 
 
 
-const getAllSubCategory = async()=>{
-    const result = await SubCategory.find();
+const getAllSubCategory = async(parentName: string)=>{
+    const filter: any = {};
+
+    if (parentName) {
+        filter.name = { $regex: parentName, $options: "i" };
+    }
+
+    const parentCategory = await Category.findOne(filter);
+
+    const result = await SubCategory.find({categoryId: parentCategory?._id});
     return result;
 }
 

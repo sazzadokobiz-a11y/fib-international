@@ -72,5 +72,5 @@ export const exportProductService = {
     addExportProduct,
     getExportProduct,
     updateExportProduct,
-    deleteExportProduct
+    deleteExportProduct,
 }

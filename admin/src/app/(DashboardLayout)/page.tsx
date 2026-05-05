@@ -1,4 +1,4 @@
-import { BarChart3, ShoppingCart, FolderOpen, FileText, Quote } from "lucide-react";
+import { ShoppingCart, FolderOpen, FileText, Quote } from "lucide-react";
 
 export default function DashboardPage() {
   const stats = [
@@ -25,7 +25,7 @@ export default function DashboardPage() {
                   <p className="text-gray-500 text-xs md:text-sm font-medium truncate">{stat.title}</p>
                   <p className="text-xl md:text-2xl font-bold text-gray-900 mt-2">{stat.value}</p>
                 </div>
-                <div className={`${stat.color} p-3 rounded-lg flex-shrink-0`}>
+                      <div className={`${stat.color} p-3 rounded-lg shrink-0`}>
                   <Icon className={`${stat.iconColor}`} size={24} />
                 </div>
               </div>
@@ -44,7 +44,7 @@ export default function DashboardPage() {
                   <p className="font-medium text-gray-900 text-sm md:text-base">Order #{2089 - idx}</p>
                   <p className="text-xs md:text-sm text-gray-500">March {15 - idx}, 2024</p>
                 </div>
-                <span className={`text-xs md:text-sm font-semibold px-2 md:px-3 py-1 rounded-full flex-shrink-0 ${
+                    <span className={`text-xs md:text-sm font-semibold px-2 md:px-3 py-1 rounded-full shrink-0 ${
                   idx === 0 ? "text-green-600 bg-green-50" : idx === 1 ? "text-yellow-600 bg-yellow-50" : "text-blue-600 bg-blue-50"
                 }`}>
                   {idx === 0 ? "Completed" : idx === 1 ? "Pending" : "Processing"}

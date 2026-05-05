@@ -1,4 +1,5 @@
 import { Plus, Search, Edit2, Trash2, Eye } from "lucide-react";
+import Link from "next/link";
 
 export default function ProductPage() {
   const products = [
@@ -16,13 +17,13 @@ export default function ProductPage() {
           <h1 className="text-3xl font-bold text-gray-900">Products</h1>
           <p className="text-gray-500 mt-2">Manage all your products</p>
         </div>
-        <button
+        <Link href="/product/create"
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-white font-semibold transition-all hover:opacity-90"
           style={{ backgroundColor: "#5D4037" }}
         >
           <Plus size={20} />
           Add Product
-        </button>
+        </Link>
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200 p-6">

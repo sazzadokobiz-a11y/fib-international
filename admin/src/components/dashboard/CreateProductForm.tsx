@@ -1,13 +1,18 @@
 "use client";
 
+import { getAllCategories } from "@/services/category";
+import { getSubCategory } from "@/services/subCategory";
 import { Upload, Save, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export function CreateProductForm() {
-  const [category, setCategory] = useState<"export" | "import">("export");
+  const [category, setCategory] = useState<"Export" | "Import">("Export");
+  const [fetchedCategory, setFetchedCategory] = useState([]);
+  const [subCategory, setSubCategory] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+console.log(subCategory)
   const [formData, setFormData] = useState({
     name: "",
     subCategory: "",
@@ -34,6 +39,23 @@ export function CreateProductForm() {
     isActive: true,
     isFeatured: false,
   });
+
+
+  useEffect(()=>{
+    const fetchCategory = async()=>{
+      const {data} = await getAllCategories();
+      setFetchedCategory(data);
+    };
+    fetchCategory();
+  }, []);
+
+  useEffect(()=>{
+    const fetchSubCategory = async () => {
+      const { data } = await getSubCategory(category);
+      setSubCategory(data);
+    }
+    fetchSubCategory()
+  },[category])
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -64,11 +86,17 @@ export function CreateProductForm() {
                 </label>
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value as "export" | "import")}
+                  onChange={(e) => setCategory(e.target.value as "Export" | "Import")}
                   className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                 >
-                  <option value="export">Export</option>
-                  <option value="import">Import</option>
+                  <option value="">Select category</option>
+                  {
+                    fetchedCategory?.map((category: {name: string, _id: string, __v: number}) => (
+                      <option key={category._id} value={category.name}>
+                        {category.name}
+                      </option>
+                    ))
+                  }
                 </select>
               </div>
 
@@ -97,9 +125,14 @@ export function CreateProductForm() {
                   className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                 >
                   <option value="">Select sub category</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="furniture">Furniture</option>
-                  <option value="clothing">Clothing</option>
+                  {
+                    subCategory?.map((subCat: {name: string, _id: string, __v: number}) => (
+                      <option key={subCat._id} value={subCat.name}>
+                        {subCat.name}
+                      </option>
+                    ))
+                  }
+                  {subCategory.length === 0 && <option value="">No sub categories available</option>}
                 </select>
               </div>
 
@@ -191,7 +224,7 @@ export function CreateProductForm() {
               </div>
 
               {/* Export Only Fields */}
-              {category === "export" && (
+              {category === "Export" && (
                 <>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -223,7 +256,7 @@ export function CreateProductForm() {
               )}
 
               {/* Import Only Fields */}
-              {category === "import" && (
+              {category === "Import" && (
                 <>
                   <div className="grid grid-cols-3 gap-4">
                     <div>

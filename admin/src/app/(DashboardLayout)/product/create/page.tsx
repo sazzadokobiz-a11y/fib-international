@@ -1,8 +1,9 @@
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { CreateProductForm } from "@/components/dashboard/CreateProductForm";
+import { getAllCategories } from "@/services/category";
 
-export default function CreateProductPage() {
+export default async function CreateProductPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">

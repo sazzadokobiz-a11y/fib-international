@@ -2,17 +2,24 @@
 
 import { getAllCategories } from "@/services/category";
 import { getSubCategory } from "@/services/subCategory";
-import { Upload, Save, X } from "lucide-react";
+import { Save, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Label } from "../ui/label";
+import UploadImages from "../UploadImages";
+
 
 export function CreateProductForm() {
   const [category, setCategory] = useState<"Export" | "Import">("Export");
   const [fetchedCategory, setFetchedCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [thumbnail, setThumbnail] = useState<File[]>([]);
+  const [images, setImages] = useState<File[]>([]);
 
-console.log(subCategory)
+  console.log(images);
+  console.log(thumbnail);
+
   const [formData, setFormData] = useState({
     name: "",
     subCategory: "",
@@ -38,6 +45,8 @@ console.log(subCategory)
     metaDescription: "",
     isActive: true,
     isFeatured: false,
+    thumbnail: "",
+    images: []
   });
 
 
@@ -66,15 +75,26 @@ console.log(subCategory)
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
+
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+
+    const fullData = {
+      ...data,
+      category,
+      thumbnail,
+      images
+    }
+
+    console.log("Form Data:", fullData);
   };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="lg:col-span-2 space-y-6">
-        <form onSubmit={handleSubmit}>
+        <form id="product-form" onSubmit={handleSubmit}>
           <div className="bg-white rounded-lg border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-6">Product Information</h2>
 
@@ -87,6 +107,8 @@ console.log(subCategory)
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value as "Export" | "Import")}
+                  name="category"
+                  required
                   className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                 >
                   <option value="">Select category</option>
@@ -132,8 +154,14 @@ console.log(subCategory)
                       </option>
                     ))
                   }
-                  {subCategory.length === 0 && <option value="">No sub categories available</option>}
+                  {subCategory.length === 0 && <option value="No sub categories available">No sub categories available</option>}
                 </select>
+              </div>
+
+              {/* Thumbnail */}
+              <div>
+                <Label className="block text-sm font-semibold text-gray-700 mb-2 capitalize">Upload Thumbnail *</Label>
+                <UploadImages setImages={setThumbnail} images={thumbnail} maxFile={1}/>
               </div>
 
               {/* Description */}
@@ -234,6 +262,7 @@ console.log(subCategory)
                       <input
                         type="number"
                         name="moq"
+                        required
                         value={formData.moq}
                         onChange={handleInputChange}
                         placeholder="0"
@@ -245,6 +274,7 @@ console.log(subCategory)
                       <input
                         type="text"
                         name="slug"
+                        required
                         value={formData.slug}
                         onChange={handleInputChange}
                         placeholder="product-slug"
@@ -268,6 +298,7 @@ console.log(subCategory)
                         onChange={handleInputChange}
                         placeholder="0.00"
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
+                        required
                       />
                     </div>
                     <div>
@@ -278,6 +309,7 @@ console.log(subCategory)
                         value={formData.discountPrice}
                         onChange={handleInputChange}
                         placeholder="0.00"
+                        required
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                       />
                     </div>
@@ -289,6 +321,7 @@ console.log(subCategory)
                         value={formData.costPrice}
                         onChange={handleInputChange}
                         placeholder="0.00"
+                        required
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                       />
                     </div>
@@ -300,6 +333,7 @@ console.log(subCategory)
                       <input
                         type="number"
                         name="stock"
+                        required
                         value={formData.stock}
                         onChange={handleInputChange}
                         placeholder="0"
@@ -311,6 +345,7 @@ console.log(subCategory)
                       <input
                         type="text"
                         name="sku"
+                        required
                         value={formData.sku}
                         onChange={handleInputChange}
                         placeholder="SKU-001"
@@ -325,6 +360,7 @@ console.log(subCategory)
                       <input
                         type="number"
                         name="weight"
+                        required
                         value={formData.weight}
                         onChange={handleInputChange}
                         placeholder="0.00"
@@ -338,6 +374,7 @@ console.log(subCategory)
                       <input
                         type="text"
                         name="dimensions"
+                        required
                         value={formData.dimensions}
                         onChange={handleInputChange}
                         placeholder="e.g., 10×10×5"
@@ -351,6 +388,7 @@ console.log(subCategory)
                     <input
                       type="text"
                       name="tags"
+                      required
                       value={formData.tags}
                       onChange={handleInputChange}
                       placeholder="Enter tags separated by commas"
@@ -364,6 +402,7 @@ console.log(subCategory)
                       <input
                         type="text"
                         name="warranty"
+                        required
                         value={formData.warranty}
                         onChange={handleInputChange}
                         placeholder="e.g., 1 Year"
@@ -375,6 +414,7 @@ console.log(subCategory)
                       <input
                         type="text"
                         name="returnPolicy"
+                        required
                         value={formData.returnPolicy}
                         onChange={handleInputChange}
                         placeholder="e.g., 30 Days"
@@ -446,16 +486,9 @@ console.log(subCategory)
               )}
             </div>
           </div>
-
           {/* image upload field */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6 mt-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-6">Product Images</h2>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-[#5D4037] transition-colors cursor-pointer">
-              <Upload className="mx-auto text-gray-400 mb-3" size={32} />
-              <p className="text-gray-700 font-medium mb-1">Upload product images</p>
-              <p className="text-gray-500 text-sm">Drag and drop or click to browse</p>
-            </div>
-          </div>
+          <Label className="block text-sm font-semibold text-gray-700 mb-2 mt-6 capitalize">Upload Product Images</Label>
+          <UploadImages setImages={setImages} images={images} maxFile={5}/>
 
           <div className="bg-white rounded-lg border border-gray-200 p-6 mt-6 lg:hidden">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions</h3>
@@ -486,7 +519,8 @@ console.log(subCategory)
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions</h3>
           <div className="space-y-3">
             <button
-              onClick={handleSubmit}
+              type="submit"
+              form="product-form"
               disabled={isSubmitting}
               className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
               style={{ backgroundColor: "#5D4037" }}

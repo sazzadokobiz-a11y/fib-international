@@ -82,24 +82,64 @@ export function CreateProductForm() {
     setIsSubmitting(true);
 
     try {
+      const toastId = toast.loading("Creating product...");
       const formDataObj = new FormData(e.currentTarget);
       const data = Object.fromEntries(formDataObj.entries());
 
+
+      let formattedDimensions;
+      if (data.dimensions && typeof data.dimensions === "string"){
+        const [length, width, height] = data.dimensions?.split("x").map((dim: string) => parseInt(dim.trim()));
+        if(isNaN(length) || isNaN(width) || isNaN(height)) {
+          toast.error("Invalid dimensions format. Please use LxWxH format.", {id: toastId});
+          setIsSubmitting(false);
+          return;
+        }
+        formattedDimensions = { length, width, height, unit: "cm" };
+      }
+
+
+      console.log(thumbnail[0])
+      if(!thumbnail.length){
+        toast.error("Thumbnail image is required", {id: toastId});
+        setIsSubmitting(false);
+        return;
+      }
+
+      if(!images.length){
+        toast.error("At least one product image is required", {id: toastId});
+        setIsSubmitting(false);
+        return;
+      }
+
+
       const imageUrls = await uploadImage(thumbnail[0], images);
-      const toastId = toast.loading("Creating product...");
 
       if (imageUrls.success) {
-        const fullData = {
-          ...data,
-          thumbnail: imageUrls.data.thumbnail,
-          images: imageUrls.data.images,
-          slug: data.name.toString().toLowerCase().replace(/\s+/g, '-'),
-        }
         if(category === "Export"){
+          const fullData = {
+            ...data,
+            thumbnail: imageUrls.data.thumbnail,
+            images: imageUrls.data.images,
+            slug: data.name.toString().toLowerCase().replace(/\s+/g, '-'),
+          }
           const result = await addExportProduct(fullData as Product);
           if(result.success){
             toast.success("Product created successfully", {id: toastId})
           }
+        }
+
+        if(category === "Import"){
+          const fullData = {
+            ...data,
+            thumbnail: imageUrls.data.thumbnail,
+            images: imageUrls.data.images,
+            slug: data.name.toString().toLowerCase().replace(/\s+/g, '-'),
+            sku: `SKU-${typeof data.name === "string" && data.name.split(" ").join("-")}-${typeof data.brand === "string" && data.brand.split(" ").join("-")}-${data.color}-${data.size}-${data.gender}-${data.subCategory}-${data.price}`,
+            dimensions: formattedDimensions,
+            tags: typeof data.tags === "string" ? data.tags.split(",").map(tag => tag.trim()) : []
+          }
+          console.log(fullData);
         }
       }
     } catch (error) {
@@ -185,6 +225,12 @@ export function CreateProductForm() {
               <div>
                 <Label className="block text-sm font-semibold text-gray-700 mb-2 capitalize">Upload Thumbnail *</Label>
                 <UploadImages setImages={setThumbnail} images={thumbnail} maxFile={1}/>
+              </div>
+
+                {/* image upload field */}
+              <div>
+                <Label className="block text-sm font-semibold text-gray-700 mb-2 mt-6 capitalize">Upload Product Images</Label>
+                <UploadImages setImages={setImages} images={images} maxFile={5} />
               </div>
 
               {/* Description */}
@@ -299,7 +345,8 @@ export function CreateProductForm() {
               {/* Import Only Fields */}
               {category === "Import" && (
                 <>
-                  <div className="grid grid-cols-3 gap-4">
+                {/* price & discount price & cost price */}
+                  <div className="grid sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">Price *</label>
                       <input
@@ -337,35 +384,8 @@ export function CreateProductForm() {
                       />
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Stock *</label>
-                      <input
-                        type="number"
-                        name="stock"
-                        required
-                        value={formData.stock}
-                        onChange={handleInputChange}
-                        placeholder="0"
-                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">SKU *</label>
-                      <input
-                        type="text"
-                        name="sku"
-                        required
-                        value={formData.sku}
-                        onChange={handleInputChange}
-                        placeholder="SKU-001"
-                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
+                  {/* weight & dimensions */}
+                  <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">Weight (kg)</label>
                       <input
@@ -393,21 +413,36 @@ export function CreateProductForm() {
                       />
                     </div>
                   </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Tags</label>
-                    <input
-                      type="text"
-                      name="tags"
-                      required
-                      value={formData.tags}
-                      onChange={handleInputChange}
-                      placeholder="Enter tags separated by commas"
-                      className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
-                    />
+                  {/* stock & tags */}
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Stock *</label>
+                      <input
+                        type="number"
+                        name="stock"
+                        required
+                        value={formData.stock}
+                        onChange={handleInputChange}
+                        placeholder="0"
+                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Tags</label>
+                      <input
+                        type="text"
+                        name="tags"
+                        required
+                        value={formData.tags}
+                        onChange={handleInputChange}
+                        placeholder="Enter tags separated by commas"
+                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
+                      />
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+
+                  <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">Warranty</label>
                       <input
@@ -429,31 +464,6 @@ export function CreateProductForm() {
                         value={formData.returnPolicy}
                         onChange={handleInputChange}
                         placeholder="e.g., 30 Days"
-                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Meta Title</label>
-                      <input
-                        type="text"
-                        name="metaTitle"
-                        value={formData.metaTitle}
-                        onChange={handleInputChange}
-                        placeholder="SEO title"
-                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Meta Description</label>
-                      <input
-                        type="text"
-                        name="metaDescription"
-                        value={formData.metaDescription}
-                        onChange={handleInputChange}
-                        placeholder="SEO description"
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                       />
                     </div>
@@ -485,9 +495,7 @@ export function CreateProductForm() {
               )}
             </div>
           </div>
-          {/* image upload field */}
-          <Label className="block text-sm font-semibold text-gray-700 mb-2 mt-6 capitalize">Upload Product Images</Label>
-          <UploadImages setImages={setImages} images={images} maxFile={5}/>
+          
 
           <div className="bg-white rounded-lg border border-gray-200 p-6 mt-6 lg:hidden">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions</h3>

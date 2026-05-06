@@ -8,6 +8,9 @@ import { useEffect, useState } from "react";
 import { Label } from "../ui/label";
 import UploadImages from "../UploadImages";
 import { uploadImage } from "@/services/uploadImage";
+import { addExportProduct } from "@/services/exportProduct";
+import { Product } from "@/types/product";
+import { toast } from "sonner";
 
 
 export function CreateProductForm() {
@@ -83,12 +86,20 @@ export function CreateProductForm() {
       const data = Object.fromEntries(formDataObj.entries());
 
       const imageUrls = await uploadImage(thumbnail[0], images);
+      const toastId = toast.loading("Creating product...");
 
       if (imageUrls.success) {
-        const finalData = {
+        const fullData = {
           ...data,
           thumbnail: imageUrls.data.thumbnail,
-          images: imageUrls.data.images
+          images: imageUrls.data.images,
+          slug: data.name.toString().toLowerCase().replace(/\s+/g, '-'),
+        }
+        if(category === "Export"){
+          const result = await addExportProduct(fullData as Product);
+          if(result.success){
+            toast.success("Product created successfully", {id: toastId})
+          }
         }
       }
     } catch (error) {
@@ -96,7 +107,6 @@ export function CreateProductForm() {
       setIsSubmitting(false);
     } finally {
       setIsSubmitting(false);
-      e.currentTarget.reset();
       setThumbnail([]);
       setImages([]);
     }
@@ -280,18 +290,6 @@ export function CreateProductForm() {
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                       />
                     </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Slug *</label>
-                      <input
-                        type="text"
-                        name="slug"
-                        required
-                        value={formData.slug}
-                        onChange={handleInputChange}
-                        placeholder="product-slug"
-                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
-                      />
-                    </div>
                   </div>
                 </>
               )}
@@ -457,18 +455,6 @@ export function CreateProductForm() {
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                       />
                     </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Slug *</label>
-                    <input
-                      type="text"
-                      name="slug"
-                      value={formData.slug}
-                      onChange={handleInputChange}
-                      placeholder="product-slug"
-                      className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
-                    />
                   </div>
 
                   <div className="flex items-center gap-4">

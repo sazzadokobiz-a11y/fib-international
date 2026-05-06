@@ -5,7 +5,7 @@ const uploadSingle = async (file: Express.Multer.File) => {
     const dataUri = `data:${file.mimetype};base64,${base64}`;
 
     const result = await cloudinary.uploader.upload(dataUri, {
-        folder: "fib-international",
+        folder: "fib_international",
     });
 
     return result.secure_url;

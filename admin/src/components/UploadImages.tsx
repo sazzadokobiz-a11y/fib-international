@@ -32,7 +32,7 @@ const UploadImages = ({ setImages, images, maxFile }: {setImages: React.Dispatch
           <Upload className="size-5 text-muted-foreground" />
           <div className="text-left">
             <p className="text-sm font-medium">Drop files or click to browse</p>
-            <p className="text-xs text-muted-foreground">Up to 8 files</p>
+            <p className="text-xs text-muted-foreground">Up to {maxFile} files</p>
           </div>
           <FileUploadTrigger asChild>
             <Button variant="outline" size="sm" className="ml-auto">

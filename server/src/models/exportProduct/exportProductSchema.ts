@@ -6,7 +6,7 @@ const exportProductSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
-    image: {
+    thumbnail: {
         type: String,
         required: true
     },
@@ -39,6 +39,10 @@ const exportProductSchema = new mongoose.Schema({
         required: true
     },
     category: {
+        type: String,
+        required: true
+    },
+    subCategory:{
         type: String,
         required: true
     },

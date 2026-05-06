@@ -120,27 +120,50 @@ export function CreateProductForm() {
             <h2 className="text-lg font-semibold text-gray-900 mb-6">Product Information</h2>
 
             <div className="space-y-5">
-              {/* Category Selection */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Category <span className="text-red-500">*</span>
-                </label>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value as "Export" | "Import")}
-                  name="category"
-                  required
-                  className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
-                >
-                  <option value="">Select category</option>
-                  {
-                    fetchedCategory?.map((category: {name: string, _id: string, __v: number}) => (
-                      <option key={category._id} value={category.name}>
-                        {category.name}
-                      </option>
-                    ))
-                  }
-                </select>
+              <div className="flex sm:flex-row flex-col gap-4">
+                {/* Category Selection */}
+                <div className="w-full">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Category <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value as "Export" | "Import")}
+                    name="category"
+                    required
+                    className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
+                  >
+                    <option value="">Select category</option>
+                    {
+                      fetchedCategory?.map((category: { name: string, _id: string, __v: number }) => (
+                        <option key={category._id} value={category.name}>
+                          {category.name}
+                        </option>
+                      ))
+                    }
+                  </select>
+                </div>
+                {/* Sub Category */}
+                <div className="w-full">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Sub Category *</label>
+                  <select
+                    name="subCategory"
+                    value={formData.subCategory}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
+                  >
+                    <option value="">Select sub category</option>
+                    {
+                      subCategory?.map((subCat: { name: string, _id: string, __v: number }) => (
+                        <option key={subCat._id} value={subCat.name}>
+                          {subCat.name}
+                        </option>
+                      ))
+                    }
+                    {subCategory.length === 0 && <option value="No sub categories available">No sub categories available</option>}
+                  </select>
+                </div>
               </div>
 
               {/* Product Name */}
@@ -157,27 +180,6 @@ export function CreateProductForm() {
                 />
               </div>
 
-              {/* Sub Category */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Sub Category *</label>
-                <select
-                  name="subCategory"
-                  value={formData.subCategory}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
-                >
-                  <option value="">Select sub category</option>
-                  {
-                    subCategory?.map((subCat: {name: string, _id: string, __v: number}) => (
-                      <option key={subCat._id} value={subCat.name}>
-                        {subCat.name}
-                      </option>
-                    ))
-                  }
-                  {subCategory.length === 0 && <option value="No sub categories available">No sub categories available</option>}
-                </select>
-              </div>
 
               {/* Thumbnail */}
               <div>
@@ -200,8 +202,8 @@ export function CreateProductForm() {
               </div>
 
               {/* Brand & Materials */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
+              <div className="flex sm:flex-row flex-col gap-4">
+                <div className="w-full">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Brand</label>
                   <input
                     type="text"
@@ -213,7 +215,7 @@ export function CreateProductForm() {
                     className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                   />
                 </div>
-                <div>
+                <div className="w-full">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Materials</label>
                   <input
                     type="text"
@@ -228,8 +230,8 @@ export function CreateProductForm() {
               </div>
 
               {/* Color & Size */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
+              <div className="flex sm:flex-row flex-col gap-4">
+                <div className="w-full">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Color</label>
                   <input
                     type="text"
@@ -241,7 +243,7 @@ export function CreateProductForm() {
                     className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                   />
                 </div>
-                <div>
+                <div className="w-full">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Size</label>
                   <input
                     type="text"
@@ -255,28 +257,28 @@ export function CreateProductForm() {
                 </div>
               </div>
 
-              {/* Gender */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
-                <select
-                  name="gender"
-                  value={formData.gender}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
-                  required
-                >
-                  <option value="">Select gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                  <option value="unisex">Unisex</option>
-                </select>
-              </div>
+              <div className="flex sm:flex-row flex-col w-full gap-4">
+                {/* Gender */}
+                <div className="w-full">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
+                    required
+                  >
+                    <option value="">Select gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="unisex">Unisex</option>
+                  </select>
+                </div>
 
-              {/* Export Only Fields */}
-              {category === "Export" && (
-                <>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
+                {/* Export Only Fields */}
+                {category === "Export" && (
+                  <>
+                    <div className="w-full">
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
                         MOQ (Minimum Order Qty) *
                       </label>
@@ -290,9 +292,9 @@ export function CreateProductForm() {
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                       />
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
+              </div>
 
               {/* Import Only Fields */}
               {category === "Import" && (

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Label } from "../ui/label";
 import UploadImages from "../UploadImages";
+import { uploadImage } from "@/services/uploadImage";
 
 
 export function CreateProductForm() {
@@ -17,8 +18,6 @@ export function CreateProductForm() {
   const [thumbnail, setThumbnail] = useState<File[]>([]);
   const [images, setImages] = useState<File[]>([]);
 
-  console.log(images);
-  console.log(thumbnail);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -75,21 +74,33 @@ export function CreateProductForm() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData.entries());
+    try {
+      const formDataObj = new FormData(e.currentTarget);
+      const data = Object.fromEntries(formDataObj.entries());
 
-    const fullData = {
-      ...data,
-      category,
-      thumbnail,
-      images
+      const imageUrls = await uploadImage(thumbnail[0], images);
+
+      if (imageUrls.success) {
+        const finalData = {
+          ...data,
+          thumbnail: imageUrls.data.thumbnail,
+          images: imageUrls.data.images
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setIsSubmitting(false);
+    } finally {
+      setIsSubmitting(false);
+      e.currentTarget.reset();
+      setThumbnail([]);
+      setImages([]);
     }
-
-    console.log("Form Data:", fullData);
-  };
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -2,6 +2,7 @@ import express, { Router } from 'express';
 import { categoryRoutes } from '../modules/category/category.route';
 import { subCategoryRoutes } from '../modules/subCategory/subCategory.route';
 import { exportProductRoute } from '../modules/exportProduct/exportProduct.route';
+import { imageUploadRoute } from '../modules/imageUpload/imageUpload.route';
 
 const router = Router();
 
@@ -17,6 +18,10 @@ const moduleRoutes = [
     {
         path: "/export-product",
         route: exportProductRoute
+    },
+    {
+        path: "/image-upload",
+        route: imageUploadRoute
     }
 ];
 

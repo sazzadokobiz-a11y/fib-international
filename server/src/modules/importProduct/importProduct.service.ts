@@ -58,7 +58,15 @@ const getImportProduct = async ({
 
 
 
+const updateImportProduct = async(id: string, payload: any)=>{
+    const result = await ImportProduct.findByIdAndUpdate(id, payload, {new: true})
+    return result
+}
+
+
+
 export const importProductService = {
     addImportProduct,
-    getImportProduct
+    getImportProduct,
+    updateImportProduct
 }

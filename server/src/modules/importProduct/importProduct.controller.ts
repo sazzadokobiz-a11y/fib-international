@@ -48,7 +48,26 @@ const getImportProduct = async(req: Request, res: Response, next: NextFunction)=
 
 
 
+
+const updateImportProduct = async(req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const {id} = req.params;
+        const result = await importProductService.updateImportProduct(id as string, req.body)
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "product updated successfully",
+            data: result
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+
 export const importProductController = {
     addImportProduct,
-    getImportProduct
+    getImportProduct,
+    updateImportProduct
 }

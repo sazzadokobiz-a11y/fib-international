@@ -66,8 +66,27 @@ const updateImportProduct = async(req: Request, res: Response, next: NextFunctio
 
 
 
+
+const deleteImportProduct = async(req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const {id} = req.params;
+        const result = await importProductService.deleteImportProduct(id as string);
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Product deleted successfully",
+            data: result
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+
 export const importProductController = {
     addImportProduct,
     getImportProduct,
-    updateImportProduct
+    updateImportProduct,
+    deleteImportProduct
 }

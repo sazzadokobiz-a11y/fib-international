@@ -65,8 +65,17 @@ const updateImportProduct = async(id: string, payload: any)=>{
 
 
 
+
+const deleteImportProduct = async(id: string)=>{
+    const result = await ImportProduct.findByIdAndDelete(id);
+    return result;
+}
+
+
+
 export const importProductService = {
     addImportProduct,
     getImportProduct,
-    updateImportProduct
+    updateImportProduct,
+    deleteImportProduct
 }

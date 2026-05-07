@@ -11,4 +11,7 @@ router.get("/get", importProductController.getImportProduct);
 
 router.put("/update/:id", importProductController.updateImportProduct);
 
+
+router.delete("/delete/:id", importProductController.deleteImportProduct);
+
 export const importProductRoute = router;

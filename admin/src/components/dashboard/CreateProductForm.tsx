@@ -88,6 +88,11 @@ export function CreateProductForm() {
 
 
       let formattedDimensions;
+      if (typeof data.dimensions === "string" && !data.dimensions.includes("x")){
+        toast.error("Invalid dimensions format. Please use LxWxH format.", { id: toastId });
+        setIsSubmitting(false);
+        return
+      }
       if (data.dimensions && typeof data.dimensions === "string"){
         const [length, width, height] = data.dimensions?.split("x").map((dim: string) => parseInt(dim.trim()));
         if(isNaN(length) || isNaN(width) || isNaN(height)) {
@@ -98,8 +103,6 @@ export function CreateProductForm() {
         formattedDimensions = { length, width, height, unit: "cm" };
       }
 
-
-      console.log(thumbnail[0])
       if(!thumbnail.length){
         toast.error("Thumbnail image is required", {id: toastId});
         setIsSubmitting(false);
@@ -134,12 +137,8 @@ export function CreateProductForm() {
             ...data,
             thumbnail: imageUrls.data.thumbnail,
             images: imageUrls.data.images,
-            slug: data.name.toString().toLowerCase().replace(/\s+/g, '-'),
-            sku: `SKU-${typeof data.name === "string" && data.name.split(" ").join("-")}-${typeof data.brand === "string" && data.brand.split(" ").join("-")}-${data.color}-${data.size}-${data.gender}-${data.subCategory}-${data.price}`,
             dimensions: formattedDimensions,
-            tags: typeof data.tags === "string" ? data.tags.split(",").map(tag => tag.trim()) : []
           }
-          console.log(fullData);
         }
       }
     } catch (error) {

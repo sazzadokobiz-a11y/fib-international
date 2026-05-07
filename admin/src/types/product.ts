@@ -19,7 +19,7 @@ export interface Product {
     stock?: number;
     sku?: string;
     weight?: number;
-    dimentions?: string;
+    dimensions?: string | { length: number, width: number, height: number, unit: string };
     tags?: string[];
     warranty?: string;
     returnPolicy?: string;

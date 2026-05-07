@@ -11,6 +11,7 @@ import { uploadImage } from "@/services/uploadImage";
 import { addExportProduct } from "@/services/exportProduct";
 import { Product } from "@/types/product";
 import { toast } from "sonner";
+import { addImportProduct } from "@/services/importProduct";
 
 
 export function CreateProductForm() {
@@ -20,36 +21,9 @@ export function CreateProductForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [thumbnail, setThumbnail] = useState<File[]>([]);
   const [images, setImages] = useState<File[]>([]);
+  const [activeProduct, setActiveProduct] = useState<boolean>(true);
+  const [isFeatured, setIsFeatured] = useState<boolean>(false)
 
-
-  const [formData, setFormData] = useState({
-    name: "",
-    subCategory: "",
-    description: "",
-    brand: "",
-    materials: "",
-    color: "",
-    size: "",
-    gender: "",
-    moq: "",
-    slug: "",
-    price: "",
-    discountPrice: "",
-    costPrice: "",
-    stock: "",
-    sku: "",
-    weight: "",
-    dimensions: "",
-    tags: "",
-    warranty: "",
-    returnPolicy: "",
-    metaTitle: "",
-    metaDescription: "",
-    isActive: true,
-    isFeatured: false,
-    thumbnail: "",
-    images: []
-  });
 
 
   useEffect(()=>{
@@ -69,20 +43,12 @@ export function CreateProductForm() {
   },[category])
 
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
-    }));
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-
+    const toastId = toast.loading("Creating product...");
+    
     try {
-      const toastId = toast.loading("Creating product...");
       const formDataObj = new FormData(e.currentTarget);
       const data = Object.fromEntries(formDataObj.entries());
 
@@ -129,20 +95,37 @@ export function CreateProductForm() {
           const result = await addExportProduct(fullData as Product);
           if(result.success){
             toast.success("Product created successfully", {id: toastId})
+            setIsSubmitting(false)
+          }else{
+            toast.error(result.message, {id: toastId})
           }
         }
 
         if(category === "Import"){
           const fullData = {
             ...data,
-            thumbnail: imageUrls.data.thumbnail,
-            images: imageUrls.data.images,
+            thumbnail: imageUrls.data.thumbnail as string,
+            images: imageUrls.data.images as string[],
             dimensions: formattedDimensions,
+            isActive: activeProduct as boolean,
+            isFeatured: isFeatured as boolean
+          }
+          const result = await addImportProduct(fullData as unknown as Product);
+          console.log(result);
+          if (result.success) {
+            toast.success("Product created successfully", { id: toastId })
+            setIsSubmitting(false)
+          }else{
+            toast.error(result.message, {id: toastId})
           }
         }
+      }else{
+        toast.error(imageUrls, {id: toastId})
       }
     } catch (error) {
+      const err = error as Error
       console.log(error);
+      toast.error(err.message, {id: toastId})
       setIsSubmitting(false);
     } finally {
       setIsSubmitting(false);
@@ -187,8 +170,8 @@ export function CreateProductForm() {
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Sub Category *</label>
                   <select
                     name="subCategory"
-                    value={formData.subCategory}
-                    onChange={handleInputChange}
+
+
                     required
                     className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                   >
@@ -211,8 +194,6 @@ export function CreateProductForm() {
                 <input
                   type="text"
                   name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
                   placeholder="Enter product name"
                   required
                   className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
@@ -237,8 +218,6 @@ export function CreateProductForm() {
                 <label className="block text-sm font-semibold text-gray-700 mb-2">Description *</label>
                 <textarea
                   name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
                   placeholder="Enter product description"
                   required
                   rows={4}
@@ -253,8 +232,8 @@ export function CreateProductForm() {
                   <input
                     type="text"
                     name="brand"
-                    value={formData.brand}
-                    onChange={handleInputChange}
+
+
                     required
                     placeholder="Enter brand name"
                     className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
@@ -265,8 +244,8 @@ export function CreateProductForm() {
                   <input
                     type="text"
                     name="materials"
-                    value={formData.materials}
-                    onChange={handleInputChange}
+
+
                     required
                     placeholder="e.g., Cotton, Polyester"
                     className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
@@ -281,8 +260,8 @@ export function CreateProductForm() {
                   <input
                     type="text"
                     name="color"
-                    value={formData.color}
-                    onChange={handleInputChange}
+
+
                     required
                     placeholder="e.g., Red, Blue"
                     className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
@@ -293,9 +272,9 @@ export function CreateProductForm() {
                   <input
                     type="text"
                     name="size"
-                    value={formData.size}
+
                     required
-                    onChange={handleInputChange}
+
                     placeholder="e.g., M, L, XL"
                     className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                   />
@@ -308,8 +287,8 @@ export function CreateProductForm() {
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Gender</label>
                   <select
                     name="gender"
-                    value={formData.gender}
-                    onChange={handleInputChange}
+
+
                     className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                     required
                   >
@@ -331,8 +310,8 @@ export function CreateProductForm() {
                         type="number"
                         name="moq"
                         required
-                        value={formData.moq}
-                        onChange={handleInputChange}
+    
+    
                         placeholder="0"
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                       />
@@ -351,8 +330,8 @@ export function CreateProductForm() {
                       <input
                         type="number"
                         name="price"
-                        value={formData.price}
-                        onChange={handleInputChange}
+    
+    
                         placeholder="0.00"
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                         required
@@ -363,8 +342,8 @@ export function CreateProductForm() {
                       <input
                         type="number"
                         name="discountPrice"
-                        value={formData.discountPrice}
-                        onChange={handleInputChange}
+    
+    
                         placeholder="0.00"
                         required
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
@@ -375,8 +354,8 @@ export function CreateProductForm() {
                       <input
                         type="number"
                         name="costPrice"
-                        value={formData.costPrice}
-                        onChange={handleInputChange}
+    
+    
                         placeholder="0.00"
                         required
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
@@ -391,8 +370,8 @@ export function CreateProductForm() {
                         type="number"
                         name="weight"
                         required
-                        value={formData.weight}
-                        onChange={handleInputChange}
+    
+    
                         placeholder="0.00"
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                       />
@@ -405,8 +384,8 @@ export function CreateProductForm() {
                         type="text"
                         name="dimensions"
                         required
-                        value={formData.dimensions}
-                        onChange={handleInputChange}
+    
+    
                         placeholder="e.g., 10×10×5"
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                       />
@@ -420,8 +399,8 @@ export function CreateProductForm() {
                         type="number"
                         name="stock"
                         required
-                        value={formData.stock}
-                        onChange={handleInputChange}
+    
+    
                         placeholder="0"
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                       />
@@ -432,8 +411,8 @@ export function CreateProductForm() {
                         type="text"
                         name="tags"
                         required
-                        value={formData.tags}
-                        onChange={handleInputChange}
+    
+    
                         placeholder="Enter tags separated by commas"
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                       />
@@ -448,8 +427,8 @@ export function CreateProductForm() {
                         type="text"
                         name="warranty"
                         required
-                        value={formData.warranty}
-                        onChange={handleInputChange}
+    
+    
                         placeholder="e.g., 1 Year"
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                       />
@@ -460,8 +439,8 @@ export function CreateProductForm() {
                         type="text"
                         name="returnPolicy"
                         required
-                        value={formData.returnPolicy}
-                        onChange={handleInputChange}
+    
+    
                         placeholder="e.g., 30 Days"
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
                       />
@@ -473,8 +452,8 @@ export function CreateProductForm() {
                       <input
                         type="checkbox"
                         name="isActive"
-                        checked={formData.isActive}
-                        onChange={handleInputChange}
+                        checked={activeProduct}
+                        onChange={()=>setActiveProduct(!activeProduct)}
                         className="w-4 h-4 accent-[#5D4037]"
                       />
                       <span className="text-sm font-medium text-gray-700">Active Product</span>
@@ -483,8 +462,8 @@ export function CreateProductForm() {
                       <input
                         type="checkbox"
                         name="isFeatured"
-                        checked={formData.isFeatured}
-                        onChange={handleInputChange}
+                        checked={isFeatured}
+                        onChange={()=>setIsFeatured(!isFeatured)}
                         className="w-4 h-4 accent-[#5D4037]"
                       />
                       <span className="text-sm font-medium text-gray-700">Featured</span>

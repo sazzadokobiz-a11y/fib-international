@@ -36,7 +36,6 @@ const importProductSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        required: true
     },
     category: {
         type: String,

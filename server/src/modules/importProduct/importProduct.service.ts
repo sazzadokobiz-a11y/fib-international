@@ -5,7 +5,7 @@ const addImportProduct = async (payload: any) => {
     const finalProductData = {
         ...payload,
         slug: payload.name.toString().toLowerCase().replace(/\s+/g, '-'),
-        sku: `SKU-${payload?.name?.split(" ")?.join("-")}-${payload?.brand?.split(" ")?.join("-")}-${payload?.color}-${payload?.size}-${payload?.gender}-${payload?.subCategory}-${payload?.price}`,
+        sku: `SKU-${payload?.name?.slice(0, 10)?.split(" ")?.join("-")}-${payload?.brand?.split(" ")?.join("-")}-${payload?.color}-${payload?.size}-${payload?.gender}-${payload?.subCategory}-${payload?.price}`,
         tags: payload.tags ? payload?.tags?.split(",").map((tag: string) => tag?.trim()) : []
     }
     const productInstance = new ImportProduct(finalProductData);

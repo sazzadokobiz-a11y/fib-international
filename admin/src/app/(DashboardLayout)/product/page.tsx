@@ -1,7 +1,26 @@
-import { Plus, Search, Edit2, Trash2, Eye } from "lucide-react";
+"use client";
+import { Plus, Edit2, Trash2, Eye } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+
+const subCats: Record<string, string[]> = {
+  Export: ["Garments", "Textiles", "Leather Goods", "Jute Products"],
+  Import: ["Raw Materials", "Machinery", "Chemicals", "Consumer Goods"],
+};
 
 export default function ProductPage() {
+  const [category, setCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+  const [query, setQuery] = useState("");
+
+  const handleCategoryChange = (val: string) => {
+    setCategory(val);
+    setSubCategory("");
+  };
+  
+  
   const products = [
     { id: 1, name: "MacBook Pro 16\"", category: "Electronics", price: "$2,499", status: "Active", stock: 15 },
     { id: 2, name: "Office Desk", category: "Furniture", price: "$299", status: "Active", stock: 8 },
@@ -11,11 +30,11 @@ export default function ProductPage() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 pt-5 md:pt-0">
+      <div className="flex md:flex-row flex-col md:gap-0 gap-5 md:items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Products</h1>
-          <p className="text-gray-500 mt-2">Manage all your products</p>
+          <h1 className="text-xl md:text-3xl font-bold text-gray-900">Products</h1>
+          <p className="text-gray-500 mt-2 text-sm md:text-base">Manage all your products</p>
         </div>
         <Link href="/product/create"
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-white font-semibold transition-all hover:opacity-90"
@@ -27,13 +46,68 @@ export default function ProductPage() {
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg mb-6 max-w-md">
-          <Search size={18} className="text-gray-500" />
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="bg-transparent outline-none text-sm text-gray-600 w-full"
-          />
+        <div className="flex flex-col gap-3 mb-5">
+          {/* Search Bar */}
+          <Field orientation="horizontal" className="border border-gray-200 rounded-xl px-3 py-1.5 bg-white">
+            <Input
+              type="search"
+              placeholder="Search products..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="border-none outline-none shadow-none flex-1"
+            />
+
+            {/* Sub Category Select */}
+            <select
+              value={subCategory}
+              onChange={(e) => setSubCategory(e.target.value)}
+              className="border-l border-gray-200 pl-3 text-sm text-gray-500 outline-none bg-transparent min-w-37.5 hidden md:block"
+            >
+              <option value="">categories</option>
+              {(subCats[category] || []).map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+          </Field>
+
+          {/* Quick Filter Chips */}
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="md:flex gap-2 hidden">
+              {["All", "Export", "Import"].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => handleCategoryChange(cat === "All" ? "" : cat)}
+                  className={`px-4 py-1.5 rounded-full text-xs border transition-all ${(cat === "All" && !category) || category === cat
+                    ? "bg-[#5D4037] text-white border-[#5D4037]"
+                    : "bg-white text-gray-500 border-gray-200 hover:border-[#5D4037]"
+                    }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+            {/* Category Select for mobile*/}
+            <select
+              value={category}
+              onChange={(e) => handleCategoryChange(e.target.value)}
+              className="border-l border-gray-200 pl-3 text-sm text-gray-500 outline-none bg-transparent min-w-32.5 md:hidden block border rounded-sm py-2"
+            >
+              <option value="">categories</option>
+              <option value="Export">Export</option>
+              <option value="Import">Import</option>
+            </select>
+            {/* Sub Category Select for mobile*/}
+            <select
+              value={subCategory}
+              onChange={(e) => setSubCategory(e.target.value)}
+              className="border-l border-gray-200 pl-3 text-sm text-gray-500 outline-none bg-transparent min-w-37.5 block md:hidden border rounded-sm py-2"
+            >
+              <option value="">sub categories</option>
+              {(subCats[category] || []).map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="overflow-x-auto">

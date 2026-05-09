@@ -1,36 +1,94 @@
 "use client";
 import { Plus, Edit2, Trash2, Eye } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { PaginationControls } from "@/components/shared/PaginationControls";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
-const subCats: Record<string, string[]> = {
-  Export: ["Garments", "Textiles", "Leather Goods", "Jute Products"],
-  Import: ["Raw Materials", "Machinery", "Chemicals", "Consumer Goods"],
-};
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { PaginationControls } from "@/components/shared/PaginationControls";
+import { getAllCategories } from "@/services/category";
+import { getSubCategory } from "@/services/subCategory";
+import { getExportProduct } from "@/services/exportProduct";
+import { Product } from "@/types/product";
+import Image from "next/image";
+import { getImportProduct } from "@/services/importProduct";
+import { useSearchParams } from "next/navigation";
 
 export default function ProductPage() {
+  const [fetchedCategory, setFetchedCategory] = useState([]);
   const [category, setCategory] = useState("Export");
+  const [fetchedSub, setFetchedSub] = useState([]);
   const [subCategory, setSubCategory] = useState("");
-  const [query, setQuery] = useState("");
+  const [search, setSearch] = useState("");
+  const [products, setProducts] = useState({ data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 1 }});
+  const searchParams = useSearchParams();
+
+  const pageNumber = searchParams.get("page") || '1'
+
+
+
+  // fetch category
+  useEffect(()=>{
+    const fetchCategory = async()=>{
+      const result = await getAllCategories()
+      setFetchedCategory(result.data)
+    }
+    fetchCategory()
+  }, [])
+
+
+  // fetch subCategory
+  useEffect(()=>{
+    const fetchedSubCategory = async()=>{
+      const result = await getSubCategory(category);
+      setFetchedSub(result.data)
+    }
+    fetchedSubCategory()
+  }, [category])
+
 
   const handleCategoryChange = (val: string) => {
     setCategory(val);
     setSubCategory("");
   };
 
-  const meta = { total: 20, page: 1, limit: 10, totalPage: 10 }
+
+  // fetch product data
+  useEffect(()=>{
+    if(category === "Export"){
+      const fetchProduct = async()=>{
+        const result = await getExportProduct(search, subCategory, "10", pageNumber)
+        setProducts(result.data)
+      }
+      fetchProduct()
+    }
+
+    if(category === "Import"){
+      const fetchProduct = async()=>{
+        const result = await getImportProduct(search, subCategory, "10", pageNumber)
+        setProducts(result.data)
+      }
+      fetchProduct()
+    }
+  }, [category, search, subCategory, pageNumber])
   
-  
-  const products = [
-    { id: 1, name: "MacBook Pro 16\"", category: "Electronics", price: "$2,499", status: "Active", stock: 15 },
-    { id: 2, name: "Office Desk", category: "Furniture", price: "$299", status: "Active", stock: 8 },
-    { id: 3, name: "Winter Jacket", category: "Clothing", price: "$129", status: "Active", stock: 42 },
-    { id: 4, name: "Wireless Mouse", category: "Electronics", price: "$29", status: "Inactive", stock: 0 },
-    { id: 5, name: "Desk Chair", category: "Furniture", price: "$199", status: "Active", stock: 12 },
-  ];
 
   return (
     <div className="space-y-6 pt-5 md:pt-0">
@@ -48,116 +106,293 @@ export default function ProductPage() {
         </Link>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <div className="flex flex-col gap-3 mb-5">
+      <div className="relative">
+        <div className="flex flex-col gap-3 sm:mb-5 mb-14">
           {/* Search Bar */}
-          <Field orientation="horizontal" className="border border-gray-200 rounded-xl px-3 py-1.5 bg-white">
+          <Field orientation="horizontal" className="border border-primary/20 rounded-xl px-3 py-1.5 bg-secondary/70">
             <Input
               type="search"
               placeholder="Search products..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="border-none outline-none shadow-none flex-1"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="border-none outline-none shadow-none flex-1 text-white placeholder:text-white"
             />
 
-            {/* Category Select */}
-            <select
-              value={category}
-              onChange={(e) => handleCategoryChange(e.target.value)}
-              className="border-l border-gray-200 pl-3 text-sm text-gray-500 outline-none bg-transparent min-w-32.5 hidden md:block"
-            >
-              <option value="">categories</option>
-              <option value="Export">Export</option>
-              <option value="Import">Import</option>
-            </select>
+            <div className="flex gap-5 sm:static absolute top-15">
+              {/* Category Select */}
+              <Select value={category}
+                onValueChange={(value) =>
+                  handleCategoryChange(value)
+                }>
+                <SelectTrigger
+                  className="flex max-w-32 w-full bg-primary p-2 rounded-lg text-white [&>span]:text-white [&>svg]:text-white border-none"
+                >
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
 
-            {/* Sub Category Select */}
-            <select
-              value={subCategory}
-              onChange={(e) => setSubCategory(e.target.value)}
-              className="border-l border-gray-200 pl-3 text-sm text-gray-500 outline-none bg-transparent min-w-37.5 hidden md:block"
-            >
-              <option value="">categories</option>
-              {(subCats[category] || []).map((s) => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </select>
+                <SelectContent className="bg-primary rounded-xl text-white">
+                  <SelectGroup>
+                    <SelectLabel className="text-white">Select Categories</SelectLabel>
+
+                    {
+                      fetchedCategory.map((cat: {name: string, _id: string, __v: number}) => <SelectItem key={cat._id} value={cat.name} className="rounded-lg">{cat.name}</SelectItem>)
+                    }
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              {/* Sub Category Select */}
+              <Select value={subCategory} onValueChange={(value) => setSubCategory(value)}>
+                <SelectTrigger
+                  className="flex max-w-32 w-full bg-primary p-2 rounded-lg text-white [&>span]:text-white [&>svg]:text-white border-none"
+                >
+                  <SelectValue placeholder="Sub category" />
+                </SelectTrigger>
+
+                <SelectContent className="bg-primary rounded-xl text-white">
+                  <SelectGroup>
+                    <SelectLabel className="text-white">Select Categories</SelectLabel>
+                    {
+                      fetchedSub.map((subCat: { name: string, _id: string, __v: number }) => (
+                        <SelectItem key={subCat._id} value={subCat.name} className="rounded-lg">{subCat.name}</SelectItem>
+                      ))
+                    }
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           </Field>
+        </div>
 
-          {/* All categories for mobile */}
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Category Select for mobile*/}
-            <select
-              value={category}
-              onChange={(e) => handleCategoryChange(e.target.value)}
-              className="border-l border-gray-200 pl-3 text-sm text-gray-500 outline-none bg-transparent min-w-32.5 md:hidden block border rounded-sm py-2"
-            >
-              <option value="">categories</option>
-              <option value="Export">Export</option>
-              <option value="Import">Import</option>
-            </select>
-            {/* Sub Category Select for mobile*/}
-            <select
-              value={subCategory}
-              onChange={(e) => setSubCategory(e.target.value)}
-              className="border-l border-gray-200 pl-3 text-sm text-gray-500 outline-none bg-transparent min-w-37.5 block md:hidden border rounded-sm py-2"
-            >
-              <option value="">sub categories</option>
-              {(subCats[category] || []).map((s) => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </select>
+        {/* table */}
+        {
+          products.data.length === 0 ? <p className="text-center mt-10">No product found</p> : <div className="rounded-xl border border-primary/20 bg-secondary/50 w-full max-w-full overflow-hidden">
+            <div className="overflow-x-auto">
+              <Table className="min-w-max text-sm">
+                <TableHeader>
+                  <TableRow className="bg-primary/5 hover:bg-primary/5">
+                    <TableHead className="font-semibold text-gray-700">
+                      image
+                    </TableHead>
+                    <TableHead className="font-semibold text-gray-700 text-nowrap">
+                      Product Name
+                    </TableHead>
+
+                    <TableHead className="font-semibold text-gray-700 text-nowrap">
+                      Category
+                    </TableHead>
+
+                    <TableHead className="font-semibold text-gray-700 text-nowrap">
+                      Sub Category
+                    </TableHead>
+
+                    <TableHead className="font-semibold text-gray-700 text-nowrap">
+                      Brand
+                    </TableHead>
+
+                    <TableHead className="font-semibold text-gray-700">
+                      Materials
+                    </TableHead>
+
+                    <TableHead className="font-semibold text-gray-700">
+                      Color
+                    </TableHead>
+
+                    <TableHead className="font-semibold text-gray-700">
+                      Size
+                    </TableHead>
+
+                    <TableHead className="font-semibold text-gray-700">
+                      Gender
+                    </TableHead>
+
+                    {
+                      category === "Export" && (
+                        <>
+                          <TableHead className="font-semibold text-gray-700">
+                            MOQ
+                          </TableHead>
+                        </>
+                      )
+                    }
+
+                    {
+                      category === "Import" && (
+                        <>
+                          <TableHead className="font-semibold text-gray-700">
+                            Price
+                          </TableHead>
+
+                          <TableHead className="font-semibold text-gray-700">
+                            Discount price
+                          </TableHead>
+
+                          <TableHead className="font-semibold text-gray-700">
+                            Cost Price
+                          </TableHead>
+
+                          <TableHead className="font-semibold text-gray-700">
+                            Stock
+                          </TableHead>
+
+                          <TableHead className="font-semibold text-gray-700">
+                            Weight
+                          </TableHead>
+
+                          <TableHead className="font-semibold text-gray-700">
+                            Dimensions
+                          </TableHead>
+
+                          <TableHead className="font-semibold text-gray-700">
+                            Warranty
+                          </TableHead>
+
+                          <TableHead className="font-semibold text-gray-700">
+                            Return Policy
+                          </TableHead>
+
+                          <TableHead className="font-semibold text-gray-700">
+                            status
+                          </TableHead>
+
+                          <TableHead className="font-semibold text-gray-700">
+                            Featured
+                          </TableHead>
+                        </>
+                      )
+                    }
+
+                    <TableHead className="text-right font-semibold text-gray-700">
+                      Actions
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+
+                <TableBody>
+                  {products?.data?.map((product: Product) => (
+                    <TableRow
+                      key={product._id}
+                      className="border-primary/10"
+                    >
+
+                      <TableCell className="font-medium text-gray-900">
+                        <Image src={product.thumbnail} alt={product.name.slice(0, 20)} width={100} height={100} className="object-cover w-25 h-25 rounded-2xl"/>
+                      </TableCell>
+                      <TableCell className="font-medium text-gray-900">
+                        {product.name.slice(0, 20)}
+                      </TableCell>
+
+                      <TableCell className="text-gray-600">
+                        {product.category}
+                      </TableCell>
+
+                      <TableCell className="font-medium text-gray-900">
+                        {product.subCategory}
+                      </TableCell>
+
+                      <TableCell className="font-medium text-gray-900">
+                        {product.brand}
+                      </TableCell>
+
+                      <TableCell className="font-medium text-gray-900">
+                        {product.materials.join(" ")}
+                      </TableCell>
+
+                      <TableCell className="font-medium text-gray-900">
+                        {product.color}
+                      </TableCell>
+
+                      <TableCell className="font-medium text-gray-900">
+                        {product.size}
+                      </TableCell>
+
+                      <TableCell className="font-medium text-gray-900">
+                        {product.gender}
+                      </TableCell>
+
+                      {
+                        category === "Export" && (
+                          <TableCell className="font-medium text-gray-900">
+                            {product.moq}
+                          </TableCell>
+                        )
+                      }
+
+
+                      {
+                        category === "Import" && (
+                          <>
+                            <TableCell className="font-medium text-gray-900">
+                              {product.price}
+                            </TableCell>
+
+                            <TableCell className="font-medium text-gray-900">
+                              {product.discountPrice}
+                            </TableCell>
+
+                            <TableCell className="font-medium text-gray-900">
+                              {product.costPrice}
+                            </TableCell>
+
+                            <TableCell className="font-medium text-gray-900">
+                              {product.stock}
+                            </TableCell>
+
+                            <TableCell className="font-medium text-gray-900">
+                              {product.weight}
+                            </TableCell>
+
+                            <TableCell className="font-medium text-gray-900">
+                              {product.dimensions?.length}x{product.dimensions?.width}x{product.dimensions?.height}x{product.dimensions?.unit}
+                            </TableCell>
+
+                            <TableCell className="font-medium text-gray-900">
+                              {product.warranty}
+                            </TableCell>
+
+                            <TableCell className="font-medium text-gray-900">
+                              {product.returnPolicy}
+                            </TableCell>
+
+                            <TableCell className="font-medium text-gray-900">
+                              {product.isActive ? "active" : "disabled"}
+                            </TableCell>
+
+                            <TableCell className="font-medium text-gray-900">
+                              {product.isFeatured ? "True" : "False"}
+                            </TableCell>
+                          </>
+                        )
+                      }
+
+
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-600 transition-colors">
+                            <Eye size={18} />
+                          </button>
+
+                          <button className="p-2 hover:bg-blue-50 rounded-lg text-blue-600 transition-colors">
+                            <Edit2 size={18} />
+                          </button>
+
+                          <button className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-colors">
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">Product Name</th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">Category</th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">Price</th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">Stock</th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
-                <th className="text-right py-3 px-4 font-semibold text-gray-700">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product) => (
-                <tr key={product.id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="py-3 px-4 font-medium text-gray-900">{product.name}</td>
-                  <td className="py-3 px-4 text-gray-600">{product.category}</td>
-                  <td className="py-3 px-4 font-medium text-gray-900">{product.price}</td>
-                  <td className="py-3 px-4">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${product.stock > 0 ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
-                      {product.stock}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${product.status === "Active" ? "bg-blue-50 text-blue-700" : "bg-gray-100 text-gray-700"}`}>
-                      {product.status}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button className="p-2 hover:bg-gray-100 rounded-lg text-gray-600 transition-colors">
-                        <Eye size={18} />
-                      </button>
-                      <button className="p-2 hover:bg-blue-50 rounded-lg text-blue-600 transition-colors">
-                        <Edit2 size={18} />
-                      </button>
-                      <button className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-colors">
-                        <Trash2 size={18} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        }
+        
       </div>
-      <PaginationControls meta={meta}/>
+      {
+        products.data.length !== 0 && <PaginationControls meta={products?.meta} />
+      }
     </div>
   );
 }

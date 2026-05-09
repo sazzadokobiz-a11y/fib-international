@@ -16,18 +16,19 @@ interface PaginationProps {
         total: number;
         page: number;
         limit: number;
-        totalPage: number;
+        totalPages: number;
     }
 }
 
-export function PaginationControls({ meta }: PaginationProps = { meta: { total: 0, page: 1, limit: 10, totalPage: 1 } }) {
-    const { total, page, limit, totalPage } = meta;
+export function PaginationControls({ meta }: PaginationProps = { meta: { total: 0, page: 1, limit: 10, totalPages: 1 } }) {
+    const { total, page, limit, totalPages } = meta;
+
     const { navigateToPage } = useNavigate()
 
     let startPage = Math.max(1, page - 1);
-    const endPage = Math.min(totalPage, startPage + 2);
+    const endPage = Math.min(totalPages, startPage + 2);
 
-    if (endPage - startPage < 2 && totalPage > 2) {
+    if (endPage - startPage < 2 && totalPages > 2) {
         startPage = Math.max(1, endPage - 2);
     }
 
@@ -62,9 +63,9 @@ export function PaginationControls({ meta }: PaginationProps = { meta: { total: 
                     </PaginationItem>
                 ))}
 
-                {endPage < totalPage && (
+                {endPage < totalPages && (
                     <>
-                        {endPage < totalPage - 1 && (
+                        {endPage < totalPages - 1 && (
                             <PaginationItem>
                                 <PaginationEllipsis />
                             </PaginationItem>
@@ -72,10 +73,10 @@ export function PaginationControls({ meta }: PaginationProps = { meta: { total: 
                         <PaginationItem>
                             <Button
                                 variant="ghost"
-                                onClick={() => navigateToPage("page", totalPage)}
+                                onClick={() => navigateToPage("page", totalPages)}
                                 className="bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer"
                             >
-                                {totalPage}
+                                {totalPages}
                             </Button>
                         </PaginationItem>
                     </>
@@ -84,7 +85,7 @@ export function PaginationControls({ meta }: PaginationProps = { meta: { total: 
                 <PaginationItem className="hidden sm:block">
                     <Button
                         onClick={() => navigateToPage("page", page + 1)}
-                        disabled={page === totalPage}
+                        disabled={page === totalPages}
                         variant="ghost"
                         className="bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer"
                     >

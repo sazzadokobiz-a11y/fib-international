@@ -19,12 +19,12 @@ export interface Product {
     stock?: number;
     sku?: string;
     weight?: number;
-    dimensions?: string | { length: number, width: number, height: number, unit: string };
+    dimensions?: { length: number, width: number, height: number, unit: string } | string;
     tags?: string[];
     warranty?: string;
     returnPolicy?: string;
     metaTitle?: string;
     metaDescription?: string;
-    active?: boolean;
-    featured?: boolean;
+    isActive?: boolean;
+    isFeatured?: boolean;
 }

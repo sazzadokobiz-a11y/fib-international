@@ -26,7 +26,7 @@ export function Sidebar() {
             {/* Mobile Menu Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`lg:hidden fixed top-3 left-4 z-50 p-2 bg-primary text-white border border-gray-200 rounded-lg ${isOpen && "left-65"} transition-all`}
+                className={`lg:hidden fixed top-3 left-4 z-50 p-2 bg-primary text-white rounded-lg ${isOpen && "left-65"} transition-all`}
             >
                 {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>

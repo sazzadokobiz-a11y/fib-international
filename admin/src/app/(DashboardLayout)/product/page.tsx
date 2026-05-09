@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PaginationControls } from "@/components/shared/PaginationControls";
 
 const subCats: Record<string, string[]> = {
   Export: ["Garments", "Textiles", "Leather Goods", "Jute Products"],
@@ -11,7 +12,7 @@ const subCats: Record<string, string[]> = {
 };
 
 export default function ProductPage() {
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("Export");
   const [subCategory, setSubCategory] = useState("");
   const [query, setQuery] = useState("");
 
@@ -19,6 +20,8 @@ export default function ProductPage() {
     setCategory(val);
     setSubCategory("");
   };
+
+  const meta = { total: 20, page: 1, limit: 10, totalPage: 10 }
   
   
   const products = [
@@ -57,6 +60,17 @@ export default function ProductPage() {
               className="border-none outline-none shadow-none flex-1"
             />
 
+            {/* Category Select */}
+            <select
+              value={category}
+              onChange={(e) => handleCategoryChange(e.target.value)}
+              className="border-l border-gray-200 pl-3 text-sm text-gray-500 outline-none bg-transparent min-w-32.5 hidden md:block"
+            >
+              <option value="">categories</option>
+              <option value="Export">Export</option>
+              <option value="Import">Import</option>
+            </select>
+
             {/* Sub Category Select */}
             <select
               value={subCategory}
@@ -70,22 +84,8 @@ export default function ProductPage() {
             </select>
           </Field>
 
-          {/* Quick Filter Chips */}
+          {/* All categories for mobile */}
           <div className="flex flex-col md:flex-row gap-4">
-            <div className="md:flex gap-2 hidden">
-              {["All", "Export", "Import"].map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => handleCategoryChange(cat === "All" ? "" : cat)}
-                  className={`px-4 py-1.5 rounded-full text-xs border transition-all ${(cat === "All" && !category) || category === cat
-                    ? "bg-[#5D4037] text-white border-[#5D4037]"
-                    : "bg-white text-gray-500 border-gray-200 hover:border-[#5D4037]"
-                    }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
             {/* Category Select for mobile*/}
             <select
               value={category}
@@ -157,6 +157,7 @@ export default function ProductPage() {
           </table>
         </div>
       </div>
+      <PaginationControls meta={meta}/>
     </div>
   );
 }

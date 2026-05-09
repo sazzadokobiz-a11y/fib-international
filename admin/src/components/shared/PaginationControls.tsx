@@ -1,0 +1,99 @@
+"use client"
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+} from "@/components/ui/pagination";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "../ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "@/hooks/useNavigate";
+
+
+interface PaginationProps {
+    meta: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPage: number;
+    }
+}
+
+export function PaginationControls({ meta }: PaginationProps = { meta: { total: 0, page: 1, limit: 10, totalPage: 1 } }) {
+    const { total, page, limit, totalPage } = meta;
+    const { navigateToPage } = useNavigate()
+
+    console.log(page)
+
+    let startPage = Math.max(1, page - 1);
+    const endPage = Math.min(totalPage, startPage + 2);
+
+    if (endPage - startPage < 2 && totalPage > 2) {
+        startPage = Math.max(1, endPage - 2);
+    }
+
+    const pages = [];
+    for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+    }
+
+    return (
+        <Pagination className="mt-10">
+            <PaginationContent className="bg-fh-cream-dark rounded-md p-1.5">
+                <PaginationItem className="sm:block hidden">
+                    <Button
+                        onClick={() => navigateToPage("page", page - 1)}
+                        variant="ghost"
+                        disabled={page === 1}
+                        className="bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer"
+                    >
+                        <ChevronLeft /> Previous
+                    </Button>
+                </PaginationItem>
+
+                {pages.map((pageNumber) => (
+                    <PaginationItem key={pageNumber}>
+                        <Button
+                            variant="ghost"
+                            onClick={() => navigateToPage("page", pageNumber)}
+                            className={`bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer ${pageNumber === page ? "bg-primary" : ""}`}
+                        >
+                            {pageNumber}
+                        </Button>
+                    </PaginationItem>
+                ))}
+
+                {endPage < totalPage && (
+                    <>
+                        {endPage < totalPage - 1 && (
+                            <PaginationItem>
+                                <PaginationEllipsis />
+                            </PaginationItem>
+                        )}
+                        <PaginationItem>
+                            <Button
+                                variant="ghost"
+                                onClick={() => navigateToPage("page", totalPage)}
+                                className="bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer"
+                            >
+                                {totalPage}
+                            </Button>
+                        </PaginationItem>
+                    </>
+                )}
+
+                <PaginationItem className="hidden sm:block">
+                    <Button
+                        onClick={() => navigateToPage("page", page + 1)}
+                        disabled={page === totalPage}
+                        variant="ghost"
+                        className="bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer"
+                    >
+                        Next <ChevronRight />
+                    </Button>
+                </PaginationItem>
+            </PaginationContent>
+        </Pagination>
+    );
+}

@@ -26,17 +26,17 @@ export function Sidebar() {
             {/* Mobile Menu Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white border border-gray-200 rounded-lg hover:bg-gray-50"
+                className={`lg:hidden fixed top-3 left-4 z-50 p-2 bg-primary text-white border border-gray-200 rounded-lg ${isOpen && "left-65"} transition-all`}
             >
                 {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
             {/* Sidebar */}
-            <aside className={`fixed top-0 left-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col transition-transform duration-300 z-40 ${
-                isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+            <aside className={`fixed top-0 left-0 h-screen w-64 bg-secondary/50 border-r border-primary/20 flex flex-col transition-transform duration-300 z-40 backdrop-blur-2xl ${
+                isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
             }`}>
-                <div className="p-6 border-b border-gray-200">
-                    <h1 className="text-2xl font-bold" style={{ color: "#5D4037" }}>
+                <div className="p-6 border-b border-primary/20">
+                    <h1 className="text-2xl font-bold text-primary">
                         FIB International
                     </h1>
                     <p className="text-sm text-gray-500 mt-1">Admin Panel</p>
@@ -53,21 +53,15 @@ export function Sidebar() {
                                 onClick={() => setIsOpen(false)}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                                     active
-                                        ? "text-[#5D4037] font-semibold shadow-sm"
-                                        : "text-gray-600 hover:bg-gray-50"
+                                        ? "text-white font-semibold shadow-sm bg-primary/50"
+                                    : "text-gray-600 hover:bg-primary/50 hover:text-white"
                                 }`}
-                                style={
-                                    active
-                                        ? { backgroundColor: "rgba(93, 64, 55, 0.1)" }
-                                        : {}
-                                }
                             >
                                 <Icon size={20} />
                                 <span className="flex-1">{item.label}</span>
                                 {active && (
                                     <div
-                                        className="w-2 h-2 rounded-full"
-                                        style={{ backgroundColor: "#5D4037" }}
+                                        className="w-2 h-2 rounded-full bg-primary"
                                     ></div>
                                 )}
                             </Link>
@@ -76,7 +70,7 @@ export function Sidebar() {
                 </nav>
 
                 {/* Footer */}
-                <div className="p-4 border-t border-gray-200 text-xs text-gray-500 text-center">
+                <div className="p-4 border-t border-primary/20 text-xs text-gray-500 text-center">
                     <p>© 2024 FIB International</p>
                 </div>
             </aside>
@@ -84,7 +78,7 @@ export function Sidebar() {
             {/* Mobile Overlay */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+                    className="fixed inset-0 bg-white/70 z-30 lg:hidden backdrop-blur-2xl"
                     onClick={() => setIsOpen(false)}
                 />
             )}

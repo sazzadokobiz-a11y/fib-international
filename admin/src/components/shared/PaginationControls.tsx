@@ -24,8 +24,6 @@ export function PaginationControls({ meta }: PaginationProps = { meta: { total: 
     const { total, page, limit, totalPage } = meta;
     const { navigateToPage } = useNavigate()
 
-    console.log(page)
-
     let startPage = Math.max(1, page - 1);
     const endPage = Math.min(totalPage, startPage + 2);
 

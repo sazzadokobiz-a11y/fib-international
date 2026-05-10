@@ -22,13 +22,15 @@ const addImportProduct = async(req: Request, res: Response, next: NextFunction)=
 
 const getImportProduct = async(req: Request, res: Response, next: NextFunction)=>{
     try {
-        const { search, category } = req.query;
+        const { search, category, subCategory } = req.query;
         const searchString = typeof search === "string" ? search : "";
         const categoryString = typeof category === "string" ? category : "";
+        const subCategoryString = typeof subCategory === "string" ? subCategory : "";
         const { page, skip, limit, sortBy, sortOrder } = paginationSortingHelper(req.query);
         const result = await importProductService.getImportProduct({
             search: searchString,
             category: categoryString,
+            subCategory: subCategoryString,
             page,
             skip,
             limit,

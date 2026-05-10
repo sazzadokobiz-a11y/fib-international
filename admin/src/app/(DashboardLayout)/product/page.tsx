@@ -26,10 +26,11 @@ import {
 import { PaginationControls } from "@/components/shared/PaginationControls";
 import { getAllCategories } from "@/services/category";
 import { getSubCategory } from "@/services/subCategory";
-import { getExportProduct } from "@/services/exportProduct";
+import { deleteExportProduct, getExportProduct } from "@/services/exportProduct";
 import { Product } from "@/types/product";
 import Image from "next/image";
-import { getImportProduct } from "@/services/importProduct";
+import { deleteImportProduct, getImportProduct } from "@/services/importProduct";
+import { toast } from "sonner";
 
 export default function ProductPage() {
   const router = useRouter();
@@ -88,7 +89,7 @@ export default function ProductPage() {
   };
 
 
-  // fetch product data - read directly from searchParams, not from state
+  // fetch product data
   useEffect(()=>{
     const pageNumber = searchParams.get("page") || '1';
     const currentCategory = searchParams.get("category") || "Export";
@@ -105,12 +106,41 @@ export default function ProductPage() {
 
     if(currentCategory === "Import"){
       const fetchProduct = async()=>{
-        const result = await getImportProduct(currentSearch, currentSubCategory, "10", pageNumber)
+        const result = await getImportProduct(currentSearch, currentCategory, currentSubCategory, "10", pageNumber)
         setProducts(result.data)
       }
       fetchProduct()
     }
   }, [searchParams])
+
+
+  const handleDelete = (id: string)=>{
+    const toastId = toast.loading("deleting product...")
+    if(category === "Export"){
+      const deleteProduct = async()=>{
+        const result = await deleteExportProduct(id);
+        if(result.success){
+          toast.success("Product deleted successfully", {id: toastId});
+          const filterDeleteProduct = products?.data?.filter((p: Product) => p._id !== id)
+          setProducts({ data: filterDeleteProduct, meta: products.meta })
+        }
+      }
+      deleteProduct();
+    }
+
+    if(category === "Import"){
+      const deleteProduct = async()=>{
+        const result = await deleteImportProduct(id);
+        if (result.success) {
+          toast.success("Product deleted successfully", { id: toastId });
+          const filterDeleteProduct = products?.data?.filter((p: Product)=> p._id !== id)
+          setProducts({data: filterDeleteProduct, meta: products.meta})
+        }
+      }
+      deleteProduct()
+    }
+  }
+
   
 
   return (
@@ -395,7 +425,7 @@ export default function ProductPage() {
                             <Edit2 size={18} />
                           </Link>}
 
-                          <button className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-colors">
+                          <button onClick={()=>handleDelete(product?._id as string)} className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-colors">
                             <Trash2 size={18} />
                           </button>
                         </div>

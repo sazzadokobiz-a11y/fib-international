@@ -76,7 +76,7 @@ const updateExportProduct = async(id: string, payload: any)=>{
 
 
 const deleteExportProduct = async(id: string)=>{
-    const result = await ExportProduct.findByIdAndDelete(id);
+    const result = await ExportProduct.findByIdAndDelete({_id: id});
     return result;
 }
 

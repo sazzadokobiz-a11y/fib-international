@@ -17,6 +17,7 @@ const addImportProduct = async (payload: any) => {
 const getImportProduct = async ({
     search,
     category,
+    subCategory,
     page,
     skip,
     limit,
@@ -24,6 +25,7 @@ const getImportProduct = async ({
     sortOrder }: {
         search?: string;
         category?: string;
+        subCategory?: string;
         page: number;
         skip: number;
         limit: number;
@@ -38,6 +40,10 @@ const getImportProduct = async ({
 
     if (category) {
         filter.category = { $regex: category, $options: "i" };
+    }
+
+    if(subCategory){
+        filter.subCategory = {$regex: subCategory, $options: "i"};
     }
 
     const sortCondition: any = {};
@@ -74,7 +80,7 @@ const updateImportProduct = async(id: string, payload: any)=>{
 
 
 const deleteImportProduct = async(id: string)=>{
-    const result = await ImportProduct.findByIdAndDelete(id);
+    const result = await ImportProduct.findByIdAndDelete({_id: id});
     return result;
 }
 

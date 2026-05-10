@@ -20,9 +20,9 @@ export const addImportProduct = async(payload: Product)=>{
 
 
 
-export const getImportProduct = async(search: string, category: string, limit: string, page: string)=>{
+export const getImportProduct = async(search: string, category: string, subCategory:string, limit: string, page: string)=>{
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/import-product/get?search=${search}&category=${category}&limit=${limit}&page=${page}`)
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/import-product/get?search=${search}&category=${category}&subCategory=${subCategory}&limit=${limit}&page=${page}`)
         return res.json();
     } catch (error) {
         return {
@@ -66,6 +66,21 @@ export const updateImportProduct = async(id: string, payload: Product)=>{
         return {
             success: false,
             message: "Failed to fetch product data",
+            error: error
+        }
+    }
+}
+
+
+
+export const deleteImportProduct = async(id: string)=>{
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/import-product/delete/${id}`, {method: "DELETE"});
+        return res.json();
+    } catch (error) {
+        return {
+            success: false,
+            message: "Failed to delete product",
             error: error
         }
     }

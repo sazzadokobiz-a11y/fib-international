@@ -48,6 +48,23 @@ const getImportProduct = async(req: Request, res: Response, next: NextFunction)=
 
 
 
+const getImportProductDetail = async(req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const {id} = req.params;
+        const result = await importProductService.getImportProductDetail(id as string)
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Product fetched successfully",
+            data: result
+        })
+    } catch (error) {
+        next()
+    }
+}
+
+
+
 
 const updateImportProduct = async(req: Request, res: Response, next: NextFunction)=>{
     try {
@@ -87,6 +104,7 @@ const deleteImportProduct = async(req: Request, res: Response, next: NextFunctio
 export const importProductController = {
     addImportProduct,
     getImportProduct,
+    getImportProductDetail,
     updateImportProduct,
     deleteImportProduct
 }

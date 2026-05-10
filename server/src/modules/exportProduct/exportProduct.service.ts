@@ -54,6 +54,12 @@ const getExportProduct = async ({
 }
 
 
+const getProductDetail = async(id: string)=>{
+    const result = await ExportProduct.findById({_id: id})
+    return result;
+}
+
+
 
 const updateExportProduct = async(id: string, payload: any)=>{
     const result = await ExportProduct.findByIdAndUpdate(id, payload, {new: true});
@@ -71,6 +77,7 @@ const deleteExportProduct = async(id: string)=>{
 export const exportProductService = {
     addExportProduct,
     getExportProduct,
+    getProductDetail,
     updateExportProduct,
     deleteExportProduct,
 }

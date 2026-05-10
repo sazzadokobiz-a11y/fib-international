@@ -46,6 +46,23 @@ const getExportProduct = async (req: Request, res: Response, next: NextFunction)
 
 
 
+const getProductDetail = async(req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const {id} = req.params
+        const result = await exportProductService.getProductDetail(id as string)
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Product detail fetched successfully",
+            data: result
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+
 
 const updatedExportProduct = async(req: Request, res: Response, next: NextFunction)=>{
     try {
@@ -84,6 +101,7 @@ const deleteExportProduct = async(req: Request, res: Response, next: NextFunctio
 export const exportProductController = {
     addExportProduct,
     getExportProduct,
+    getProductDetail,
     updatedExportProduct,
-    deleteExportProduct
+    deleteExportProduct,
 }

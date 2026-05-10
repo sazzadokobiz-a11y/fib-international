@@ -1,16 +1,16 @@
 export interface Product {
     _id?: number | string;
     name: string;
-    thumbnail: string;
-    images: string[];
+    thumbnail?: string;
+    images?: string[];
     description: string;
     brand: string;
     materials: string[];
     color?: string;
     size?: string;
-    gender: string;
-    category: string;
-    subCategory: string;
+    gender?: string;
+    category?: string;
+    subCategory?: string;
     moq?: number;
     slug?: string;
     price?: number;

@@ -5,7 +5,6 @@ import {
     PaginationEllipsis,
     PaginationItem,
 } from "@/components/ui/pagination";
-import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "@/hooks/useNavigate";

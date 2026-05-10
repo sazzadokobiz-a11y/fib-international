@@ -9,6 +9,9 @@ router.post("/create", exportProductController.addExportProduct);
 router.get("/get-all", exportProductController.getExportProduct);
 
 
+router.get("/get/:id", exportProductController.getProductDetail);
+
+
 router.put("/update/:id", exportProductController.updatedExportProduct);
 
 

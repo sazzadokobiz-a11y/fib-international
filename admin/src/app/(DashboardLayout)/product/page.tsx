@@ -1,7 +1,8 @@
 "use client";
-import { Plus, Edit2, Trash2, Eye } from "lucide-react";
+import { Plus, Edit2, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -29,18 +30,17 @@ import { getExportProduct } from "@/services/exportProduct";
 import { Product } from "@/types/product";
 import Image from "next/image";
 import { getImportProduct } from "@/services/importProduct";
-import { useSearchParams } from "next/navigation";
 
 export default function ProductPage() {
-  const [fetchedCategory, setFetchedCategory] = useState([]);
-  const [category, setCategory] = useState("Export");
-  const [fetchedSub, setFetchedSub] = useState([]);
-  const [subCategory, setSubCategory] = useState("");
-  const [search, setSearch] = useState("");
-  const [products, setProducts] = useState({ data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 1 }});
+  const router = useRouter();
   const searchParams = useSearchParams();
 
-  const pageNumber = searchParams.get("page") || '1'
+  const [fetchedCategory, setFetchedCategory] = useState([]);
+  const [category, setCategory] = useState(() => searchParams.get("category") || "Export");
+  const [fetchedSub, setFetchedSub] = useState([]);
+  const [subCategory, setSubCategory] = useState(() => searchParams.get("subCategory") || "");
+  const [search, setSearch] = useState(() => searchParams.get("search") || "");
+  const [products, setProducts] = useState({ data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 1 }});
 
 
 
@@ -54,6 +54,17 @@ export default function ProductPage() {
   }, [])
 
 
+  // sync state from URL params when URL changes
+  useEffect(() => {
+    const newCategory = searchParams.get("category") || "Export";
+    const newSubCategory = searchParams.get("subCategory") || "";
+    const newSearch = searchParams.get("search") || "";
+    setCategory(newCategory);
+    setSubCategory(newSubCategory);
+    setSearch(newSearch);
+  }, [searchParams])
+
+
   // fetch subCategory
   useEffect(()=>{
     const fetchedSubCategory = async()=>{
@@ -65,29 +76,51 @@ export default function ProductPage() {
 
 
   const handleCategoryChange = (val: string) => {
-    setCategory(val);
-    setSubCategory("");
+    const params = new URLSearchParams(searchParams);
+    params.set("category", val);
+    params.delete("subCategory");
+    params.delete("page");
+    router.push(`?${params.toString()}`);
+  };
+
+  const handleSubCategoryChange = (val: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("subCategory", val);
+    params.delete("page");
+    router.push(`?${params.toString()}`);
+  };
+
+  const handleSearch = (val: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("search", val);
+    params.delete("page");
+    router.push(`?${params.toString()}`);
   };
 
 
-  // fetch product data
+  // fetch product data - read directly from searchParams, not from state
   useEffect(()=>{
-    if(category === "Export"){
+    const pageNumber = searchParams.get("page") || '1';
+    const currentCategory = searchParams.get("category") || "Export";
+    const currentSearch = searchParams.get("search") || "";
+    const currentSubCategory = searchParams.get("subCategory") || "";
+
+    if(currentCategory === "Export"){
       const fetchProduct = async()=>{
-        const result = await getExportProduct(search, subCategory, "10", pageNumber)
+        const result = await getExportProduct(currentSearch, currentCategory, currentSubCategory, "10", pageNumber)
         setProducts(result.data)
       }
       fetchProduct()
     }
 
-    if(category === "Import"){
+    if(currentCategory === "Import"){
       const fetchProduct = async()=>{
-        const result = await getImportProduct(search, subCategory, "10", pageNumber)
+        const result = await getImportProduct(currentSearch, currentSubCategory, "10", pageNumber)
         setProducts(result.data)
       }
       fetchProduct()
     }
-  }, [category, search, subCategory, pageNumber])
+  }, [searchParams])
   
 
   return (
@@ -114,7 +147,7 @@ export default function ProductPage() {
               type="search"
               placeholder="Search products..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
               className="border-none outline-none shadow-none flex-1 text-white placeholder:text-white"
             />
 
@@ -142,7 +175,7 @@ export default function ProductPage() {
               </Select>
 
               {/* Sub Category Select */}
-              <Select value={subCategory} onValueChange={(value) => setSubCategory(value)}>
+              <Select value={subCategory} onValueChange={(value) => handleSubCategoryChange(value)}>
                 <SelectTrigger
                   className="flex max-w-32 w-full bg-primary p-2 rounded-lg text-white [&>span]:text-white [&>svg]:text-white border-none"
                 >
@@ -276,7 +309,7 @@ export default function ProductPage() {
                     >
 
                       <TableCell className="font-medium text-gray-900">
-                        <Image src={product.thumbnail} alt={product.name.slice(0, 20)} width={100} height={100} className="object-cover w-25 h-25 rounded-2xl"/>
+                        <Image src={product?.thumbnail} alt={product.name.slice(0, 20)} width={100} height={100} className="object-cover w-25 h-25 rounded-2xl"/>
                       </TableCell>
                       <TableCell className="font-medium text-gray-900">
                         {product.name.slice(0, 20)}
@@ -368,7 +401,7 @@ export default function ProductPage() {
 
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <Link href={`/product/${product.category.toLowerCase()}/${product._id}`} className="p-2 hover:bg-blue-50 rounded-lg text-blue-600 transition-colors">
+                          <Link href={`/product/${product?.category.toLowerCase()}/${product._id}`} className="p-2 hover:bg-blue-50 rounded-lg text-blue-600 transition-colors">
                             <Edit2 size={18} />
                           </Link>
 

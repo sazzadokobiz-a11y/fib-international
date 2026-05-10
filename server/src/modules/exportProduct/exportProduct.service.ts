@@ -1,3 +1,4 @@
+import { SubCategory } from './../../models/subCategory/subCategorySchema';
 import { ExportProduct } from "../../models/exportProduct/exportProductSchema";
 
 const addExportProduct = async(payload: any)=>{
@@ -11,6 +12,7 @@ const addExportProduct = async(payload: any)=>{
 const getExportProduct = async ({
     search,
     category,
+    subCategory,
     page,
     skip,
     limit,
@@ -18,6 +20,7 @@ const getExportProduct = async ({
     sortOrder}: {
     search?: string;
     category?: string;
+    subCategory?: string;
     page: number;
     skip: number;
     limit: number;
@@ -32,6 +35,10 @@ const getExportProduct = async ({
 
     if(category){
         filter.category = { $regex: category, $options: "i" };
+    }
+
+    if(subCategory){
+        filter.subCategory = {$regex: subCategory, $options: "i"}
     }
 
     const sortCondition: any = {};

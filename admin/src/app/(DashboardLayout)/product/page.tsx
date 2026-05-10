@@ -36,11 +36,12 @@ export default function ProductPage() {
   const searchParams = useSearchParams();
 
   const [fetchedCategory, setFetchedCategory] = useState([]);
-  const [category, setCategory] = useState(() => searchParams.get("category") || "Export");
   const [fetchedSub, setFetchedSub] = useState([]);
-  const [subCategory, setSubCategory] = useState(() => searchParams.get("subCategory") || "");
-  const [search, setSearch] = useState(() => searchParams.get("search") || "");
   const [products, setProducts] = useState({ data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 1 }});
+
+  const category = searchParams.get("category") || "Export";
+  const subCategory = searchParams.get("subCategory") || "";
+  const search = searchParams.get("search") || "";
 
 
 
@@ -52,17 +53,6 @@ export default function ProductPage() {
     }
     fetchCategory()
   }, [])
-
-
-  // sync state from URL params when URL changes
-  useEffect(() => {
-    const newCategory = searchParams.get("category") || "Export";
-    const newSubCategory = searchParams.get("subCategory") || "";
-    const newSearch = searchParams.get("search") || "";
-    setCategory(newCategory);
-    setSubCategory(newSubCategory);
-    setSearch(newSearch);
-  }, [searchParams])
 
 
   // fetch subCategory
@@ -309,7 +299,7 @@ export default function ProductPage() {
                     >
 
                       <TableCell className="font-medium text-gray-900">
-                        <Image src={product?.thumbnail} alt={product.name.slice(0, 20)} width={100} height={100} className="object-cover w-25 h-25 rounded-2xl"/>
+                        {product?.thumbnail && <Image src={product.thumbnail} alt={product.name.slice(0, 20)} width={100} height={100} className="object-cover w-25 h-25 rounded-2xl"/>}
                       </TableCell>
                       <TableCell className="font-medium text-gray-900">
                         {product.name.slice(0, 20)}
@@ -376,7 +366,7 @@ export default function ProductPage() {
                             </TableCell>
 
                             <TableCell className="font-medium text-gray-900">
-                              {product.dimensions?.length}x{product.dimensions?.width}x{product.dimensions?.height}x{product.dimensions?.unit}
+                              {typeof product.dimensions === 'object' ? `${product.dimensions?.length}x${product.dimensions?.width}x${product.dimensions?.height}x${product.dimensions?.unit}` : product.dimensions}
                             </TableCell>
 
                             <TableCell className="font-medium text-gray-900">
@@ -401,9 +391,9 @@ export default function ProductPage() {
 
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <Link href={`/product/${product?.category.toLowerCase()}/${product._id}`} className="p-2 hover:bg-blue-50 rounded-lg text-blue-600 transition-colors">
+                          {product.category && <Link href={`/product/${product.category.toLowerCase()}/${product._id}`} className="p-2 hover:bg-blue-50 rounded-lg text-blue-600 transition-colors">
                             <Edit2 size={18} />
-                          </Link>
+                          </Link>}
 
                           <button className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-colors">
                             <Trash2 size={18} />

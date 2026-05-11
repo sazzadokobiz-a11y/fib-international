@@ -27,6 +27,18 @@ export const addCategory = async(category: {name: string})=>{
 
         return res.json();
     } catch (error) {
-        return { success: false, message: "Error fetching categories", error: error, data: [] }
+        return { success: false, message: "Failed to create categories", error: error, data: [] }
+    }
+}
+
+
+
+export const deleteCategory = async(id: string)=>{
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/delete/${id}`, {method: "DELETE"});
+        return res.json();
+    } catch (error) {
+        console.log(error)
+        return { success: false, message: "Failed to create categories", error: error, data: [] }
     }
 }

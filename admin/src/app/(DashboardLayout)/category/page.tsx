@@ -1,7 +1,7 @@
 "use client"
 import { Input } from "@/components/ui/input";
-import { addCategory, getAllCategories } from "@/services/category";
-import { Plus, Edit2, Trash2 } from "lucide-react";
+import { addCategory, deleteCategory, getAllCategories } from "@/services/category";
+import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -39,13 +39,32 @@ export default function CategoryPage() {
       return
     }
 
-
     try {
       const data = {name: category as string}
       const result = await addCategory(data);
       if (result.success) {
         setCategories([...categories, {...result.data, totalProducts: 0}])
         toast.success("Category created successfully", { id: toastId })
+      }
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        toast.error(error.message, { id: toastId });
+      } else {
+        toast.error("Something went wrong", { id: toastId });
+      }
+    }
+  }
+
+
+  const handleDeleteCategory = async(id: string)=>{
+    const toastId = toast.loading("Deleting category...")
+    try {
+      const result = await deleteCategory(id);
+      if(result.success){
+        toast.success(result.message, {id: toastId})
+        const filterCategory = categories.filter(cat=> cat._id !== id)
+        setCategories(filterCategory)
       }
     } catch (error) {
       console.log(error);
@@ -99,10 +118,7 @@ export default function CategoryPage() {
                   </td>
                   <td className="py-3 px-4 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <button className="p-2 hover:bg-blue-50 rounded-lg text-blue-600 transition-colors">
-                        <Edit2 size={18} />
-                      </button>
-                      <button className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-colors">
+                      <button onClick={()=>handleDeleteCategory(category._id)} className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-colors">
                         <Trash2 size={18} />
                       </button>
                     </div>

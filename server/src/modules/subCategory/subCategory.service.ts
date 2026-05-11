@@ -10,18 +10,28 @@ const createSubCategory = async(payload: {name: string, categoryId: string})=>{
 
 
 
-const getAllSubCategory = async(parentName: string)=>{
-    const filter: any = {};
-
-    if (parentName) {
-        filter.name = { $regex: parentName, $options: "i" };
+const getAllSubCategory = async (parentName?: string) => {
+    if (!parentName) {
+        return await SubCategory.find()
+            .populate("categoryId", "name");
     }
 
-    const parentCategory = await Category.findOne(filter);
+    const parentCategory = await Category.findOne({
+        name: { $regex: parentName, $options: "i" }
+    });
 
-    const result = await SubCategory.find({categoryId: parentCategory?._id});
+    if (!parentCategory) {
+        return [];
+    }
+
+    const result = await SubCategory.find({
+        categoryId: parentCategory._id
+    }).populate("categoryId", "name");
+
     return result;
-}
+};
+
+
 
 
 const updatedSubCategory = async(id: string, payload: {name: string})=>{
@@ -32,7 +42,7 @@ const updatedSubCategory = async(id: string, payload: {name: string})=>{
 
 
 const deleteSubCategory = async(id: string)=>{
-    const result = await SubCategory.findByIdAndDelete(id);
+    const result = await SubCategory.findByIdAndDelete({_id: id});
     return result;
 }
 

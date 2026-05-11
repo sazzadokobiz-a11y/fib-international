@@ -97,38 +97,40 @@ export default function CategoryPage() {
         </form>
       </div>
 
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="text-nowrap">
-              <tr className="border-b border-gray-200">
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">Category Name</th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">Products</th>
-                <th className="text-right py-3 px-4 font-semibold text-gray-700">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {categories.map((category: TCategory) => (
-                <tr key={category?._id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="py-3 px-4 font-medium text-gray-900">{category?.name}</td>
-                  <td className="py-3 px-4 text-gray-600">
-                    <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
-                      {category?.totalProducts}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button onClick={()=>handleDeleteCategory(category._id)} className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-colors">
-                        <Trash2 size={18} />
-                      </button>
-                    </div>
-                  </td>
+      {
+        categories.length === 0 ? <p className="text-center mt-10">No category found</p> : <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="text-nowrap">
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Category Name</th>
+                  <th className="text-left py-3 px-4 font-semibold text-gray-700">Products</th>
+                  <th className="text-right py-3 px-4 font-semibold text-gray-700">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {categories.map((category: TCategory) => (
+                  <tr key={category?._id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="py-3 px-4 font-medium text-gray-900">{category?.name}</td>
+                    <td className="py-3 px-4 text-gray-600">
+                      <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
+                        {category?.totalProducts}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button onClick={() => handleDeleteCategory(category._id)} className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-colors">
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      }
     </div>
   );
 }

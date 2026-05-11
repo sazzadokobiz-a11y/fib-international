@@ -135,7 +135,7 @@ export default function SubCategoryPage() {
       </div>
 
       {categories.length > 0 && (
-        <div className="flex gap-2 items-center">
+        <div className="flex sm:flex-row flex-col gap-2 items-center">
           <label className="text-sm font-medium text-gray-700">Filter by Category:</label>
           <select
             value={selectedFilter}

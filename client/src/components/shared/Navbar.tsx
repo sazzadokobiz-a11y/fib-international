@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import Container from "./Container";
+import Logo from "./Logo";
 
 
 export default function Navbar() {
@@ -33,11 +34,12 @@ export default function Navbar() {
 
     return (
         <nav className="w-full bg-secondary/50 shadow-xl">
-            <Container className="flex items-center justify-between h-16">
+            <Container className="flex items-center justify-between">
 
-                <Link href={'/'} className="text-lg md:text-xl font-bold tracking-tighter text-slate-900 dark:text-white font-headline hover:opacity-80 transition-opacity">
+                {/* <Link href={'/'} className="text-lg md:text-xl font-bold tracking-tighter text-slate-900 dark:text-white font-headline hover:opacity-80 transition-opacity">
                     Family JV International
-                </Link>
+                </Link> */}
+                <Logo/>
 
                 <ul className="hidden md:flex items-center gap-8 font-headline tracking-tight text-sm font-medium text-slate-700 dark:text-slate-200">
                     {Links}

@@ -48,7 +48,7 @@ const deleteCategory = async(id: string)=>{
     if(subCategoryExists){
         throw createHttpError(400, "Category has sub-category, delete sub-category first");
     }
-    const result = await Category.findByIdAndDelete(id);
+    const result = await Category.findByIdAndDelete({_id: id});
     return result;
 }
 

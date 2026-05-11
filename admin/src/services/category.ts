@@ -9,6 +9,24 @@ export const getAllCategories = async()=>{
         return res.json();
     } catch (error) {
         console.log(error);
-        return { success: false, message: "Error fetching categories", data: [] };
+        return { success: false, message: "Error fetching categories", error: error, data: [] };
+    }
+}
+
+
+
+export const addCategory = async(category: {name: string})=>{
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/add`, {
+            method: "POST",
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(category)
+        })
+
+        return res.json();
+    } catch (error) {
+        return { success: false, message: "Error fetching categories", error: error, data: [] }
     }
 }

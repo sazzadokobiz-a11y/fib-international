@@ -1,45 +1,75 @@
-import { Plus, Search, Edit2, Trash2 } from "lucide-react";
+"use client"
+import { Input } from "@/components/ui/input";
+import { addCategory } from "@/services/category";
+import { Plus, Edit2, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function CategoryPage() {
   const categories = [
-    { id: 1, name: "Electronics", description: "Electronic devices and accessories", products: 45 },
-    { id: 2, name: "Furniture", description: "Home and office furniture", products: 32 },
-    { id: 3, name: "Clothing", description: "Men and women apparel", products: 128 },
-    { id: 4, name: "Books", description: "Educational and recreational books", products: 67 },
+    { id: 1, name: "Electronics", products: 45 },
+    { id: 2, name: "Furniture", products: 32 },
+    { id: 3, name: "Clothing", products: 128 },
+    { id: 4, name: "Books", products: 67 },
   ];
+
+
+
+  const handleAddCategory = async (e: React.FormEvent<HTMLFormElement>) =>{
+    e.preventDefault();
+    const toastId = toast.loading("Creating category...")
+    const formData = new FormData(e.currentTarget);
+    const category = formData.get("name");
+
+    if(!category){
+      toast.error("Please input category name", {id: toastId})
+      return
+    }
+
+
+    try {
+      const data = {name: category as string}
+      const result = await addCategory(data);
+      console.log(result);
+      if (result.success) {
+        toast.success("Category created successfully", { id: toastId })
+      }
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        toast.error(error.message, { id: toastId });
+      } else {
+        toast.error("Something went wrong", { id: toastId });
+      }
+    }
+  }
+
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
+      <div className="flex md:flex-row flex-col items-center justify-between lg:pt-0 pt-10">
+        <div className="md:mb-0 mb-10">
           <h1 className="text-3xl font-bold text-gray-900">Categories</h1>
           <p className="text-gray-500 mt-2">Manage product categories</p>
         </div>
-        <button
-          className="flex items-center gap-2 px-4 py-2 rounded-lg text-white font-semibold transition-all hover:opacity-90"
-          style={{ backgroundColor: "#5D4037" }}
-        >
-          <Plus size={20} />
-          Add Category
-        </button>
+        <form onSubmit={handleAddCategory} className="flex sm:flex-row flex-col gap-3 items-center">
+          <Input name="name" placeholder="Add a category" className="border border-primary/20 rounded-lg px-3 bg-slate-100"/>
+          <button
+            type="submit"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg text-white font-semibold transition-all hover:opacity-90 w-64"
+            style={{ backgroundColor: "#5D4037" }}
+          >
+            <Plus size={20} />
+            Add Category
+          </button>
+        </form>
       </div>
 
       <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <div className="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-lg mb-6 max-w-md">
-          <Search size={18} className="text-gray-500" />
-          <input
-            type="text"
-            placeholder="Search categories..."
-            className="bg-transparent outline-none text-sm text-gray-600 w-full"
-          />
-        </div>
-
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead>
+            <thead className="text-nowrap">
               <tr className="border-b border-gray-200">
                 <th className="text-left py-3 px-4 font-semibold text-gray-700">Category Name</th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">Description</th>
                 <th className="text-left py-3 px-4 font-semibold text-gray-700">Products</th>
                 <th className="text-right py-3 px-4 font-semibold text-gray-700">Actions</th>
               </tr>
@@ -48,7 +78,6 @@ export default function CategoryPage() {
               {categories.map((category) => (
                 <tr key={category.id} className="border-b border-gray-100 hover:bg-gray-50">
                   <td className="py-3 px-4 font-medium text-gray-900">{category.name}</td>
-                  <td className="py-3 px-4 text-gray-600">{category.description}</td>
                   <td className="py-3 px-4 text-gray-600">
                     <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
                       {category.products}

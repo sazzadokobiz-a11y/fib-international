@@ -18,7 +18,75 @@ const addCategory = async (payload: {name: string})=>{
 
 
 const getAllCategory = async()=>{
-    const result = await Category.find();
+    const result = await Category.aggregate([
+        {
+            $lookup: {
+                from: "exportproducts",
+                let: { categoryName: "$name" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: ["$category", "$$categoryName"]
+                            }
+                        }
+                    },
+                    {
+                        $count: "total"
+                    }
+                ],
+                as: "exportData"
+            }
+        },
+
+        {
+            $lookup: {
+                from: "importproducts",
+                let: { categoryName: "$name" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $eq: ["$category", "$$categoryName"]
+                            }
+                        }
+                    },
+                    {
+                        $count: "total"
+                    }
+                ],
+                as: "importData"
+            }
+        },
+
+        {
+            $addFields: {
+                totalProducts: {
+                    $add: [
+                        {
+                            $ifNull: [
+                                { $arrayElemAt: ["$exportData.total", 0] },
+                                0
+                            ]
+                        },
+                        {
+                            $ifNull: [
+                                { $arrayElemAt: ["$importData.total", 0] },
+                                0
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+
+        {
+            $project: {
+                exportData: 0,
+                importData: 0
+            }
+        }
+    ]);
     return result;
 }
 

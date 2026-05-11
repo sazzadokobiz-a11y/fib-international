@@ -1,16 +1,30 @@
 "use client"
 import { Input } from "@/components/ui/input";
-import { addCategory } from "@/services/category";
+import { addCategory, getAllCategories } from "@/services/category";
 import { Plus, Edit2, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+
+interface TCategory {
+  _id: string,
+  name: string,
+  totalProducts: number,
+  __v: number,
+}
+
+
 export default function CategoryPage() {
-  const categories = [
-    { id: 1, name: "Electronics", products: 45 },
-    { id: 2, name: "Furniture", products: 32 },
-    { id: 3, name: "Clothing", products: 128 },
-    { id: 4, name: "Books", products: 67 },
-  ];
+  const [categories, setCategories] = useState<TCategory[]>([]);
+
+
+  useEffect(()=>{
+    const getCategories = async ()=>{
+      const result = await getAllCategories();
+      setCategories(result.data)
+    }
+    getCategories();
+  }, [])
 
 
 
@@ -29,8 +43,8 @@ export default function CategoryPage() {
     try {
       const data = {name: category as string}
       const result = await addCategory(data);
-      console.log(result);
       if (result.success) {
+        setCategories([...categories, {...result.data, totalProducts: 0}])
         toast.success("Category created successfully", { id: toastId })
       }
     } catch (error) {
@@ -75,12 +89,12 @@ export default function CategoryPage() {
               </tr>
             </thead>
             <tbody>
-              {categories.map((category) => (
-                <tr key={category.id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="py-3 px-4 font-medium text-gray-900">{category.name}</td>
+              {categories.map((category: TCategory) => (
+                <tr key={category?._id} className="border-b border-gray-100 hover:bg-gray-50">
+                  <td className="py-3 px-4 font-medium text-gray-900">{category?.name}</td>
                   <td className="py-3 px-4 text-gray-600">
                     <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium">
-                      {category.products}
+                      {category?.totalProducts}
                     </span>
                   </td>
                   <td className="py-3 px-4 text-right">

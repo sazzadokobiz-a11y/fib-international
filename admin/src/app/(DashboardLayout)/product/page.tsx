@@ -162,13 +162,13 @@ export default function ProductPage() {
       <div className="relative">
         <div className="flex flex-col gap-3 sm:mb-5 mb-14">
           {/* Search Bar */}
-          <Field orientation="horizontal" className="border border-primary/20 rounded-xl px-3 py-1.5 bg-secondary/70">
+          <Field orientation="horizontal" className="border border-primary/20 rounded-xl px-3 py-1.5 bg-gray-100">
             <Input
               type="search"
               placeholder="Search products..."
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
-              className="border-none outline-none shadow-none flex-1 text-white placeholder:text-white"
+              className="border-none outline-none shadow-none flex-1"
             />
 
             <div className="flex gap-5 sm:static absolute top-15">
@@ -219,7 +219,7 @@ export default function ProductPage() {
 
         {/* table */}
         {
-          products.data.length === 0 ? <p className="text-center mt-10">No product found</p> : <div className="rounded-xl border border-primary/20 bg-secondary/50 w-full max-w-full overflow-hidden">
+          products.data.length === 0 ? <p className="text-center mt-10">No product found</p> : <div className="rounded-xl border border-primary/20 w-full max-w-full overflow-hidden">
             <div className="overflow-x-auto">
               <Table className="min-w-max text-sm">
                 <TableHeader>
@@ -325,7 +325,7 @@ export default function ProductPage() {
                   {products?.data?.map((product: Product) => (
                     <TableRow
                       key={product._id}
-                      className="border-primary/10"
+                      className="border-primary/10 odd:bg-white even:bg-gray-100"
                     >
 
                       <TableCell className="font-medium text-gray-900">

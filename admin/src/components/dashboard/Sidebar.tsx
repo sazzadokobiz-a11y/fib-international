@@ -6,11 +6,11 @@ import { FolderOpen, Grid3x3, ShoppingCart, FileText, MessageSquare, Menu, X } f
 import { useState } from "react";
 
 const navItems = [
-    { label: "Product", href: "/product", icon: ShoppingCart },
     { label: "Order", href: "/order", icon: FileText },
     { label: "Quote", href: "/quote", icon: MessageSquare },
     { label: "Category", href: "/category", icon: FolderOpen },
     { label: "Sub Category", href: "/sub-category", icon: Grid3x3 },
+    { label: "Product", href: "/product", icon: ShoppingCart },
 ];
 
 export function Sidebar() {
@@ -32,7 +32,7 @@ export function Sidebar() {
             </button>
 
             {/* Sidebar */}
-            <aside className={`fixed top-0 left-0 h-screen w-64 bg-secondary/50 border-r border-primary/20 flex flex-col transition-transform duration-300 z-40 backdrop-blur-2xl ${
+            <aside className={`fixed top-0 left-0 h-screen w-64 border-r bg-white border-primary/20 flex flex-col transition-transform duration-300 z-40 ${
                 isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
             }`}>
                 <div className="p-6 border-b border-primary/20">

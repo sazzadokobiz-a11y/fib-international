@@ -12,7 +12,7 @@ type SubCategoryResponse = {
 
 export const getSubCategories = async (parentName: string): Promise<SubCategoryResponse> => {
     try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || process.env.BASE_API_URL;
 
         if (!baseUrl) {
             return { success: false, data: [] };

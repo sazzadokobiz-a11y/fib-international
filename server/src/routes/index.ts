@@ -4,6 +4,9 @@ import { subCategoryRoutes } from '../modules/subCategory/subCategory.route';
 import { exportProductRoute } from '../modules/exportProduct/exportProduct.route';
 import { imageUploadRoute } from '../modules/imageUpload/imageUpload.route';
 import { importProductRoute } from '../modules/importProduct/importProduct.router';
+import { quoteRoute } from '../modules/quote/quote.route';
+import { orderRoute } from '../modules/order/order.route';
+import { dashboardRoute } from '../modules/dashboard/dashboard.route';
 
 const router = Router();
 
@@ -27,6 +30,18 @@ const moduleRoutes = [
     {
         path: "/image-upload",
         route: imageUploadRoute
+    },
+    {
+        path: "/quote",
+        route: quoteRoute
+    },
+    {
+        path: "/order",
+        route: orderRoute
+    },
+    {
+        path: "/dashboard",
+        route: dashboardRoute
     }
 ];
 

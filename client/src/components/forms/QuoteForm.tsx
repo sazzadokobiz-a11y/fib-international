@@ -1,8 +1,11 @@
 'use client'
 
 import React, { useState } from 'react'
+import { submitQuoteRequest } from '@/services/quote'
+import { useToast } from '@/components/shared/ToastProvider'
 
 interface QuoteFormProps {
+    productId: string
     productName: string
     quantity: number
     moq: number
@@ -12,65 +15,82 @@ interface QuoteFormProps {
 
 export interface QuoteFormData {
     fullName: string
-    address: string
+    companyName: string
     country: string
-    mobileNo: string
+    phoneNumber: string
     email: string
-    subject: string
-    description: string
+    message: string
+    requestedQuantity: number
 }
 
 export const QuoteForm: React.FC<QuoteFormProps> = ({
+    productId,
     productName,
     quantity,
     moq,
     onQuantityChange,
     onSubmit
 }) => {
+    const { showToast } = useToast()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [formData, setFormData] = useState<QuoteFormData>({
         fullName: '',
-        address: '',
+        companyName: '',
         country: '',
-        mobileNo: '',
+        phoneNumber: '',
         email: '',
-        subject: '',
-        description: ''
+        message: '',
+        requestedQuantity: quantity
     })
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
         setFormData(prev => ({
             ...prev,
-            [name]: value
+            [name]: name === "requestedQuantity" ? Number(value) : value
         }))
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+
+        if (quantity < moq) {
+            showToast(`Requested quantity must be at least ${moq}`, "error")
+            return
+        }
+
         setIsSubmitting(true)
         try {
-            if (onSubmit) {
-                await onSubmit(formData)
-            } else {
-                // Default behavior - log and show alert
-                console.log('Quote Form Data:', { ...formData, productName, quantity })
-                alert('Quote request submitted successfully! Our team will contact you shortly.')
+            const payload = {
+                ...formData,
+                productId,
+                requestedQuantity: quantity,
             }
 
-            // Reset form
+            if (onSubmit) {
+                await onSubmit(payload)
+            } else {
+                const result = await submitQuoteRequest(payload)
+                if (!result.success) {
+                    throw new Error(result.message || "Failed to submit quote request")
+                }
+
+                showToast("Quote request submitted successfully", "success")
+            }
+
             setFormData({
                 fullName: '',
-                address: '',
+                companyName: '',
                 country: '',
-                mobileNo: '',
+                phoneNumber: '',
                 email: '',
-                subject: '',
-                description: ''
+                message: '',
+                requestedQuantity: moq
             })
+            onQuantityChange(moq)
         } catch (error) {
             console.error('Error submitting form:', error)
-            alert('Error submitting quote request. Please try again.')
+            showToast(error instanceof Error ? error.message : 'Error submitting quote request. Please try again.', "error")
         } finally {
             setIsSubmitting(false)
         }
@@ -90,16 +110,16 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                         value={formData.fullName}
                         onChange={handleInputChange}
                         required
-                        placeholder="Your Name"
+                        placeholder="Full Name"
                         className="px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-primary placeholder-slate-400"
                     />
                     <input
                         type="text"
-                        name="address"
-                        value={formData.address}
+                        name="companyName"
+                        value={formData.companyName}
                         onChange={handleInputChange}
                         required
-                        placeholder="Your Address"
+                        placeholder="Company Name"
                         className="px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-primary placeholder-slate-400"
                     />
                     <input
@@ -117,11 +137,11 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <input
                         type="tel"
-                        name="mobileNo"
-                        value={formData.mobileNo}
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
                         onChange={handleInputChange}
                         required
-                        placeholder="Mobile / WhatsApp"
+                        placeholder="Phone Number"
                         className="px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-primary placeholder-slate-400"
                     />
                     <input
@@ -135,11 +155,9 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                     />
                     <input
                         type="text"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleInputChange}
-                        placeholder="Subject"
-                        className="px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-primary placeholder-slate-400"
+                        value={productName}
+                        readOnly
+                        className="px-4 py-3 border border-slate-300 rounded-lg bg-white/70 text-slate-600 focus:outline-none placeholder-slate-400"
                     />
                 </div>
 
@@ -155,6 +173,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                             <input
                                 type="number"
                                 min={moq}
+                                name="requestedQuantity"
                                 value={quantity}
                                 onChange={(e) => onQuantityChange(Number(e.target.value))}
                                 className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:border-primary text-sm"
@@ -165,11 +184,12 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
 
                 {/* Description */}
                 <textarea
-                    name="description"
-                    value={formData.description}
+                    name="message"
+                    value={formData.message}
                     onChange={handleInputChange}
+                    required
                     rows={4}
-                    placeholder="The product you are interested in, your market or any questions?"
+                    placeholder="Message"
                     className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:border-primary resize-none placeholder-slate-400"
                 />
 

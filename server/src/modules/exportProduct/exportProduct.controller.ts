@@ -63,6 +63,21 @@ const getProductDetail = async(req: Request, res: Response, next: NextFunction)=
     }
 }
 
+const getProductDetailBySlug = async(req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const {slug} = req.params
+        const result = await exportProductService.getProductDetailBySlug(slug as string)
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Product detail fetched successfully",
+            data: result
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 
 
 
@@ -104,6 +119,7 @@ export const exportProductController = {
     addExportProduct,
     getExportProduct,
     getProductDetail,
+    getProductDetailBySlug,
     updatedExportProduct,
     deleteExportProduct,
 }

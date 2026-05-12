@@ -95,7 +95,7 @@ const importProductSchema = new mongoose.Schema({
         default: false
     }
 
-})
+}, { timestamps: true })
 
 
 export const ImportProduct = mongoose.model("importProduct", importProductSchema)

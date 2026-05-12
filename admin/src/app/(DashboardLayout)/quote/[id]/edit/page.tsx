@@ -1,16 +1,13 @@
 import { ChevronLeft, Save, X } from "lucide-react";
 import Link from "next/link";
 
-export async function generateStaticParams() {
-  return [{ id: "1" }, { id: "2" }, { id: "3" }];
-}
-
-export default function EditQuotePage({ params }: { params: { id: string } }) {
+export default async function EditQuotePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link href={`/dashboard/quote/${params.id}`} className="p-2 hover:bg-gray-100 rounded-lg">
+          <Link href={`/quote/${id}`} className="p-2 hover:bg-gray-100 rounded-lg">
             <ChevronLeft size={20} className="text-gray-600" />
           </Link>
           <div>
@@ -85,7 +82,7 @@ export default function EditQuotePage({ params }: { params: { id: string } }) {
                 <Save size={18} />
                 Update Quote
               </button>
-              <Link href={`/dashboard/quote/${params.id}`} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors">
+              <Link href={`/quote/${id}`} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors">
                 <X size={18} />
                 Cancel
               </Link>

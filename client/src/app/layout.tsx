@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
+import { CartProvider } from "@/context/CartContext";
+import { ToastProvider } from "@/components/shared/ToastProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,11 +21,15 @@ export default function RootLayout({
       className="h-full antialiased"
     >
       <body className="min-h-full flex flex-col">
-        <Navbar />
-        <main className="bg-[#fcf9f4]">
-          {children}
-        </main>
-        <Footer />
+        <ToastProvider>
+          <CartProvider>
+            <Navbar />
+            <main className="bg-[#fcf9f4]">
+              {children}
+            </main>
+            <Footer />
+          </CartProvider>
+        </ToastProvider>
       </body>
     </html>
   );

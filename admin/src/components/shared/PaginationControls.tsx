@@ -16,13 +16,22 @@ interface PaginationProps {
         page: number;
         limit: number;
         totalPages: number;
-    }
+    };
+    onPageChange?: (pageNumber: number) => void;
 }
 
-export function PaginationControls({ meta }: PaginationProps = { meta: { total: 0, page: 1, limit: 10, totalPages: 1 } }) {
+export function PaginationControls({ meta, onPageChange }: PaginationProps = { meta: { total: 0, page: 1, limit: 10, totalPages: 1 } }) {
     const { total, page, limit, totalPages } = meta;
 
-    const { navigateToPage } = useNavigate()
+    const { navigateToPage } = useNavigate();
+
+    const handlePageChange = (pageNumber: number) => {
+        if (onPageChange) {
+            onPageChange(pageNumber);
+        } else {
+            navigateToPage("page", pageNumber);
+        }
+    };
 
     let startPage = Math.max(1, page - 1);
     const endPage = Math.min(totalPages, startPage + 2);
@@ -41,7 +50,7 @@ export function PaginationControls({ meta }: PaginationProps = { meta: { total: 
             <PaginationContent className="bg-fh-cream-dark rounded-md p-1.5">
                 <PaginationItem className="sm:block hidden">
                     <Button
-                        onClick={() => navigateToPage("page", page - 1)}
+                        onClick={() => handlePageChange(page - 1)}
                         variant="ghost"
                         disabled={page === 1}
                         className="bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer"
@@ -54,7 +63,7 @@ export function PaginationControls({ meta }: PaginationProps = { meta: { total: 
                     <PaginationItem key={pageNumber}>
                         <Button
                             variant="ghost"
-                            onClick={() => navigateToPage("page", pageNumber)}
+                            onClick={() => handlePageChange(pageNumber)}
                             className={`bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer ${pageNumber === page ? "bg-primary" : ""}`}
                         >
                             {pageNumber}
@@ -72,7 +81,7 @@ export function PaginationControls({ meta }: PaginationProps = { meta: { total: 
                         <PaginationItem>
                             <Button
                                 variant="ghost"
-                                onClick={() => navigateToPage("page", totalPages)}
+                                onClick={() => handlePageChange(totalPages)}
                                 className="bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer"
                             >
                                 {totalPages}
@@ -83,7 +92,7 @@ export function PaginationControls({ meta }: PaginationProps = { meta: { total: 
 
                 <PaginationItem className="hidden sm:block">
                     <Button
-                        onClick={() => navigateToPage("page", page + 1)}
+                        onClick={() => handlePageChange(page + 1)}
                         disabled={page === totalPages}
                         variant="ghost"
                         className="bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer"

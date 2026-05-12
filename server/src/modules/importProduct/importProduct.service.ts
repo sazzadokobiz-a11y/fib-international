@@ -69,6 +69,28 @@ const getImportProductDetail = async(id: string)=>{
     return result;
 }
 
+const getImportProductDetailBySlug = async(slug: string)=>{
+    const product = await ImportProduct.findOne({ slug, isActive: { $ne: false } });
+
+    if (!product) {
+        return null;
+    }
+
+    const relatedProducts = await ImportProduct.find({
+        _id: { $ne: product._id },
+        isActive: { $ne: false },
+        $or: [
+            { category: product.category },
+            { subCategory: product.subCategory }
+        ]
+    }).limit(8);
+
+    return {
+        product,
+        relatedProducts
+    };
+}
+
 
 
 const updateImportProduct = async(id: string, payload: any)=>{
@@ -90,6 +112,7 @@ export const importProductService = {
     addImportProduct,
     getImportProduct,
     getImportProductDetail,
+    getImportProductDetailBySlug,
     updateImportProduct,
     deleteImportProduct
 }

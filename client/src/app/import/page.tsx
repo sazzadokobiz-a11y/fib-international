@@ -1,6 +1,5 @@
-import React from 'react'
 import Container from '@/components/shared/Container'
-import ProductCard from '@/components/cards/ProductCard'
+import ImportProductCard from '@/components/cards/ImportProductCard'
 import {
     InputGroup,
     InputGroupAddon,
@@ -11,18 +10,69 @@ import {
     NativeSelectOption,
 } from "@/components/ui/native-select"
 import { SearchIcon, Globe, Truck, ShieldCheck, Package } from 'lucide-react'
-import { products } from "@/data/products"
 import { getSubCategories, type SubCategory } from '@/services/subCategory';
+import { getImportProducts } from '@/services/product';
+import Link from 'next/link';
 
 export const dynamic = "force-dynamic";
 
-const ImportPage = async () => {
-    const { data: allSubCategories } = await getSubCategories("Import");
+type PageProps = {
+    searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}
+
+const getParam = (params: Record<string, string | string[] | undefined>, key: string) => {
+    const value = params[key];
+    return Array.isArray(value) ? value[0] || "" : value || "";
+}
+
+const getSort = (sort: string) => {
+    switch (sort) {
+        case "price-low":
+            return { sortBy: "price", sortOrder: "asc" as const };
+        case "price-high":
+            return { sortBy: "price", sortOrder: "desc" as const };
+        case "name":
+            return { sortBy: "name", sortOrder: "asc" as const };
+        default:
+            return { sortBy: "createdAt", sortOrder: "desc" as const };
+    }
+}
+
+const createPageHref = (params: Record<string, string>, page: number) => {
+    const nextParams = new URLSearchParams(params);
+    nextParams.set("page", String(page));
+    return `/import?${nextParams.toString()}`;
+}
+
+const ImportPage = async ({ searchParams }: PageProps) => {
+    const resolvedParams = await searchParams || {};
+    const search = getParam(resolvedParams, "search");
+    const subCategory = getParam(resolvedParams, "subCategory");
+    const sort = getParam(resolvedParams, "sort");
+    const page = getParam(resolvedParams, "page") || "1";
+    const sortQuery = getSort(sort);
+
+    const [{ data: allSubCategories }, productResponse] = await Promise.all([
+        getSubCategories("Import"),
+        getImportProducts({
+            search,
+            subCategory,
+            page,
+            limit: 12,
+            ...sortQuery
+        })
+    ]);
+
+    const products = productResponse.data.data;
+    const meta = productResponse.data.meta;
+    const currentQuery = {
+        ...(search ? { search } : {}),
+        ...(subCategory ? { subCategory } : {}),
+        ...(sort ? { sort } : {}),
+    };
 
     return (
         <div className="pb-20">
-
-            {/* HERO */}
             <div className="bg-linear-to-br from-secondary/20 via-secondary/10 to-transparent py-16">
                 <Container>
                     <div className="grid md:grid-cols-2 gap-10 items-center">
@@ -32,7 +82,7 @@ const ImportPage = async () => {
                             </h1>
                             <p className="text-slate-600 mb-6 leading-relaxed">
                                 Source high-quality products from trusted international suppliers.
-                                We streamline logistics, compliance, and delivery—so you can focus on growing your business.
+                                We streamline logistics, compliance, and delivery so you can focus on growing your business.
                             </p>
 
                             <div className="flex gap-6">
@@ -73,42 +123,75 @@ const ImportPage = async () => {
             </div>
 
             <Container>
-
-                {/* FILTER */}
-                <div className="bg-white border shadow-sm rounded-xl p-4 flex flex-col lg:flex-row gap-4 lg:items-center justify-between mt-10">
+                <form action="/import" className="bg-white border shadow-sm rounded-xl p-4 flex flex-col lg:flex-row gap-4 lg:items-center justify-between mt-10">
                     <InputGroup className="w-full lg:max-w-md">
-                        <InputGroupInput placeholder="Search import products..." />
+                        <InputGroupInput name="search" defaultValue={search} placeholder="Search import products..." />
                         <InputGroupAddon>
                             <SearchIcon size={18} />
                         </InputGroupAddon>
                     </InputGroup>
 
-                    <div className="flex gap-3">
-                        <NativeSelect className="bg-gray-50 rounded-lg">
-                            <NativeSelectOption value="">All Categories</NativeSelectOption>
-                            {allSubCategories.map((subCategory: SubCategory) => (
-                                <NativeSelectOption key={subCategory._id} value={subCategory.name.toLowerCase()}>
-                                    {subCategory.name}
+                    <div className="flex flex-col sm:flex-row gap-3">
+                        <NativeSelect name="subCategory" defaultValue={subCategory} className="bg-gray-50 rounded-lg">
+                            <NativeSelectOption value="">All Import Subcategories</NativeSelectOption>
+                            {allSubCategories.map((subCat: SubCategory) => (
+                                <NativeSelectOption key={subCat._id} value={subCat.name}>
+                                    {subCat.name}
                                 </NativeSelectOption>
                             ))}
                         </NativeSelect>
 
-                        <NativeSelect className="bg-gray-50 rounded-lg">
-                            <NativeSelectOption>Sort</NativeSelectOption>
-                            <NativeSelectOption>Latest</NativeSelectOption>
-                            <NativeSelectOption>Price</NativeSelectOption>
+                        <NativeSelect name="sort" defaultValue={sort} className="bg-gray-50 rounded-lg">
+                            <NativeSelectOption value="">Latest</NativeSelectOption>
+                            <NativeSelectOption value="price-low">Price Low</NativeSelectOption>
+                            <NativeSelectOption value="price-high">Price High</NativeSelectOption>
+                            <NativeSelectOption value="name">Name A-Z</NativeSelectOption>
                         </NativeSelect>
+
+                        <button type="submit" className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90">
+                            Filter
+                        </button>
                     </div>
-                </div>
+                </form>
 
-                {/* GRID */}
-                <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
-                    {products.map(product => (
-                        <ProductCard key={product._id} product={product} />
-                    ))}
-                </div>
+                {products.length === 0 ? (
+                    <div className="mt-10 rounded-lg border border-dashed border-gray-300 bg-white py-16 text-center text-gray-500">
+                        No import products found.
+                    </div>
+                ) : (
+                    <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-10">
+                        {products.map(product => (
+                            <ImportProductCard key={product._id} product={product} />
+                        ))}
+                    </div>
+                )}
 
-                {/* HOW IT WORKS */}
+                {meta.totalPages > 1 && (
+                    <div className='mt-10 flex justify-center gap-2 overflow-x-auto'>
+                        <Link
+                            href={createPageHref(currentQuery, Math.max(1, meta.page - 1))}
+                            className={`rounded-lg px-3 py-2 text-sm font-semibold ${meta.page === 1 ? "pointer-events-none bg-gray-200 text-gray-400" : "bg-secondary text-primary"}`}
+                        >
+                            Previous
+                        </Link>
+                        {Array.from({ length: meta.totalPages }, (_, index) => index + 1).map((pageNumber) => (
+                            <Link
+                                key={pageNumber}
+                                href={createPageHref(currentQuery, pageNumber)}
+                                className={`rounded-lg px-3 py-2 text-sm font-semibold ${pageNumber === meta.page ? "bg-primary text-white" : "bg-secondary text-primary"}`}
+                            >
+                                {pageNumber}
+                            </Link>
+                        ))}
+                        <Link
+                            href={createPageHref(currentQuery, Math.min(meta.totalPages, meta.page + 1))}
+                            className={`rounded-lg px-3 py-2 text-sm font-semibold ${meta.page === meta.totalPages ? "pointer-events-none bg-gray-200 text-gray-400" : "bg-secondary text-primary"}`}
+                        >
+                            Next
+                        </Link>
+                    </div>
+                )}
+
                 <div className="mt-20">
                     <h2 className="text-3xl font-semibold text-center mb-10">
                         How Import Works
@@ -120,8 +203,8 @@ const ImportPage = async () => {
                             { icon: Globe, title: "Source Globally" },
                             { icon: Truck, title: "We Ship" },
                             { icon: ShieldCheck, title: "Safe Delivery" },
-                        ].map((step, i) => (
-                            <div key={i} className="p-6 bg-[#f9fafb] rounded-xl hover:shadow-md transition">
+                        ].map((step) => (
+                            <div key={step.title} className="p-6 bg-[#f9fafb] rounded-xl hover:shadow-md transition">
                                 <step.icon className="mx-auto text-secondary mb-3" size={28} />
                                 <h4 className="font-medium">{step.title}</h4>
                             </div>
@@ -129,7 +212,6 @@ const ImportPage = async () => {
                     </div>
                 </div>
 
-                {/* TRUST SECTION */}
                 <div className="mt-20 bg-linear-to-r from-secondary/10 to-transparent p-10 rounded-2xl">
                     <h2 className="text-2xl font-semibold mb-6 text-center">
                         Trusted by Businesses Worldwide
@@ -150,7 +232,6 @@ const ImportPage = async () => {
                         </div>
                     </div>
                 </div>
-
             </Container>
         </div>
     )

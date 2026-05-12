@@ -55,7 +55,7 @@ const exportProductSchema = new mongoose.Schema({
         required: true,
         unique: true
     }
-})
+}, { timestamps: true })
 
 
 export const ExportProduct = mongoose.model("exportProduct", exportProductSchema)

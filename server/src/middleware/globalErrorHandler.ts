@@ -72,8 +72,8 @@ export function errorHandler(error: any, req: Request, res: Response, next: Next
   }
 
   // Custom status code if provided
-  else if (error.status) {
-    statusCode = Number(error.status);
+  else if (error.status || error.statusCode) {
+    statusCode = Number(error.status || error.statusCode);
     message = error.message || "An error occurred";
   }
 

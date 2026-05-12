@@ -19,7 +19,7 @@ export default function Footer() {
                     <div>
                         <h4 className="font-bold text-lg mb-4">Quick Links</h4>
                         <div className="flex flex-col gap-3">
-                            <Link className="text-muted hover:text-amber-400 transition-colors" href={`/shop`}>Shop</Link>
+                            <Link className="text-muted hover:text-amber-400 transition-colors" href={`/import`}>Shop</Link>
                             <Link className="text-muted hover:text-amber-400 transition-colors" href={`/about`}>About Us</Link>
                             <Link className="text-muted hover:text-amber-400 transition-colors" href={`/contact`}>Contact Us</Link>
                         </div>

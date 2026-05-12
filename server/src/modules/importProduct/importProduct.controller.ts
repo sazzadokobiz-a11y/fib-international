@@ -65,6 +65,21 @@ const getImportProductDetail = async(req: Request, res: Response, next: NextFunc
     }
 }
 
+const getImportProductDetailBySlug = async(req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const {slug} = req.params;
+        const result = await importProductService.getImportProductDetailBySlug(slug as string)
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Product fetched successfully",
+            data: result
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 
 
 
@@ -107,6 +122,7 @@ export const importProductController = {
     addImportProduct,
     getImportProduct,
     getImportProductDetail,
+    getImportProductDetailBySlug,
     updateImportProduct,
     deleteImportProduct
 }

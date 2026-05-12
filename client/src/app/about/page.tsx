@@ -19,7 +19,7 @@ const AboutPage = () => {
     return (
         <div className="pb-16">
             {/* HERO */}
-            <div className="bg-gradient-to-br from-secondary/20 via-secondary/10 to-transparent py-12">
+            <div className="bg-linear-to-br from-secondary/20 via-secondary/10 to-transparent py-12">
                 <Container>
                     <div className="text-center max-w-3xl mx-auto">
                         <h1 className="text-4xl md:text-5xl font-bold text-primary mb-3">
@@ -131,7 +131,7 @@ const AboutPage = () => {
                 </div>
 
                 {/* CTA */}
-                <div className="mt-12 text-center bg-gradient-to-r from-secondary/10 to-transparent p-8 rounded-lg">
+                <div className="mt-12 text-center bg-linear-to-r from-secondary/10 to-transparent p-8 rounded-lg">
                     <h2 className="text-2xl font-semibold mb-2">
                         Partner for Global Success
                     </h2>

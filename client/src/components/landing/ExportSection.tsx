@@ -1,6 +1,8 @@
 import React from 'react'
 import Container from '../shared/Container'
 import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 
 const ExportSection = () => {
     return (
@@ -13,10 +15,13 @@ const ExportSection = () => {
                             Premium Export Curations
                         </h2>
                     </div>
-                    <button className="flex items-center gap-2 text-primary font-medium hover:text-secondary transition-colors duration-300 group">
+                    <Link
+                        href="/export"
+                        className="flex items-center gap-2 text-primary font-medium hover:text-secondary transition-colors duration-300 group"
+                    >
                         View All Exports
-                        <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
-                    </button>
+                        <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                    </Link>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {/* Card 1 */}

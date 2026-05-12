@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { Menu, ShoppingCart, X } from "lucide-react";
 import Container from "./Container";
 import Logo from "./Logo";
+import { useCart } from "@/context/CartContext";
 
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const { cartCount } = useCart();
 
     const Links = <>
         <li>
@@ -45,7 +47,15 @@ export default function Navbar() {
                     {Links}
                 </ul>
 
-                <div className="hidden md:block">
+                <div className="hidden md:flex items-center gap-3">
+                    <Link href="/cart" className="relative p-3 rounded-lg bg-white/70 text-primary hover:bg-white transition-all duration-200 cursor-pointer font-medium" aria-label="Cart">
+                        <ShoppingCart size={20} />
+                        {cartCount > 0 && (
+                            <span className="absolute -right-2 -top-2 min-w-5 rounded-full bg-primary px-1.5 py-0.5 text-center text-xs text-white">
+                                {cartCount}
+                            </span>
+                        )}
+                    </Link>
                     <Link href="/request-quote" className="p-3 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all duration-200 cursor-pointer font-medium">
                         Request Quote
                     </Link>
@@ -85,6 +95,14 @@ export default function Navbar() {
                             className="w-full py-2.5 px-6 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all duration-200 cursor-pointer font-medium mt-4"
                         >
                             Request Quote
+                        </Link>
+                        <Link
+                            href="/cart"
+                            onClick={handleLinkClick}
+                            className="flex w-full items-center justify-center gap-2 py-2.5 px-6 rounded-lg border border-primary text-primary hover:bg-primary/10 transition-all duration-200 cursor-pointer font-medium"
+                        >
+                            <ShoppingCart size={18} />
+                            Cart ({cartCount})
                         </Link>
                     </Container>
                 </div>

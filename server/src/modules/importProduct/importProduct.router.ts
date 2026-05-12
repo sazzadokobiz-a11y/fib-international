@@ -8,6 +8,7 @@ router.post("/create", importProductController.addImportProduct);
 
 router.get("/get", importProductController.getImportProduct);
 
+router.get("/slug/:slug", importProductController.getImportProductDetailBySlug);
 
 router.get("/get/:id", importProductController.getImportProductDetail);
 

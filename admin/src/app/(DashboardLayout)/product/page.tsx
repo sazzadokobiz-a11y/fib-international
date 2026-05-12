@@ -2,9 +2,9 @@
 import { Plus, Edit2, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PaginationControls } from "@/components/shared/PaginationControls";
 import {
   Select,
   SelectContent,
@@ -23,7 +23,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PaginationControls } from "@/components/shared/PaginationControls";
 import { getAllCategories } from "@/services/category";
 import { getSubCategory } from "@/services/subCategory";
 import { deleteExportProduct, getExportProduct } from "@/services/exportProduct";
@@ -33,16 +32,13 @@ import { deleteImportProduct, getImportProduct } from "@/services/importProduct"
 import { toast } from "sonner";
 
 export default function ProductPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
   const [fetchedCategory, setFetchedCategory] = useState([]);
   const [fetchedSub, setFetchedSub] = useState([]);
   const [products, setProducts] = useState({ data: [], meta: { total: 0, page: 1, limit: 10, totalPages: 1 }});
-
-  const category = searchParams.get("category") || "Export";
-  const subCategory = searchParams.get("subCategory") || "";
-  const search = searchParams.get("search") || "";
+  const [category, setCategory] = useState("Export");
+  const [subCategory, setSubCategory] = useState("");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState("1");
 
 
 
@@ -67,51 +63,40 @@ export default function ProductPage() {
 
 
   const handleCategoryChange = (val: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("category", val);
-    params.delete("subCategory");
-    params.delete("page");
-    router.push(`?${params.toString()}`);
+    setCategory(val);
+    setSubCategory("");
+    setPage("1");
   };
 
   const handleSubCategoryChange = (val: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("subCategory", val);
-    params.delete("page");
-    router.push(`?${params.toString()}`);
+    setSubCategory(val);
+    setPage("1");
   };
 
   const handleSearch = (val: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("search", val);
-    params.delete("page");
-    router.push(`?${params.toString()}`);
+    setSearch(val);
+    setPage("1");
   };
 
 
   // fetch product data
   useEffect(()=>{
-    const pageNumber = searchParams.get("page") || '1';
-    const currentCategory = searchParams.get("category") || "Export";
-    const currentSearch = searchParams.get("search") || "";
-    const currentSubCategory = searchParams.get("subCategory") || "";
-
-    if(currentCategory === "Export"){
+    if(category === "Export"){
       const fetchProduct = async()=>{
-        const result = await getExportProduct(currentSearch, currentCategory, currentSubCategory, "10", pageNumber)
+        const result = await getExportProduct(search, category, subCategory, "10", page)
         setProducts(result.data)
       }
       fetchProduct()
     }
 
-    if(currentCategory === "Import"){
+    if(category === "Import"){
       const fetchProduct = async()=>{
-        const result = await getImportProduct(currentSearch, currentCategory, currentSubCategory, "10", pageNumber)
+        const result = await getImportProduct(search, category, subCategory, "10", page)
         setProducts(result.data)
       }
       fetchProduct()
     }
-  }, [searchParams])
+  }, [category, page, search, subCategory])
 
 
   const handleDelete = (id: string)=>{
@@ -440,7 +425,9 @@ export default function ProductPage() {
         
       </div>
       {
-        products.data.length !== 0 && <PaginationControls meta={products?.meta} />
+        products.data.length !== 0 && (
+          <PaginationControls meta={products.meta} onPageChange={(pageNumber) => setPage(String(pageNumber))} />
+        )
       }
     </div>
   );

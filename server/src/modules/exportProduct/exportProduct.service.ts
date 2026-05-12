@@ -66,6 +66,27 @@ const getProductDetail = async(id: string)=>{
     return result;
 }
 
+const getProductDetailBySlug = async(slug: string)=>{
+    const product = await ExportProduct.findOne({ slug });
+
+    if (!product) {
+        return null;
+    }
+
+    const relatedProducts = await ExportProduct.find({
+        _id: { $ne: product._id },
+        $or: [
+            { category: product.category },
+            { subCategory: product.subCategory }
+        ]
+    }).limit(8);
+
+    return {
+        product,
+        relatedProducts
+    };
+}
+
 
 
 const updateExportProduct = async(id: string, payload: any)=>{
@@ -85,6 +106,7 @@ export const exportProductService = {
     addExportProduct,
     getExportProduct,
     getProductDetail,
+    getProductDetailBySlug,
     updateExportProduct,
     deleteExportProduct,
 }

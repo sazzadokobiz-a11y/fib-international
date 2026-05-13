@@ -7,6 +7,7 @@ import { importProductRoute } from '../modules/importProduct/importProduct.route
 import { quoteRoute } from '../modules/quote/quote.route';
 import { orderRoute } from '../modules/order/order.route';
 import { dashboardRoute } from '../modules/dashboard/dashboard.route';
+import { authRoute } from '../modules/auth/auth.route';
 
 const router = Router();
 
@@ -42,6 +43,10 @@ const moduleRoutes = [
     {
         path: "/dashboard",
         route: dashboardRoute
+    },
+    {
+        path: "/auth",
+        route: authRoute
     }
 ];
 

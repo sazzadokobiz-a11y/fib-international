@@ -3,11 +3,17 @@
 import { useState, FormEvent } from "react";
 import { Mail, Lock, Eye, EyeOff, LogIn } from "lucide-react";
 import { toast } from "sonner";
-import { loginAdmin } from "@/services/adminLogin";
+import { loginAdmin } from "@/services/admin";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+
 
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -24,6 +30,8 @@ export default function LoginPage() {
       const result = await loginAdmin({email, password});
       if(result.success){
         toast.success("Login successfull", {id: toastId})
+        const redirectTo = searchParams.get("redirect") || "/";
+        router.push(redirectTo);
       }
     } catch (error) {
       console.log(error);

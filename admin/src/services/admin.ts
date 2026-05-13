@@ -21,3 +21,27 @@ export const loginAdmin = async(payload: {email: string, password: string})=>{
         return {success: false, message: "login failed", error: error}
     }
 }
+
+
+
+export const getAdmin = async () => {
+    try {
+        const storeCookie = await cookies();
+        const currentTime = Date.now() / 1000;
+        const token = storeCookie.get("token")?.value
+        let decoded = null;
+        if (token) {
+            decoded = await jwtDecode(token);
+            if (decoded.exp < currentTime) {
+                storeCookie.delete("token");
+                decoded = null;
+                return null
+            }
+            return decoded;
+        } else {
+            return null
+        }
+    } catch (error) {
+        return {success: false, message: "Admin fetch error", error: error}
+    }
+}

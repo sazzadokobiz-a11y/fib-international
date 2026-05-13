@@ -26,6 +26,24 @@ const adminLogin = async(req: Request, res: Response, next: NextFunction)=>{
 }
 
 
+
+const getAdmin = async(req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const {email} = req.admin;
+        const result = await authService.getAdmin(email as string);
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Admin data fetched successfully",
+            data: result
+        })        
+    } catch (error) {
+        next(error)
+    }
+}
+
+
 export const authController = {
-    adminLogin
+    adminLogin,
+    getAdmin
 }

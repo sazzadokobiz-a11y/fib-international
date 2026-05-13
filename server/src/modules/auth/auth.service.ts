@@ -40,6 +40,23 @@ const adminLogin = async(payload: {email: string, password: string})=>{
 }
 
 
+
+const getAdmin = async(email: string)=>{
+    if(!email){
+        throw createHttpError(400, "Email is required");
+    }
+    
+    const result = await Admin.findOne({email: email})
+
+    if (!result) {
+        throw createHttpError(404, "User not found");
+    }
+
+    return result;
+}
+
+
 export const authService = {
-    adminLogin
+    adminLogin,
+    getAdmin
 }

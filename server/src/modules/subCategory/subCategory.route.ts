@@ -1,20 +1,21 @@
 import { Router } from "express";
 import { subCategoryController } from "./subCategory.controller";
+import auth, { AdminRole } from "../../middleware/auth";
 
 const router = Router();
 
 
-router.post("/create", subCategoryController.createSubCategory);
+router.post("/create", auth(AdminRole.ADMIN), subCategoryController.createSubCategory);
 
 
 router.get("/get-all", subCategoryController.getAllSubCategory);
 
 
-router.put("/update/:id", subCategoryController.updatedSubCategory);
+router.put("/update/:id", auth(AdminRole.ADMIN), subCategoryController.updatedSubCategory);
 
 
 
-router.delete("/delete/:id", subCategoryController.deleteSubCategory);
+router.delete("/delete/:id", auth(AdminRole.ADMIN), subCategoryController.deleteSubCategory);
 
 
 export const subCategoryRoutes = router;

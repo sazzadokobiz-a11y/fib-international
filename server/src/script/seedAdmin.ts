@@ -2,10 +2,6 @@ import bcrypt from "bcryptjs";
 import config from "../config";
 import { Admin } from "../models/admin/admin.model";
 
-export interface IAdmin {
-    ADMIN: "ADMIN"
-}
-
 export const seedAdmin = async()=>{
     try {
         if (!config.admin_email){

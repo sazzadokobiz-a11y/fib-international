@@ -1,47 +1,42 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { useState, FormEvent } from "react";
 import { Mail, Lock, Eye, EyeOff, LogIn } from "lucide-react";
-import Link from "next/link";
-
-const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  rememberMe: z.boolean().optional(),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
+import { toast } from "sonner";
+import { loginAdmin } from "@/services/adminLogin";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-  });
 
-  const onSubmit = async (data: LoginFormData) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsLoading(true);
+    const toastId = toast.loading("Please wait...")
+
+    const form = e.currentTarget
+
+    const email = form.email.value;
+    const password = form.password.value;
+
     try {
-      // Simulate API call
-      console.log("Form data:", data);
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const result = await loginAdmin({email, password});
+      if(result.success){
+        toast.success("Login successfull", {id: toastId})
+      }
+    } catch (error) {
+      console.log(error);
+      const err = error as unknown as Error;
+      toast.error(err.message, {id: toastId});
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 to-gray-100 p-4">
       <div className="w-full max-w-md">
-        {/* Card */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
           {/* Header */}
           <div
@@ -49,96 +44,80 @@ export default function LoginPage() {
             style={{ backgroundColor: "#5D4037" }}
           >
             <div>
-              <h1 className="text-3xl font-bold font-heading">FIB International</h1>
+              <h1 className="text-3xl font-bold font-heading">
+                FIB International
+              </h1>
               <p className="text-sm mt-2 opacity-90">Admin Dashboard</p>
             </div>
           </div>
 
           {/* Form */}
           <div className="p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-            <p className="text-gray-500 text-sm mb-8">Sign in to access your admin panel</p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Welcome Back
+            </h2>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-              {/* Email Field */}
+            <p className="text-gray-500 text-sm mb-8">
+              Sign in to access your admin panel
+            </p>
+
+            <form onSubmit={onSubmit} className="space-y-5">
+              {/* Email */}
               <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Email Address
                 </label>
+
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2">
                     <Mail size={18} className="text-gray-400" />
                   </div>
+
                   <input
-                    {...register("email")}
-                    id="email"
                     type="email"
+                    name="email"
                     placeholder="you@example.com"
-                    className={`w-full pl-10 pr-4 py-2 rounded-lg border-2 transition-colors outline-none ${
-                      errors.email
-                        ? "border-red-500 bg-red-50 focus:border-red-500"
-                        : "border-gray-200 bg-gray-50 focus:border-[#5D4037] focus:bg-white"
-                    }`}
+                    required
+                    className="w-full pl-10 pr-4 py-2 rounded-lg border-2 border-gray-200 bg-gray-50 focus:border-[#5D4037] focus:bg-white outline-none transition-colors"
                   />
                 </div>
-                {errors.email && (
-                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
-                    <span>•</span> {errors.email.message}
-                  </p>
-                )}
               </div>
 
-              {/* Password Field */}
+              {/* Password */}
               <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Password
                 </label>
+
                 <div className="relative">
                   <div className="absolute left-3 top-1/2 -translate-y-1/2">
                     <Lock size={18} className="text-gray-400" />
                   </div>
+
                   <input
-                    {...register("password")}
-                    id="password"
                     type={showPassword ? "text" : "password"}
+                    name="password"
                     placeholder="••••••"
-                    className={`w-full pl-10 pr-12 py-2 rounded-lg border-2 transition-colors outline-none ${
-                      errors.password
-                        ? "border-red-500 bg-red-50 focus:border-red-500"
-                        : "border-gray-200 bg-gray-50 focus:border-[#5D4037] focus:bg-white"
-                    }`}
+                    required
+                    className="w-full pl-10 pr-12 py-2 rounded-lg border-2 border-gray-200 bg-gray-50 focus:border-[#5D4037] focus:bg-white outline-none transition-colors"
                   />
+
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    {showPassword ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
                   </button>
                 </div>
-                {errors.password && (
-                  <p className="text-red-500 text-sm mt-1.5 flex items-center gap-1">
-                    <span>•</span> {errors.password.message}
-                  </p>
-                )}
               </div>
 
-              {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    {...register("rememberMe")}
-                    type="checkbox"
-                    className="w-4 h-4 rounded border-gray-300 accent-[#5D4037]"
-                  />
-                  <span className="text-sm text-gray-600">Remember me</span>
-                </label>
-                <Link href="#" className="text-sm font-medium text-[#5D4037] hover:underline">
-                  Forgot password?
-                </Link>
-              </div>
 
-              {/* Submit Button */}
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={isLoading}
@@ -169,4 +148,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

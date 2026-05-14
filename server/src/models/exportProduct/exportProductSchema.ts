@@ -54,6 +54,9 @@ const exportProductSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true
+    },
+    stock: {
+        type: Number,
     }
 }, { timestamps: true })
 

@@ -9,7 +9,8 @@ const getDashboardStats = async()=>{
         totalExportProducts,
         totalImportProducts,
         salesAggregate,
-        stockByCategory,
+        importStockByCategory,
+        exportStockByCategory,
         stockBySubCategory
     ] = await Promise.all([
         Order.countDocuments(),
@@ -24,11 +25,17 @@ const getDashboardStats = async()=>{
             { $group: { _id: "$category", stock: { $sum: { $ifNull: ["$stock", 0] } } } },
             { $sort: { stock: -1 } }
         ]),
+        ExportProduct.aggregate([
+            { $group: { _id: "$category", stock: { $sum: { $ifNull: ["$stock", 0] } } } },
+            { $sort: { stock: -1 } }
+        ]),
         ImportProduct.aggregate([
             { $group: { _id: "$subCategory", stock: { $sum: { $ifNull: ["$stock", 0] } } } },
             { $sort: { stock: -1 } }
         ])
     ]);
+
+    const stockByCategory = mergeStockData(importStockByCategory, exportStockByCategory);
 
     return {
         totalOrders,
@@ -39,6 +46,22 @@ const getDashboardStats = async()=>{
         stockByCategory: stockByCategory.map((item) => ({ label: item._id || "Uncategorized", value: item.stock })),
         stockBySubCategory: stockBySubCategory.map((item) => ({ label: item._id || "Uncategorized", value: item.stock }))
     };
+}
+
+const mergeStockData = (importData: any[], exportData: any[]) => {
+    const merged: { [key: string]: number } = {};
+
+    importData.forEach(item => {
+        const key = item._id || "Uncategorized";
+        merged[key] = (merged[key] || 0) + item.stock;
+    });
+
+    exportData.forEach(item => {
+        const key = item._id || "Uncategorized";
+        merged[key] = (merged[key] || 0) + item.stock;
+    });
+
+    return Object.entries(merged).map(([_id, stock]) => ({ _id, stock })).sort((a, b) => b.stock - a.stock);
 }
 
 export const dashboardService = {

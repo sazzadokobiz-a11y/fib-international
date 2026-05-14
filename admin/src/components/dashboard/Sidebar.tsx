@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FolderOpen, Grid3x3, ShoppingCart, FileText, MessageSquare, Menu, X } from "lucide-react";
+import { LayoutDashboard, FolderOpen, Grid3x3, ShoppingCart, FileText, MessageSquare, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
+    {label: "Dashboard", href: "/", icon: LayoutDashboard},
     { label: "Order", href: "/order", icon: FileText },
     { label: "Quote", href: "/quote", icon: MessageSquare },
     { label: "Category", href: "/category", icon: FolderOpen },

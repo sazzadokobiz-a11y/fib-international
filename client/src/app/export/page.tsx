@@ -12,7 +12,7 @@ import {
 import { SearchIcon } from 'lucide-react';
 import { getSubCategories } from '@/services/subCategory';
 import { getExportProducts } from '@/services/product';
-import Link from 'next/link';
+import { PaginationControls } from '@/components/shared/PaginationControls';
 
 export const dynamic = "force-dynamic";
 
@@ -36,12 +36,6 @@ const getSort = (sort: string) => {
     }
 }
 
-const createPageHref = (params: Record<string, string>, page: number) => {
-    const nextParams = new URLSearchParams(params);
-    nextParams.set("page", String(page));
-    return `/export?${nextParams.toString()}`;
-}
-
 const ExportPage = async ({ searchParams }: PageProps) => {
     const resolvedParams = await searchParams || {};
     const search = getParam(resolvedParams, "search");
@@ -63,11 +57,6 @@ const ExportPage = async ({ searchParams }: PageProps) => {
 
     const products = productResponse.data.data;
     const meta = productResponse.data.meta;
-    const currentQuery = {
-        ...(search ? { search } : {}),
-        ...(subCategory ? { subCategory } : {}),
-        ...(sort ? { sort } : {}),
-    };
 
     return (
         <div className='pb-10'>
@@ -127,29 +116,7 @@ const ExportPage = async ({ searchParams }: PageProps) => {
                 )}
 
                 {meta.totalPages > 1 && (
-                    <div className='mt-10 flex justify-center gap-2 overflow-x-auto'>
-                        <Link
-                            href={createPageHref(currentQuery, Math.max(1, meta.page - 1))}
-                            className={`rounded-lg px-3 py-2 text-sm font-semibold ${meta.page === 1 ? "pointer-events-none bg-gray-200 text-gray-400" : "bg-secondary text-primary"}`}
-                        >
-                            Previous
-                        </Link>
-                        {Array.from({ length: meta.totalPages }, (_, index) => index + 1).map((pageNumber) => (
-                            <Link
-                                key={pageNumber}
-                                href={createPageHref(currentQuery, pageNumber)}
-                                className={`rounded-lg px-3 py-2 text-sm font-semibold ${pageNumber === meta.page ? "bg-primary text-white" : "bg-secondary text-primary"}`}
-                            >
-                                {pageNumber}
-                            </Link>
-                        ))}
-                        <Link
-                            href={createPageHref(currentQuery, Math.min(meta.totalPages, meta.page + 1))}
-                            className={`rounded-lg px-3 py-2 text-sm font-semibold ${meta.page === meta.totalPages ? "pointer-events-none bg-gray-200 text-gray-400" : "bg-secondary text-primary"}`}
-                        >
-                            Next
-                        </Link>
-                    </div>
+                    <PaginationControls meta={meta} href='/export' />
                 )}
 
                 {products.length > 0 && (
@@ -167,7 +134,7 @@ const ExportPage = async ({ searchParams }: PageProps) => {
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-                                {products.slice(0, 5).map(product => (
+                                {products.slice(products.length - 5, products.length).map(product => (
                                     <div key={product._id} className="scale-[0.97] hover:scale-100 transition">
                                         <ProductCard product={product} />
                                     </div>

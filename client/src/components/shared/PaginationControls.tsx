@@ -48,13 +48,13 @@ export function PaginationControls({ meta, onPageChange, href }: PaginationProps
 
     return (
         <Pagination className="mt-10">
-            <PaginationContent className="bg-fh-cream-dark rounded-md p-1.5">
+            <PaginationContent>
                 <PaginationItem className="sm:block hidden">
                     <Button
                         onClick={() => handlePageChange(page - 1)}
                         variant="ghost"
                         disabled={page === 1}
-                        className="bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer"
+                        className="bg-secondary hover:bg-primary rounded-md text-white hover:text-white cursor-pointer"
                     >
                         <ChevronLeft /> Previous
                     </Button>
@@ -65,7 +65,7 @@ export function PaginationControls({ meta, onPageChange, href }: PaginationProps
                         <Button
                             variant="ghost"
                             onClick={() => handlePageChange(pageNumber)}
-                            className={`bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer ${pageNumber === page ? "bg-primary" : ""}`}
+                            className={`bg-secondary hover:bg-primary rounded-md text-white hover:text-white cursor-pointer ${pageNumber === page ? "bg-primary" : ""}`}
                         >
                             {pageNumber}
                         </Button>
@@ -83,7 +83,7 @@ export function PaginationControls({ meta, onPageChange, href }: PaginationProps
                             <Button
                                 variant="ghost"
                                 onClick={() => handlePageChange(totalPages)}
-                                className="bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer"
+                                className="bg-secondary hover:bg-primary rounded-md text-white hover:text-white cursor-pointer"
                             >
                                 {totalPages}
                             </Button>
@@ -96,7 +96,7 @@ export function PaginationControls({ meta, onPageChange, href }: PaginationProps
                         onClick={() => handlePageChange(page + 1)}
                         disabled={page === totalPages}
                         variant="ghost"
-                        className="bg-secondary hover:bg-primary rounded-xl text-white hover:text-white cursor-pointer"
+                        className="bg-secondary hover:bg-primary rounded-md text-white hover:text-white cursor-pointer"
                     >
                         Next <ChevronRight />
                     </Button>

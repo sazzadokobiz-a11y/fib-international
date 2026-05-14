@@ -37,17 +37,13 @@ export default function Navbar() {
     return (
         <nav className="w-full bg-secondary/50 shadow-xl">
             <Container className="flex items-center justify-between">
-
-                {/* <Link href={'/'} className="text-lg md:text-xl font-bold tracking-tighter text-slate-900 dark:text-white font-headline hover:opacity-80 transition-opacity">
-                    Family JV International
-                </Link> */}
                 <Logo/>
 
                 <ul className="hidden md:flex items-center gap-8 font-headline tracking-tight text-sm font-medium text-slate-700 dark:text-slate-200">
                     {Links}
                 </ul>
 
-                <div className="hidden md:flex items-center gap-3">
+                <div className="flex items-center gap-3">
                     <Link href="/cart" className="relative p-3 rounded-lg bg-white/70 text-primary hover:bg-white transition-all duration-200 cursor-pointer font-medium" aria-label="Cart">
                         <ShoppingCart size={20} />
                         {cartCount > 0 && (
@@ -56,18 +52,18 @@ export default function Navbar() {
                             </span>
                         )}
                     </Link>
-                    <Link href="/request-quote" className="p-3 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all duration-200 cursor-pointer font-medium">
+                    <Link href="/request-quote" className="hidden md:block p-3 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all duration-200 cursor-pointer font-medium">
                         Request Quote
                     </Link>
+                    <button
+                        className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors duration-200"
+                        onClick={() => setIsOpen(!isOpen)}
+                        aria-label="Toggle menu"
+                    >
+                        {isOpen ? <X size={24} className="text-slate-900 dark:text-white" /> : <Menu size={24} className="text-slate-900 dark:text-white" />}
+                    </button>
                 </div>
 
-                <button
-                    className="md:hidden p-2 hover:bg-muted rounded-lg transition-colors duration-200"
-                    onClick={() => setIsOpen(!isOpen)}
-                    aria-label="Toggle menu"
-                >
-                    {isOpen ? <X size={24} className="text-slate-900 dark:text-white" /> : <Menu size={24} className="text-slate-900 dark:text-white" />}
-                </button>
             </Container>
 
             {isOpen && (
@@ -95,14 +91,6 @@ export default function Navbar() {
                             className="w-full py-2.5 px-6 rounded-lg bg-primary text-white hover:bg-primary/90 transition-all duration-200 cursor-pointer font-medium mt-4"
                         >
                             Request Quote
-                        </Link>
-                        <Link
-                            href="/cart"
-                            onClick={handleLinkClick}
-                            className="flex w-full items-center justify-center gap-2 py-2.5 px-6 rounded-lg border border-primary text-primary hover:bg-primary/10 transition-all duration-200 cursor-pointer font-medium"
-                        >
-                            <ShoppingCart size={18} />
-                            Cart ({cartCount})
                         </Link>
                     </Container>
                 </div>

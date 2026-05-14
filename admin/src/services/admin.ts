@@ -45,3 +45,9 @@ export const getAdmin = async () => {
         return {success: false, message: "Admin fetch error", error: error}
     }
 }
+
+
+export const adminLogOut = async () => {
+    const storeCookie = await cookies();
+    storeCookie.delete("token");
+}

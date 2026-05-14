@@ -1,4 +1,6 @@
+"use server"
 import type { OrderListResponse, OrderStatus } from "@/types/order";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -24,9 +26,8 @@ export const getOrders = async(query: {
         if (!baseUrl) {
             return { success: false, data: fallbackList };
         }
-
         const params = new URLSearchParams(query);
-        const res = await fetch(`${baseUrl}/order/get?${params.toString()}`, {
+        const res = await fetchWithAuth(`${baseUrl}/order/get?${params.toString()}`, {
             cache: "no-store"
         });
         return res.json();
@@ -42,7 +43,7 @@ export const getOrders = async(query: {
 
 export const getOrderDetail = async(id: string)=>{
     try {
-        const res = await fetch(`${baseUrl}/order/${id}`, {
+        const res = await fetchWithAuth(`${baseUrl}/order/${id}`, {
             cache: "no-store"
         });
         return res.json();
@@ -53,11 +54,8 @@ export const getOrderDetail = async(id: string)=>{
 
 export const updateOrderStatus = async(id: string, status: OrderStatus)=>{
     try {
-        const res = await fetch(`${baseUrl}/order/status/${id}`, {
+        const res = await fetchWithAuth(`${baseUrl}/order/status/${id}`, {
             method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify({ status })
         });
         return res.json();
@@ -68,7 +66,7 @@ export const updateOrderStatus = async(id: string, status: OrderStatus)=>{
 
 export const sendOrderToCourier = async(id: string)=>{
     try {
-        const res = await fetch(`${baseUrl}/order/send-courier/${id}`, {
+        const res = await fetchWithAuth(`${baseUrl}/order/send-courier/${id}`, {
             method: "POST"
         });
         return res.json();

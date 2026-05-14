@@ -1,3 +1,6 @@
+"use server"
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
+
 export const getSubCategory = async(parentCategory: string)=>{
     try {
         const baseUrl: string | undefined = process.env.NEXT_PUBLIC_API_URL;
@@ -5,7 +8,7 @@ export const getSubCategory = async(parentCategory: string)=>{
             console.log(baseUrl)
             return { success: false, message: "Base API URL not configured", data: [] };
         }
-        const res = await fetch(`${baseUrl}/sub-category/get-all?parent=${parentCategory}`);
+        const res = await fetch(`${baseUrl}/sub-category/get-all?parent=${parentCategory}`, {cache: "no-store"});
         return res.json();
     } catch (error) {
         console.log(error);
@@ -16,11 +19,8 @@ export const getSubCategory = async(parentCategory: string)=>{
 
 export const addSubCategory = async(subCategory: {name: string, categoryId: string})=>{
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/sub-category/create`, {
+        const res = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/sub-category/create`, {
             method: "POST",
-            "headers": {
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify(subCategory)
         })
 
@@ -33,7 +33,9 @@ export const addSubCategory = async(subCategory: {name: string, categoryId: stri
 
 export const deleteSubCategory = async(id: string)=>{
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/sub-category/delete/${id}`, {method: "DELETE"});
+        const res = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/sub-category/delete/${id}`, {
+            method: "DELETE"
+        });
         return res.json();
     } catch (error) {
         console.log(error)

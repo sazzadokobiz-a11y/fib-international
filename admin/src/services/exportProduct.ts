@@ -1,12 +1,11 @@
+"use server"
 import { Product } from "@/types/product";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 export const addExportProduct = async (data: Product)=>{
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/export-product/create`, {
+        const res = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/export-product/create`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
             body: JSON.stringify(data)
         })
         return res.json()
@@ -24,7 +23,7 @@ export const addExportProduct = async (data: Product)=>{
 
 export const getExportProduct = async(search: string, category: string, subCategory: string, limit: string, page: string)=>{
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/export-product/get-all?search=${search}&category=${category}&subCategory=${subCategory}&limit=${limit}&page=${page}`)
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/export-product/get-all?search=${search}&category=${category}&subCategory=${subCategory}&limit=${limit}&page=${page}`, { cache: "no-store"})
         return res.json();
     } catch (error) {
         return {
@@ -39,7 +38,7 @@ export const getExportProduct = async(search: string, category: string, subCateg
 
 export const getExportProductDetail = async(id: string)=>{
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/export-product/get/${id}`)
+        const res = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/export-product/get/${id}`)
         return res.json();
     } catch (error) {
         return {
@@ -54,11 +53,8 @@ export const getExportProductDetail = async(id: string)=>{
 
 export const updateExportProduct = async(id: string, payload: Product)=>{
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/export-product/update/${id}`, {
+        const res = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/export-product/update/${id}`, {
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify(payload)
         })
         return res.json();
@@ -75,7 +71,9 @@ export const updateExportProduct = async(id: string, payload: Product)=>{
 
 export const deleteExportProduct = async(id: string)=>{
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/export-product/delete/${id}`, {method: "DELETE"})
+        const res = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/export-product/delete/${id}`, {
+            method: "DELETE"
+        })
         return res.json()
     } catch (error) {
         return {

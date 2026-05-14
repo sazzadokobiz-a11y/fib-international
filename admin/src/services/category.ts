@@ -1,3 +1,6 @@
+"use server"
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
+
 export const getAllCategories = async()=>{
     try {
         const baseUrl: string | undefined = process.env.NEXT_PUBLIC_API_URL;
@@ -17,11 +20,8 @@ export const getAllCategories = async()=>{
 
 export const addCategory = async(category: {name: string})=>{
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/add`, {
+        const res = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/category/add`, {
             method: "POST",
-            "headers": {
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify(category)
         })
 
@@ -35,7 +35,9 @@ export const addCategory = async(category: {name: string})=>{
 
 export const deleteCategory = async(id: string)=>{
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category/delete/${id}`, {method: "DELETE"});
+        const res = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/category/delete/${id}`, {
+            method: "DELETE"
+        });
         return res.json();
     } catch (error) {
         console.log(error)

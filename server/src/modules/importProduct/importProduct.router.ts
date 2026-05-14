@@ -11,7 +11,7 @@ router.get("/get", importProductController.getImportProduct);
 
 router.get("/slug/:slug", importProductController.getImportProductDetailBySlug);
 
-router.get("/get/:id", importProductController.getImportProductDetail);
+router.get("/get/:id", auth(AdminRole.ADMIN), importProductController.getImportProductDetail);
 
 
 router.put("/update/:id", auth(AdminRole.ADMIN), importProductController.updateImportProduct);

@@ -11,7 +11,7 @@ router.get("/get-all", exportProductController.getExportProduct);
 
 router.get("/slug/:slug", exportProductController.getProductDetailBySlug);
 
-router.get("/get/:id", exportProductController.getProductDetail);
+router.get("/get/:id", auth(AdminRole.ADMIN), exportProductController.getProductDetail);
 
 
 router.put("/update/:id", auth(AdminRole.ADMIN), exportProductController.updatedExportProduct);

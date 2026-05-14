@@ -1,8 +1,11 @@
 "use client";
-import { Bell, User } from "lucide-react";
+import { Bell } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getUnreadQuoteCount, markAllQuotesRead } from "@/services/quote";
+import { Button } from "../ui/button";
+import { adminLogOut } from "@/services/admin";
+import { toast } from "sonner";
 
 export function Header() {
     const router = useRouter();
@@ -27,6 +30,13 @@ export function Header() {
         router.push("/quote");
     }
 
+
+    const handleLogout = ()=>{
+        adminLogOut();
+        toast.success("Log out successfull")
+        router.push("/login")
+    }
+
     return (
         <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-end px-4 md:px-6 sticky top-0 z-30 backdrop-blur-2xl">
             <div className="flex items-center gap-2 md:gap-4">
@@ -39,10 +49,7 @@ export function Header() {
                     )}
                 </button>
                 <div className="flex items-center gap-2 md:gap-3 pl-2 md:pl-4 border-l border-primary/20">
-                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
-                        <User size={18} className="text-white" />
-                    </div>
-                    <span className="hidden sm:block text-sm font-medium text-gray-700">Admin</span>
+                    <Button onClick={handleLogout} className="cursor-pointer rounded-xl">Log out</Button>
                 </div>
             </div>
         </header>

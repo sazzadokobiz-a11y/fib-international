@@ -1,4 +1,6 @@
+"use server"
 import type { QuoteListResponse, QuoteStatus } from "@/types/quote";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -25,7 +27,7 @@ export const getQuotes = async(search: string, status: string, limit: string, pa
             page
         });
 
-        const res = await fetch(`${baseUrl}/quote/get?${params.toString()}`, {
+        const res = await fetchWithAuth(`${baseUrl}/quote/get?${params.toString()}`, {
             cache: "no-store"
         });
         return res.json();
@@ -41,7 +43,7 @@ export const getQuotes = async(search: string, status: string, limit: string, pa
 
 export const getQuoteDetail = async(id: string)=>{
     try {
-        const res = await fetch(`${baseUrl}/quote/${id}`, {
+        const res = await fetchWithAuth(`${baseUrl}/quote/${id}`, {
             cache: "no-store"
         });
         return res.json();
@@ -52,11 +54,8 @@ export const getQuoteDetail = async(id: string)=>{
 
 export const updateQuoteStatus = async(id: string, status: QuoteStatus)=>{
     try {
-        const res = await fetch(`${baseUrl}/quote/status/${id}`, {
+        const res = await fetchWithAuth(`${baseUrl}/quote/status/${id}`, {
             method: "PATCH",
-            headers: {
-                "Content-Type": "application/json"
-            },
             body: JSON.stringify({ status })
         });
         return res.json();
@@ -67,7 +66,7 @@ export const updateQuoteStatus = async(id: string, status: QuoteStatus)=>{
 
 export const getUnreadQuoteCount = async()=>{
     try {
-        const res = await fetch(`${baseUrl}/quote/unread-count`, {
+        const res = await fetchWithAuth(`${baseUrl}/quote/unread-count`, {
             cache: "no-store"
         });
         return res.json();
@@ -78,7 +77,7 @@ export const getUnreadQuoteCount = async()=>{
 
 export const markAllQuotesRead = async()=>{
     try {
-        const res = await fetch(`${baseUrl}/quote/mark-all-read`, {
+        const res = await fetchWithAuth(`${baseUrl}/quote/mark-all-read`, {
             method: "PATCH"
         });
         return res.json();

@@ -8,6 +8,7 @@ import { quoteRoute } from '../modules/quote/quote.route';
 import { orderRoute } from '../modules/order/order.route';
 import { dashboardRoute } from '../modules/dashboard/dashboard.route';
 import { authRoute } from '../modules/auth/auth.route';
+import { contactRoute } from '../modules/contact/contact.route';
 
 const router = Router();
 
@@ -47,6 +48,10 @@ const moduleRoutes = [
     {
         path: "/auth",
         route: authRoute
+    },
+    {
+        path: "/contact",
+        route: contactRoute
     }
 ];
 

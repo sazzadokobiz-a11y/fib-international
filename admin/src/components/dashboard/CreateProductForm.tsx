@@ -404,21 +404,21 @@ export function CreateProductForm() {
                       />
                     </div>
                   </div>
-                  {/* stock & tags */}
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Tags</label>
-                      <input
-                        type="text"
-                        name="tags"
-                        required
-    
-    
-                        placeholder="Enter tags separated by commas"
-                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
-                      />
-                    </div>
+                  
+                  {/* tags */}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Tags</label>
+                    <input
+                      type="text"
+                      name="tags"
+                      required
+
+
+                      placeholder="Enter tags separated by commas"
+                      className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
+                    />
                   </div>
+
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">Warranty</label>

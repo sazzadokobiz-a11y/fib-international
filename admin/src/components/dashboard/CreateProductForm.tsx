@@ -298,13 +298,26 @@ export function CreateProductForm() {
                     <option value="unisex">Unisex</option>
                   </select>
                 </div>
+                {/* Stock value */}
+                <div className="w-full">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Stock value *</label>
+                  <input
+                    type="number"
+                    name="stock"
+                    required
+
+
+                    placeholder="0"
+                    className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
+                  />
+                </div>
 
                 {/* Export Only Fields */}
                 {category === "Export" && (
                   <>
                     <div className="w-full">
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        MOQ (Minimum Order Qty) *
+                        MOQ *
                       </label>
                       <input
                         type="number"
@@ -394,18 +407,6 @@ export function CreateProductForm() {
                   {/* stock & tags */}
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Stock *</label>
-                      <input
-                        type="number"
-                        name="stock"
-                        required
-    
-    
-                        placeholder="0"
-                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#5D4037] transition-colors"
-                      />
-                    </div>
-                    <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">Tags</label>
                       <input
                         type="text"
@@ -418,8 +419,6 @@ export function CreateProductForm() {
                       />
                     </div>
                   </div>
-
-
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">Warranty</label>
@@ -499,27 +498,29 @@ export function CreateProductForm() {
         </form>
       </div>
 
-      <div className="hidden lg:block space-y-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-6 sticky top-20">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions</h3>
-          <div className="space-y-3">
-            <button
-              type="submit"
-              form="product-form"
-              disabled={isSubmitting}
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
-              style={{ backgroundColor: "#5D4037" }}
-            >
-              <Save size={18} />
-              {isSubmitting ? "Saving..." : "Save Product"}
-            </button>
-            <Link
-              href="/product"
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors"
-            >
-              <X size={18} />
-              Cancel
-            </Link>
+      <div className="hidden lg:block">
+        <div className="sticky top-20">
+          <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions</h3>
+            <div className="space-y-3">
+              <button
+                type="submit"
+                form="product-form"
+                disabled={isSubmitting}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
+                style={{ backgroundColor: "#5D4037" }}
+              >
+                <Save size={18} />
+                {isSubmitting ? "Saving..." : "Save Product"}
+              </button>
+              <Link
+                href="/product"
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-semibold text-gray-700 border border-gray-200 hover:bg-gray-50 transition-colors"
+              >
+                <X size={18} />
+                Cancel
+              </Link>
+            </div>
           </div>
         </div>
       </div>

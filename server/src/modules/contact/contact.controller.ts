@@ -45,12 +45,24 @@ const getAllContacts = async (req: Request, res: Response, next: NextFunction) =
 };
 
 
+const getContactStats = async (req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const result = await contactService.getContactStats();
 
-const getUnreadContactCount = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Stats fetched successfully",
+            data: result
+        })
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+
+const getUnreadContactCount = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await contactService.getUnreadContactCount();
 
@@ -65,6 +77,24 @@ const getUnreadContactCount = async (
     }
 };
 
+
+
+const updateContactStatus = async (req: Request, res: Response, next: NextFunction)=>{
+    try {
+        const {id} = req.params;
+        console.log(req.body.status)
+        const result = await contactService.updateContactStatus(id as string, req.body.status);
+
+        sendResponse(res, {
+            statusCode: 200,
+            success: true,
+            message: "Contact status updated successfully",
+            data: result
+        })
+    } catch (error) {
+        next(error)
+    }
+}
 
 
 
@@ -115,6 +145,8 @@ const deleteContact = async (
 export const contactController = {
     createContact,
     getAllContacts,
+    getContactStats,
+    updateContactStatus,
     getUnreadContactCount,
     markAsRead,
     deleteContact,

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { contactService } from "./contact.service";
 import sendResponse from "../../utils/sendResponse";
+import paginationSortingHelper from "../../helpers/paginationSorting";
 
 const createContact = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -21,7 +22,16 @@ const createContact = async (req: Request, res: Response, next: NextFunction) =>
 
 const getAllContacts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await contactService.getAllContacts();
+        const {status} = req.query;
+        const statusString = typeof status === "string" ? status : "";
+        const { page, skip, limit, sortBy, sortOrder } = paginationSortingHelper(req.query);
+        const result = await contactService.getAllContacts({
+            status: statusString,
+            page,
+            skip,
+            limit,
+            sortBy,
+            sortOrder});
 
         sendResponse(res, {
             statusCode: 200,

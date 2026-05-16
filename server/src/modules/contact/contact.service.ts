@@ -7,10 +7,44 @@ const createContact = async(payload:IContact)=>{
 }
 
 
-const getAllContacts = async () => {
-    const result = await Contact.find().sort({ createdAt: -1 });
+const getAllContacts = async ({
+    status,
+    page,
+    skip,
+    limit,
+    sortBy,
+    sortOrder }: {
+        status: string;
+        page: number;
+        skip: number;
+        limit: number;
+        sortBy: string;
+        sortOrder: string;
+    }) => {
+    let filter: any = {};
 
-    return result;
+    if (status) {
+        filter.status = { $regex: status, $options: "i" };
+    }
+
+    if(status === "all" || status === "All"){
+        filter = {}
+    }
+
+
+    const result = await Contact.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
+
+    const total = await Contact.countDocuments(filter);
+
+    return {
+        data: result,
+        meta: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit)
+        },
+    };
 };
 
 

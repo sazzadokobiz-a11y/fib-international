@@ -3,6 +3,6 @@ export interface IContact {
     email: string;
     subject: string;
     message: string;
-    isRead: boolean;
-    status: "pending" | "replied"
+    isRead?: boolean;
+    status?: "pending" | "replied"
 }

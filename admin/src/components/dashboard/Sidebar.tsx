@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FolderOpen, Grid3x3, ShoppingCart, FileText, MessageSquare, Menu, X } from "lucide-react";
+import { LayoutDashboard, FolderOpen, Grid3x3, ShoppingCart, FileText, MessageSquare, Menu, X, Contact } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
@@ -12,6 +12,7 @@ const navItems = [
     { label: "Category", href: "/category", icon: FolderOpen },
     { label: "Sub Category", href: "/sub-category", icon: Grid3x3 },
     { label: "Product", href: "/product", icon: ShoppingCart },
+    {label: "Contact", href: "/contact", icon: Contact}
 ];
 
 export function Sidebar() {

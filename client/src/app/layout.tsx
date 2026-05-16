@@ -4,6 +4,7 @@ import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import { CartProvider } from "@/context/CartContext";
 import { ToastProvider } from "@/components/shared/ToastProvider";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -26,6 +27,7 @@ export default function RootLayout({
             <Navbar />
             <main className="bg-[#fcf9f4]">
               {children}
+              <Toaster position="top-right" richColors />
             </main>
             <Footer />
           </CartProvider>

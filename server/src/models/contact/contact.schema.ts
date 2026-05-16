@@ -16,6 +16,12 @@ const contactSchema = new Schema<IContact>(
             lowercase: true,
         },
 
+        subject: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+
         message: {
             type: String,
             required: true,

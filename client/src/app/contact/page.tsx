@@ -3,11 +3,14 @@
 import React, { useState } from 'react'
 import Container from '@/components/shared/Container'
 import { Mail, Phone, MapPin, Send, MessageCircle } from 'lucide-react'
+import { sendMessage } from '@/services/contact'
+import { toast } from 'sonner'
 
 const ContactPage = () => {
     const [formData, setFormData] = useState({
-        name: '',
+        fullName: '',
         email: '',
+        subject: '',
         message: ''
     })
 
@@ -18,26 +21,50 @@ const ContactPage = () => {
         })
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async(e: React.FormEvent) => {
         e.preventDefault()
+        const toastId = toast.loading("Message sending...")
 
-        //  Email redirect (mailto)
-        const subject = `Inquiry from ${formData.name}`
-        const body = `Name: ${formData.name}\nEmail: ${formData.email}\nMessage: ${formData.message}`
+        try {
+            if (
+                !formData.fullName ||
+                !formData.email ||
+                !formData.subject ||
+                !formData.message
+            ) {
+                return toast.error("All fields are required");
+            }
 
-        window.location.href = `mailto:info.okobiz@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+            const result = await sendMessage(formData);
+
+            if (result.success) {
+                toast.success(result.message, { id: toastId })
+                
+                setFormData({
+                    fullName: '',
+                    email: '',
+                    subject: '',
+                    message: ''
+                });
+            }else{
+                toast.error("Message send failed", {id: toastId});
+            }
+        } catch (error) {
+            const err = error as unknown as Error
+            toast.error(err.message, {id: toastId});
+        }
     }
 
     //  WhatsApp link
     const whatsappNumber = "8801973590937" // replace with number
-    const whatsappMessage = `Hello, I'm ${formData.name}. ${formData.message}`
+    const whatsappMessage = `Hello, I'm ${formData.fullName}. ${formData.message}`
     const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`
 
     return (
         <div className="pb-20">
 
             {/* HERO */}
-            <div className="bg-gradient-to-br from-secondary/20 via-secondary/10 to-transparent py-16">
+            <div className="bg-linear-to-br from-secondary/20 via-secondary/10 to-transparent py-16">
                 <Container>
                     <div className="text-center max-w-2xl mx-auto">
                         <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
@@ -102,9 +129,9 @@ const ContactPage = () => {
 
                             <input
                                 type="text"
-                                name="name"
+                                name="fullName"
                                 placeholder="Your Name"
-                                value={formData.name}
+                                value={formData.fullName}
                                 onChange={handleChange}
                                 required
                                 className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-secondary"
@@ -115,6 +142,16 @@ const ContactPage = () => {
                                 name="email"
                                 placeholder="Your Email"
                                 value={formData.email}
+                                onChange={handleChange}
+                                required
+                                className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-secondary"
+                            />
+
+                            <input
+                                type="text"
+                                name="subject"
+                                placeholder="Subject line"
+                                value={formData.subject}
                                 onChange={handleChange}
                                 required
                                 className="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-secondary"

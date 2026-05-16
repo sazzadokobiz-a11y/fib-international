@@ -9,6 +9,9 @@ import { orderRoute } from '../modules/order/order.route';
 import { dashboardRoute } from '../modules/dashboard/dashboard.route';
 import { authRoute } from '../modules/auth/auth.route';
 import { contactRoute } from '../modules/contact/contact.route';
+import { bannerRoute } from '../modules/banner/banner.route';
+import { partnerRoute } from '../modules/partner/partner.route';
+import { contentRoute } from '../modules/content/content.route';
 
 const router = Router();
 
@@ -52,6 +55,18 @@ const moduleRoutes = [
     {
         path: "/contact",
         route: contactRoute
+    },
+    {
+        path: "/banner",
+        route: bannerRoute
+    },
+    {
+        path: "/partner",
+        route: partnerRoute
+    },
+    {
+        path: "/content",
+        route: contentRoute
     }
 ];
 

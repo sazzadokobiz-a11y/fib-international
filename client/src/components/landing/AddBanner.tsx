@@ -5,40 +5,59 @@ import Image from "next/image"
 import { ChevronLeft, ChevronRight, Globe, Truck, ShieldCheck, type LucideIcon } from "lucide-react"
 
 type Banner = {
-    id: number
+    _id: string
     title: string
     subtitle: string
     image: string
     type: "Offer" | "Sale" | "Announcement"
+    isActive: boolean
 }
 
-const banners: Banner[] = [
+const fallbackBanners: Banner[] = [
     {
-        id: 1,
+        _id: "1",
         title: "Mega Export Sale",
         subtitle: "Up to 30% off on bulk orders this week",
         image: "https://images.unsplash.com/photo-1580828343064-fde4fc206bc6?q=80&w=1171&auto=format&fit=crop",
         type: "Sale",
+        isActive: true,
     },
     {
-        id: 2,
+        _id: "2",
         title: "Special Offer for New Clients",
         subtitle: "Free shipping on first international order",
         image: "https://images.unsplash.com/photo-1607083206968-13611e3d76db?q=80&w=1215&auto=format&fit=crop",
         type: "Offer",
+        isActive: true,
     },
     {
-        id: 3,
+        _id: "3",
         title: "Global Trade Expansion",
         subtitle: "New shipping routes across Asia & Europe",
         image: "https://images.unsplash.com/photo-1607082350899-7e105aa886ae?q=80&w=1170&auto=format&fit=crop",
         type: "Announcement",
+        isActive: true,
     },
 ]
 
 function AddBanner() {
-
+    const [banners, setBanners] = useState<Banner[]>(fallbackBanners)
     const [current, setCurrent] = useState(0)
+
+    useEffect(() => {
+        const fetchBanners = async () => {
+            try {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/banner/active`)
+                const result = await res.json()
+                if (result.success && result.data && result.data.length > 0) {
+                    setBanners(result.data)
+                }
+            } catch {
+                // keep fallback
+            }
+        }
+        fetchBanners()
+    }, [])
 
     const nextSlide = () => {
         setCurrent((prev) => (prev + 1) % banners.length)
@@ -49,12 +68,10 @@ function AddBanner() {
     }
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            nextSlide()
-        }, 6000)
-
+        if (banners.length === 0) return
+        const interval = setInterval(nextSlide, 6000)
         return () => clearInterval(interval)
-    }, [])
+    }, [banners.length])
 
     const active = banners[current]
 
@@ -62,10 +79,10 @@ function AddBanner() {
         <div className="max-w-6xl mx-auto my-16 px-4">
 
             {/* MAIN CARD */}
-            <div className="grid lg:grid-cols-2 bg-white shadow-xl rounded-2xl overflow-hidden border h-96">
+            <div className="grid lg:grid-cols-2 bg-white shadow-xl rounded-2xl overflow-hidden border lg:h-96">
 
                 {/* LEFT INFO PANEL */}
-                <div className="p-8 bg-gradient-to-br from-primary/5 to-white flex flex-col justify-between">
+                <div className="p-8 bg-linear-to-br from-primary/5 to-white flex flex-col justify-between">
 
                     <div>
                         <p className="text-xs uppercase tracking-widest text-gray-500">
@@ -98,7 +115,7 @@ function AddBanner() {
                 <div className="relative">
 
                     {/* IMAGE */}
-                    <div className="relative h-[320px] lg:h-full">
+                    <div className="relative h-80 lg:h-full">
                         <Image
                             src={active.image}
                             alt={active.title}
@@ -111,14 +128,13 @@ function AddBanner() {
                     </div>
 
                     {/* CONTENT */}
-                    <div className="absolute inset-0 flex flex-col justify-center p-6 text-white space-y-3">
+                    <div className="absolute inset-0 flex flex-col justify-center pl-20 p-6 text-white space-y-3">
 
                         <span className={`
                             w-fit text-xs px-3 py-1 rounded-full font-medium
                             ${active.type === "Sale" ? "bg-red-500" :
                                 active.type === "Offer" ? "bg-green-500" :
-                                    "bg-blue-500"}
-                        `}>
+                                    "bg-blue-500"}`}>
                             {active.type}
                         </span>
 

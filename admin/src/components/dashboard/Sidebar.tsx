@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FolderOpen, Grid3x3, ShoppingCart, FileText, MessageSquare, Menu, X, Contact } from "lucide-react";
+import { LayoutDashboard, FolderOpen, Grid3x3, ShoppingCart, FileText, MessageSquare, Menu, X, Contact, Image, Users, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge"
 import { getUnreadMessage } from "@/services/contact";
@@ -14,6 +14,9 @@ const navItems = [
     { label: "Category", href: "/category", icon: FolderOpen },
     { label: "Sub Category", href: "/sub-category", icon: Grid3x3 },
     { label: "Product", href: "/product", icon: ShoppingCart },
+    { label: "Banners", href: "/banner", icon: Image },
+    { label: "Partners", href: "/partners", icon: Users },
+    { label: "CMS", href: "/cms", icon: BookOpen },
     {label: "Contact", href: "/contact", icon: Contact}
 ];
 

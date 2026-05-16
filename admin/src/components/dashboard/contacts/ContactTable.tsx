@@ -12,7 +12,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { deleteContact, updateContactStatus } from "@/services/contact";
+import { deleteContact, markAssRead, updateContactStatus } from "@/services/contact";
 
 
 export default function ContactTable({ contacts, setContact, setSelectedContact, setOpenModal }: {contacts: IContactResponse; setContact: Dispatch<SetStateAction<IContactResponse | undefined>>; setSelectedContact: Dispatch<SetStateAction<IContact | null>>; setOpenModal: Dispatch<SetStateAction<boolean>>; }) {
@@ -48,6 +48,10 @@ export default function ContactTable({ contacts, setContact, setSelectedContact,
             const err = error as unknown as Error;
             toast.error(err.message, {id: toastId})
         }
+    }
+
+    const handleMarkRead = async(id:string)=>{
+        await markAssRead(id)
     }
     return (
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
@@ -143,6 +147,7 @@ export default function ContactTable({ contacts, setContact, setSelectedContact,
                                         <button onClick={() => {
                                             setSelectedContact(contact);
                                             setOpenModal(true);
+                                            handleMarkRead(contact?._id as string)
                                         }} className="p-2 rounded-lg hover:bg-gray-100">
                                             <Eye size={18} />
                                         </button>

@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, FolderOpen, Grid3x3, ShoppingCart, FileText, MessageSquare, Menu, X, Contact } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge"
+import { getUnreadMessage } from "@/services/contact";
 
 const navItems = [
     {label: "Dashboard", href: "/", icon: LayoutDashboard},
@@ -18,6 +20,15 @@ const navItems = [
 export function Sidebar() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
+    const [unreadMessage, setUnreadMessage] = useState(0);
+
+    useEffect(()=>{
+        const fetchUnreadCount = async()=>{
+            const result = await getUnreadMessage();
+            setUnreadMessage(result.data)
+        }
+        fetchUnreadCount();
+    }, [])
 
     const isActive = (href: string) => {
         return pathname === href || pathname.startsWith(href + "/");
@@ -61,11 +72,9 @@ export function Sidebar() {
                             >
                                 <Icon size={20} />
                                 <span className="flex-1">{item.label}</span>
-                                {active && (
-                                    <div
-                                        className="w-2 h-2 rounded-full bg-primary"
-                                    ></div>
-                                )}
+                                {
+                                    item.href === "/contact" ? unreadMessage > 0 ? <Badge variant="destructive">{unreadMessage}</Badge> : "" : ""
+                                }
                             </Link>
                         );
                     })}

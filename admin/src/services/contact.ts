@@ -41,6 +41,30 @@ export const updateContactStatus = async(id: string, status: {status: string})=>
 }
 
 
+export const getUnreadMessage = async()=>{
+    try {
+        const res = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/contact/unread-count`);
+        return res.json();
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+
+
+export const markAssRead = async(id: string)=>{
+    try {
+        const res = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/contact/read/${id}`, {
+            method: "PATCH",
+        })
+        return res.json();
+    } catch (error) {
+        console.log(error)
+        return error
+    }
+}
+
+
 
 export const deleteContact = async(id: string)=>{
     try {

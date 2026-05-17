@@ -22,9 +22,24 @@ export default function ContactTable({ contacts, setContact, setSelectedContact,
 
         try {
             const result = await updateContactStatus(id, {status: value});
-            console.log(result)
             if (result.success) {
                 toast.success(result.message, { id: toastId })
+                setContact((prev) => {
+
+                    if (!prev) return prev;
+
+                    return {
+                        ...prev,
+                        data: prev.data.map((item) =>
+                            item._id === id
+                                ? {
+                                    ...item,
+                                    status: value as "pending" | "replied"
+                                }
+                                : item
+                        )
+                    };
+                });
             } else {
                 toast.error("Something went wrong", { id: toastId })
             }

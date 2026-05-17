@@ -44,7 +44,7 @@ export default function ContactsPage() {
             setStats(result.data);
         }
         fetchStats();
-    },[])
+    },[contact]);
 
     return (
         <div className="space-y-6">
@@ -58,39 +58,47 @@ export default function ContactsPage() {
                 </p>
             </div>
 
-            <ContactStats stats={stats}/>
+            {
+                contact?.data?.length === 0 ? <p className="text-center text-2xl">No message found</p> : (
+                    <>
 
-            <div className="flex justify-end">
-                <Select
-                    value={filterStatus}
-                    onValueChange={(value) => {
-                        setFilterStatus(value);
-                    }}
-                >
-                    <SelectTrigger className="w-full max-w-48 border border-primary/20 rounded-lg p-3">
-                        <SelectValue placeholder="Filter by filterStatus" />
-                    </SelectTrigger>
+                        <ContactStats stats={stats} />
 
-                    <SelectContent className="rounded-lg">
-                        <SelectGroup>
-                            <SelectLabel>Status</SelectLabel>
+                        <div className="flex justify-end">
+                        <Select
+                            value={filterStatus}
+                            onValueChange={(value) => {
+                                setFilterStatus(value);
+                            }}
+                        >
+                            <SelectTrigger className="w-full max-w-48 border border-primary/20 rounded-lg p-3">
+                                <SelectValue placeholder="Filter by status" />
+                            </SelectTrigger>
 
-                            <SelectItem value="all">All</SelectItem>
+                            <SelectContent className="rounded-lg">
+                                <SelectGroup>
+                                    <SelectLabel>Status</SelectLabel>
 
-                            <SelectItem value="pending">
-                                pending
-                            </SelectItem>
+                                    <SelectItem value="all">All</SelectItem>
 
-                            <SelectItem value="replied">
-                                replied
-                            </SelectItem>
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
-            </div>
+                                    <SelectItem value="pending">
+                                        pending
+                                    </SelectItem>
 
-            <ContactTable contacts={contact as IContactResponse} setContact={setContact} setSelectedContact={setSelectedContact}
-                setOpenModal={setOpenModal} />
+                                    <SelectItem value="replied">
+                                        replied
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                        </div>
+
+                        <ContactTable contacts={contact as IContactResponse} setContact={setContact} setSelectedContact={setSelectedContact}
+                            setOpenModal={setOpenModal} />
+                    </>
+                )
+            }
+
 
             {
                 openModal && selectedContact && (

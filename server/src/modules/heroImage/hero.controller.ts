@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import sendResponse from "../../utils/sendResponse";
-import { bannerService } from "./banner.service";
+import { heroService } from "./hero.service";
 
-const createBanner = async (req: Request, res: Response, next: NextFunction) => {
+const createHero = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await bannerService.createBanner(req.body);
+        const result = await heroService.createHero(req.body);
         sendResponse(res, {
             statusCode: 201,
             success: true,
-            message: "Banner created successfully",
+            message: "Hero image created successfully",
             data: result,
         });
     } catch (error) {
@@ -16,9 +16,9 @@ const createBanner = async (req: Request, res: Response, next: NextFunction) => 
     }
 };
 
-const getAllBanners = async (req: Request, res: Response, next: NextFunction) => {
+const getHeroImage = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await bannerService.getAllBanners();
+        const result = await heroService.getHeroImage();
         sendResponse(res, {
             statusCode: 200,
             success: true,
@@ -30,13 +30,16 @@ const getAllBanners = async (req: Request, res: Response, next: NextFunction) =>
     }
 };
 
-const getActiveBanners = async (req: Request, res: Response, next: NextFunction) => {
+
+
+
+const getActiveHero = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await bannerService.getActiveBanners();
+        const result = await heroService.getActiveHero();
         sendResponse(res, {
             statusCode: 200,
             success: true,
-            message: "Active banners fetched successfully",
+            message: "Active hero image fetched successfully",
             data: result,
         });
     } catch (error) {
@@ -44,14 +47,16 @@ const getActiveBanners = async (req: Request, res: Response, next: NextFunction)
     }
 };
 
-const updateBanner = async (req: Request, res: Response, next: NextFunction) => {
+
+
+const updateHero = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
-        const result = await bannerService.updateBanner(id as string, req.body);
+        const result = await heroService.updateHero(id as string, req.body);
         sendResponse(res, {
             statusCode: 200,
             success: true,
-            message: "Banner updated successfully",
+            message: "Hero image updated successfully",
             data: result,
         });
     } catch (error) {
@@ -59,10 +64,14 @@ const updateBanner = async (req: Request, res: Response, next: NextFunction) => 
     }
 };
 
-const deleteBanner = async (req: Request, res: Response, next: NextFunction) => {
+
+
+
+
+const deleteHero = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
-        const result = await bannerService.deleteBanner(id as string);
+        const result = await heroService.deleteHero(id as string);
         sendResponse(res, {
             statusCode: 200,
             success: true,
@@ -74,10 +83,10 @@ const deleteBanner = async (req: Request, res: Response, next: NextFunction) => 
     }
 };
 
-export const bannerController = {
-    createBanner,
-    getAllBanners,
-    getActiveBanners,
-    updateBanner,
-    deleteBanner,
+export const heroController = {
+    createHero,
+    getHeroImage,
+    getActiveHero,
+    updateHero,
+    deleteHero
 };

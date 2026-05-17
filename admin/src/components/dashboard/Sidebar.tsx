@@ -14,6 +14,7 @@ const navItems = [
     { label: "Category", href: "/category", icon: FolderOpen },
     { label: "Sub Category", href: "/sub-category", icon: Grid3x3 },
     { label: "Product", href: "/product", icon: ShoppingCart },
+    {label: "Hero image", href: "/hero-image", icon: Image},
     { label: "Banners", href: "/banner", icon: Image },
     { label: "Partners", href: "/partners", icon: Users },
     { label: "CMS", href: "/cms", icon: BookOpen },

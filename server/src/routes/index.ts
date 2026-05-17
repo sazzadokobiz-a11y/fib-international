@@ -12,10 +12,15 @@ import { contactRoute } from '../modules/contact/contact.route';
 import { bannerRoute } from '../modules/banner/banner.route';
 import { partnerRoute } from '../modules/partner/partner.route';
 import { contentRoute } from '../modules/content/content.route';
+import { heroRoute } from '../modules/heroImage/hero.route';
 
 const router = Router();
 
 const moduleRoutes = [
+    {
+        path: "/hero-image",
+        route: heroRoute
+    },
     {
         path: "/category",
         route: categoryRoutes

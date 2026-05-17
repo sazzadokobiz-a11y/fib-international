@@ -37,15 +37,15 @@ export default function BannerPage() {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState("");
     const [submitting, setSubmitting] = useState(false);
-
-    const fetchBanners = async () => {
-        setLoading(true);
-        const result = await getAllBanners();
-        if (result.success) setBanners(result.data || []);
-        setLoading(false);
-    };
-
+    
+    
     useEffect(() => {
+        const fetchBanners = async () => {
+            setLoading(true);
+            const result = await getAllBanners();
+            if (result.success) setBanners(result.data || []);
+            setLoading(false);
+        };
         fetchBanners();
     }, []);
 

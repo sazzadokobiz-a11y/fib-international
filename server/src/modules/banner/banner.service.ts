@@ -1,5 +1,7 @@
 import { Banner } from "../../models/banner/banner.schema";
 
+type BannerType = "Offer" | "Sale" | "Announcement";
+
 const createHttpError = (statusCode: number, message: string) => {
     const error = new Error(message) as Error & { statusCode: number };
     error.statusCode = statusCode;
@@ -10,7 +12,7 @@ const createBanner = async (payload: {
     title: string;
     subtitle: string;
     image: string;
-    type: string;
+    type: BannerType;
     isActive?: boolean;
     order?: number;
 }) => {

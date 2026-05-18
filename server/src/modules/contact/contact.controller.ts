@@ -82,7 +82,6 @@ const getUnreadContactCount = async (req: Request, res: Response, next: NextFunc
 const updateContactStatus = async (req: Request, res: Response, next: NextFunction)=>{
     try {
         const {id} = req.params;
-        console.log(req.body.status)
         const result = await contactService.updateContactStatus(id as string, req.body.status);
 
         sendResponse(res, {

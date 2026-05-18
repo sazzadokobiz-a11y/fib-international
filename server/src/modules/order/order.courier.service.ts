@@ -36,7 +36,6 @@ const sendToSteadfast = async (payload: OrderPayload) => {
 
     
     const text = await response.text();
-    console.log("Steadfast raw response:", text);
 
     try {
         return JSON.parse(text);
@@ -141,7 +140,7 @@ const sendToSteadfast = async (payload: OrderPayload) => {
 export const dispatchToCourier = async (
     courier: CourierName,
     payload: OrderPayload
-) => {
+):Promise<unknown> => {
     switch (courier) {
         case "steadfast":
             return await sendToSteadfast(payload);

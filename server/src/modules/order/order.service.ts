@@ -225,9 +225,8 @@ const sendCourier = async (orderId: string, courier: CourierName) => {
     };
 
     // ─── 4. Courier API তে পাঠাও ──────────────────────────────────────────────
-    const courierResponse = await dispatchToCourier(courier, payload);
+    const courierResponse = await dispatchToCourier(courier, payload) as Record<string, any>;
 
-    console.log("Courier response:", JSON.stringify(courierResponse, null, 2));
 
     // ─── 5. Steadfast error check (status 200 না হলে failed) ──────────────────
     if (courier === "steadfast" && courierResponse?.status !== 200) {

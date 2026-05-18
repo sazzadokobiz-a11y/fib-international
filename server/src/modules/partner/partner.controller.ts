@@ -47,7 +47,7 @@ const getActivePartners = async (req: Request, res: Response, next: NextFunction
 const updatePartner = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
-        const result = await partnerService.updatePartner(id, req.body);
+        const result = await partnerService.updatePartner(id as string, req.body);
         sendResponse(res, {
             statusCode: 200,
             success: true,
@@ -62,7 +62,7 @@ const updatePartner = async (req: Request, res: Response, next: NextFunction) =>
 const deletePartner = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
-        const result = await partnerService.deletePartner(id);
+        const result = await partnerService.deletePartner(id as string);
         sendResponse(res, {
             statusCode: 200,
             success: true,

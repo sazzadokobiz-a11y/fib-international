@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FolderOpen, Grid3x3, ShoppingCart, FileText, MessageSquare, Menu, X, Contact, Image, Users, BookOpen } from "lucide-react";
+import { LayoutDashboard, FolderOpen, Grid3x3, ShoppingCart, FileText, MessageSquare, Menu, X, Contact, Image, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge"
 import { getUnreadMessage } from "@/services/contact";
@@ -17,7 +17,6 @@ const navItems = [
     {label: "Hero image", href: "/hero-image", icon: Image},
     { label: "Banners", href: "/banner", icon: Image },
     { label: "Partners", href: "/partners", icon: Users },
-    { label: "CMS", href: "/cms", icon: BookOpen },
     {label: "Contact", href: "/contact", icon: Contact}
 ];
 
@@ -86,7 +85,7 @@ export function Sidebar() {
 
                 {/* Footer */}
                 <div className="p-4 border-t border-primary/20 text-xs text-gray-500 text-center">
-                    <p>© 2024 FIB International</p>
+                    <p>© {new Date().getFullYear()} FIB International</p>
                 </div>
             </aside>
 

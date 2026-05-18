@@ -2,6 +2,7 @@
 
 import React from 'react'
 import Container from '@/components/shared/Container'
+import Link from 'next/link';
 
 const AboutPage = () => {
     const globalBrands = [
@@ -138,9 +139,9 @@ const AboutPage = () => {
                     <p className="text-slate-600 text-sm mb-4">
                         Experience seamless import-export of premium FMCG and international products.
                     </p>
-                    <button className="bg-secondary text-white px-6 py-2 rounded-lg hover:bg-secondary/90 transition text-sm font-medium">
+                    <Link href="/contact" className="bg-secondary text-white px-6 py-2 rounded-lg hover:bg-secondary/90 transition text-sm font-medium">
                         Get in Touch
-                    </button>
+                    </Link>
                 </div>
             </Container>
         </div>

@@ -12,5 +12,12 @@ export default {
   admin_password: process.env.ADMIN_PASSWORD,
   jwt_secret: process.env.JWT_ACCESS_SECRET,
   jwt_expires_in: process.env.JWT_ACCESS_EXPIRES_IN || "1d",
-  bcrypt_salt_round: process.env.BCRYPT_SALT_ROUNDS
+  bcrypt_salt_round: process.env.BCRYPT_SALT_ROUNDS,
+
+  // Courier
+  steadfast: {
+    baseUrl: "https://portal.packzy.com/api/v1",
+    apiKey: process.env.STEADFAST_API_KEY || "",
+    secretKey: process.env.STEADFAST_SECRET_KEY || "",
+  }
 };

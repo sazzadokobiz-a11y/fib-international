@@ -1,3 +1,4 @@
+import { CourierName, dispatchToCourier } from './order.courier.service';
 import { ImportProduct } from "../../models/importProduct/importProductSchema";
 import { Order, orderStatuses } from "../../models/order/orderSchema";
 
@@ -38,7 +39,7 @@ const generateOrderId = () => {
     return `FJV-${datePart}-${randomPart}`;
 }
 
-const createOrder = async(payload: OrderPayload)=>{
+const createOrder = async (payload: OrderPayload) => {
     if (!payload.customer) {
         throw createHttpError(400, "customer info is required");
     }
@@ -112,7 +113,7 @@ const createOrder = async(payload: OrderPayload)=>{
     return result;
 }
 
-const getOrders = async({
+const getOrders = async ({
     search,
     status,
     dateFrom,
@@ -132,7 +133,7 @@ const getOrders = async({
     limit: number;
     sortBy: string;
     sortOrder: string;
-})=>{
+}) => {
     const filter: any = {};
 
     if (search) {
@@ -177,7 +178,7 @@ const getOrders = async({
     };
 }
 
-const getOrderDetail = async(id: string)=>{
+const getOrderDetail = async (id: string) => {
     const result = await Order.findById(id);
     if (!result) {
         throw createHttpError(404, "Order not found");
@@ -185,7 +186,7 @@ const getOrderDetail = async(id: string)=>{
     return result;
 }
 
-const updateOrderStatus = async(id: string, status: string)=>{
+const updateOrderStatus = async (id: string, status: string) => {
     if (!orderStatuses.includes(status as typeof orderStatuses[number])) {
         throw createHttpError(400, "Invalid order status");
     }
@@ -197,64 +198,92 @@ const updateOrderStatus = async(id: string, status: string)=>{
     return result;
 }
 
-const sendCourier = async(id: string)=>{
-    const order = await Order.findById(id);
+const sendCourier = async (orderId: string, courier: CourierName) => {
+    const order = await Order.findById(orderId);
     if (!order) {
         throw createHttpError(404, "Order not found");
     }
 
-    const courierPayload = {
-        orderId: order.orderId,
-        customer: order.customer,
-        products: order.products,
-        subtotal: order.subtotal,
-        shipping: order.shipping,
-        total: order.total,
-        paymentMethod: order.paymentMethod
-    };
-
-    let courierResponse: unknown;
-    let courierName = process.env.COURIER_NAME || "Free Courier Sandbox";
-
-    if (process.env.COURIER_API_URL) {
-        const headers: Record<string, string> = {
-            "Content-Type": "application/json"
-        };
-
-        if (process.env.COURIER_API_KEY) {
-            headers.Authorization = `Bearer ${process.env.COURIER_API_KEY}`;
-        }
-
-        const response = await fetch(process.env.COURIER_API_URL, {
-            method: "POST",
-            headers,
-            body: JSON.stringify(courierPayload)
-        });
-
-        courierResponse = await response.json().catch(() => ({ status: response.status, message: response.statusText }));
-
-        if (!response.ok) {
-            order.courierStatus = "Failed";
-            order.courier = courierName;
-            order.courierResponse = courierResponse;
-            await order.save();
-            throw createHttpError(response.status, "Courier API request failed");
-        }
-    } else {
-        courierResponse = {
-            provider: courierName,
-            trackingId: `FCS-${order.orderId}`,
-            status: "submitted",
-            simulated: true
-        };
+    // customer check
+    if (!order.customer) {
+        throw createHttpError(400, "Customer information not found");
     }
 
-    order.courierStatus = "Sent";
-    order.courier = courierName;
-    order.courierResponse = courierResponse;
-    const result = await order.save();
-    return result;
-}
+    
+    if (order.courierStatus === "Sent") {
+        throw createHttpError(400, `Order already sent to courier via ${order.courier}`);
+    }
+
+    // ─── 3. Courier API payload তৈরি করো ──────────────────────────────────────
+    const payload = {
+        orderId: order.orderId,
+        recipientName: order.customer.fullName,
+        recipientPhone: order.customer.mobileNumber,
+        recipientAddress: `${order.customer.shippingAddress}, ${order.customer.thana}, ${order.customer.district}`,
+        codAmount: order.total,
+        note: `Order ID: ${order.orderId}`,
+    };
+
+    // ─── 4. Courier API তে পাঠাও ──────────────────────────────────────────────
+    const courierResponse = await dispatchToCourier(courier, payload);
+
+    console.log("Courier response:", JSON.stringify(courierResponse, null, 2));
+
+    // ─── 5. Steadfast error check (status 200 না হলে failed) ──────────────────
+    if (courier === "steadfast" && courierResponse?.status !== 200) {
+        // Save failed status to DB
+        await Order.findByIdAndUpdate(orderId, {
+            courier,
+            courierStatus: "Failed",
+            courierResponse,
+        });
+        throw createHttpError(
+            400,
+            courierResponse?.message || "Steadfast API returned an error"
+        );
+    }
+
+    // ─── 6. Tracking code বের করো ─────────────────────────────────────────────
+    let trackingCode = "";
+    if (courier === "steadfast") {
+        trackingCode = courierResponse?.consignment?.tracking_code || "";
+    } else if (courier === "pathao") {
+        trackingCode = courierResponse?.data?.consignment_id || "";
+    } else if (courier === "redx") {
+        trackingCode = courierResponse?.tracking_id || "";
+    }
+
+    if (!trackingCode) {
+        await Order.findByIdAndUpdate(orderId, {
+            courier,
+            courierStatus: "Failed",
+            courierResponse,
+        });
+        throw createHttpError(400, "Courier did not return a tracking code");
+    }
+
+    // ─── 7. DB তে success update করো ──────────────────────────────────────────
+    const updatedOrder = await Order.findByIdAndUpdate(
+        orderId,
+        {
+            courier,
+            courierStatus: "Sent",
+            orderStatus: "Shipped",
+            courierResponse: {
+                ...courierResponse,
+                trackingCode,
+            },
+        },
+        { new: true }
+    );
+
+    return {
+        trackingCode,
+        courier,
+        courierResponse,
+        order: updatedOrder,
+    };
+};
 
 export const orderService = {
     createOrder,

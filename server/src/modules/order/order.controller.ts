@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import paginationSortingHelper from "../../helpers/paginationSorting";
 import sendResponse from "../../utils/sendResponse";
 import { orderService } from "./order.service";
+import { CourierName } from "./order.courier.service";
 
 const createOrder = async(req: Request, res: Response, next: NextFunction)=>{
     try {
@@ -73,7 +74,19 @@ const updateOrderStatus = async(req: Request, res: Response, next: NextFunction)
 
 const sendCourier = async(req: Request, res: Response, next: NextFunction)=>{
     try {
-        const result = await orderService.sendCourier(req.params.id as string);
+        const { orderId } = req.params;
+        const { courier } = req.body as { courier: CourierName };
+
+        const validCouriers: CourierName[] = ["steadfast", "pathao", "redx"];
+        if (!courier || !validCouriers.includes(courier)) {
+            res.status(400).json({
+                success: false,
+                message: `Invalid courier. Must be one of: ${validCouriers.join(", ")}`,
+            });
+            return;
+        }
+
+        const result = await orderService.sendCourier(orderId as string, courier);
         sendResponse(res, {
             statusCode: 200,
             success: true,

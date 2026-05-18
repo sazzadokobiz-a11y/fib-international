@@ -2,6 +2,7 @@ import { getOrderDetail } from "@/services/order";
 import type { Order } from "@/types/order";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { CourierSection } from "./CourierSection";
 
 const formatPrice = (value: number) => `৳${Number(value || 0).toLocaleString()}`;
 const formatDate = (date: string) => new Intl.DateTimeFormat("en-US", {
@@ -100,13 +101,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Courier</h3>
-            <Info label="Courier" value={order.courier || "N/A"} />
-            <div className="mt-4">
-              <Info label="Courier Status" value={order.courierStatus} />
-            </div>
-          </div>
+          {/* ✅ Courier section — client component */}
+          <CourierSection order={order} />
         </div>
       </div>
     </div>

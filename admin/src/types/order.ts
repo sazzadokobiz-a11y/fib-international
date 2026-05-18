@@ -30,7 +30,10 @@ export type Order = {
     orderStatus: OrderStatus;
     courierStatus: string;
     courier?: string;
-    courierResponse?: unknown;
+    courierResponse?: {
+        trackingCode?: string;
+        [key: string]: unknown;
+    };
     createdAt: string;
     updatedAt: string;
 }
@@ -44,3 +47,7 @@ export type OrderListResponse = {
         totalPages: number;
     };
 }
+
+
+
+export type CourierName = "steadfast" | "pathao" | "redx";

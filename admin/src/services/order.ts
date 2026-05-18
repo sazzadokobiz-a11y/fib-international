@@ -1,5 +1,5 @@
 "use server"
-import type { OrderListResponse, OrderStatus } from "@/types/order";
+import type { CourierName, OrderListResponse, OrderStatus } from "@/types/order";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -64,10 +64,11 @@ export const updateOrderStatus = async(id: string, status: OrderStatus)=>{
     }
 }
 
-export const sendOrderToCourier = async(id: string)=>{
+export const sendOrderToCourier = async (orderId: string, courier: CourierName)=>{
     try {
-        const res = await fetchWithAuth(`${baseUrl}/order/send-courier/${id}`, {
-            method: "POST"
+        const res = await fetchWithAuth(`${baseUrl}/order/send-courier/${orderId}`, {
+            method: "POST",
+            body: JSON.stringify({ courier }),
         });
         return res.json();
     } catch (error) {

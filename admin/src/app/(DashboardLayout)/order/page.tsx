@@ -1,7 +1,7 @@
 "use client";
 
 import { getOrders, sendOrderToCourier, updateOrderStatus } from "@/services/order";
-import type { Order, OrderListResponse, OrderStatus } from "@/types/order";
+import type { Order, OrderListResponse, OrderStatus, CourierName } from "@/types/order";
 import { PaginationControls } from "@/components/shared/PaginationControls";
 import { ConfirmationDialog } from "@/components/shared/ConfirmationDialog";
 import { Download, Eye, Search, Send } from "lucide-react";
@@ -125,11 +125,14 @@ export default function OrderPage() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [pendingOrder, setPendingOrder] = useState<Order | null>(null);
   const [isSending, setIsSending] = useState(false);
+  const [selectedCourier, setCourier] = useState<CourierName>();
+
+  console.log(selectedCourier);
 
   const getDateRange = (filter: string) => {
     const today = new Date();
     let dateFrom = "";
-    let dateTo = today.toISOString().split('T')[0];
+    const dateTo = today.toISOString().split('T')[0];
 
     switch (filter) {
       case "today":
@@ -202,16 +205,24 @@ export default function OrderPage() {
   };
 
   const handleCourierSend = async (order: Order) => {
+    if(!selectedCourier){
+      toast.error("Please select a courier")
+      return
+    }
     setPendingOrder(order);
     setShowConfirm(true);
   };
+
+  console.log(pendingOrder)
 
   const confirmCourierSend = async () => {
     if (!pendingOrder) return;
 
     setIsSending(true);
     const toastId = toast.loading("Sending order to courier...");
-    const result = await sendOrderToCourier(pendingOrder._id);
+    const result = await sendOrderToCourier(pendingOrder._id, selectedCourier as CourierName);
+
+    console.log(result);
 
     if (result.success) {
       toast.success("Order sent to courier", { id: toastId });
@@ -322,7 +333,9 @@ export default function OrderPage() {
                 <th className="text-left py-3 px-4 font-semibold text-gray-700">Status</th>
                 <th className="text-left py-3 px-4 font-semibold text-gray-700">Update Status</th>
                 <th className="text-left py-3 px-4 font-semibold text-gray-700">Courier Status</th>
-                <th className="text-left py-3 px-4 font-semibold text-gray-700">Courier</th>
+                <th className="text-left py-3 px-4 font-semibold text-gray-700">Courier Name</th>
+                <th className="text-left py-3 px-4 font-semibold text-gray-700">Select Courier</th>
+                <th className="text-left py-3 px-4 font-semibold text-gray-700">Send Courier</th>
                 <th className="text-left py-3 px-4 font-semibold text-gray-700">Invoice</th>
                 <th className="text-right py-3 px-4 font-semibold text-gray-700">Action</th>
               </tr>
@@ -337,7 +350,7 @@ export default function OrderPage() {
                   <td className="py-8 text-center text-gray-500" colSpan={14}>No orders found</td>
                 </tr>
               ) : orders.data.map((order, index) => (
-                <tr key={order._id} className="border-b border-gray-100 hover:bg-gray-50">
+                <tr key={order._id} className="border-b border-gray-100 hover:bg-gray-50 text-nowrap">
                   <td className="py-3 px-4 font-medium text-gray-900">{(orders.meta.page - 1) * orders.meta.limit + index + 1}</td>
                   <td className="py-3 px-4">
                     <p className="font-medium text-gray-900">{order.orderId}</p>
@@ -381,13 +394,28 @@ export default function OrderPage() {
                     </select>
                   </td>
                   <td className="py-3 px-4">
-                    <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">
+                    <span className={`rounded-full px-3 py-1 text-xs font-medium ${order.courierStatus === "Sent" ? "bg-green-50 text-green-600" : "bg-red-50 text-red-600"}`}>
                       {order.courierStatus}
                     </span>
                   </td>
+                  <td className="py-3 px-4 text-center">
+                    <span className="text-gray-500">{order.courier || "—"}</span>
+                  </td>
+                  <td className="py-3 px-4">
+                    <select
+                      // value={order.courier}
+                      onChange={(e) => setCourier(e.target.value as CourierName)}
+                      className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm outline-none focus:border-[#5D4037]"
+                    >
+
+                      <option value="">Select a courier</option>
+                      <option value="steadfast">Steadfast</option>
+                      <option value="Pathao">Pathao</option>
+                      <option value="redx">Redx</option>
+                    </select>
+                  </td>
                   <td className="py-3 px-4 text-gray-600">
                     <div className="flex items-center gap-2">
-                      <span>{order.courier || "N/A"}</span>
                       <button
                         type="button"
                         onClick={() => handleCourierSend(order)}

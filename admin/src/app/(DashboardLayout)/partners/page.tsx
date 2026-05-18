@@ -36,14 +36,14 @@ export default function PartnersPage() {
     const [logoPreview, setLogoPreview] = useState("");
     const [submitting, setSubmitting] = useState(false);
 
-    const fetchPartners = async () => {
-        setLoading(true);
-        const result = await getAllPartners();
-        if (result.success) setPartners(result.data || []);
-        setLoading(false);
-    };
-
+    
     useEffect(() => {
+        const fetchPartners = async () => {
+            setLoading(true);
+            const result = await getAllPartners();
+            if (result.success) setPartners(result.data || []);
+            setLoading(false);
+        };
         fetchPartners();
     }, []);
 
@@ -218,7 +218,7 @@ export default function PartnersPage() {
                     <p>No partners found. Click &quot;Add Partner&quot; to create one.</p>
                 </div>
             ) : (
-                <div className="bg-white rounded-xl border overflow-hidden">
+                <div className="bg-white rounded-xl border overflow-auto">
                     <table className="w-full text-sm">
                         <thead className="bg-gray-50 border-b">
                             <tr>
@@ -243,7 +243,7 @@ export default function PartnersPage() {
                                     <td className="px-4 py-3 text-gray-500 hidden md:table-cell">{partner.country || "-"}</td>
                                     <td className="px-4 py-3 hidden lg:table-cell">
                                         {partner.website ? (
-                                            <a href={partner.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline truncate block max-w-[200px]">
+                                            <a href={partner.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline truncate block max-w-50">
                                                 {partner.website}
                                             </a>
                                         ) : (

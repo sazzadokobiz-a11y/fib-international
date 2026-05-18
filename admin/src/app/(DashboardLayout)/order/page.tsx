@@ -127,7 +127,6 @@ export default function OrderPage() {
   const [isSending, setIsSending] = useState(false);
   const [selectedCourier, setCourier] = useState<CourierName>();
 
-  console.log(selectedCourier);
 
   const getDateRange = (filter: string) => {
     const today = new Date();
@@ -213,7 +212,6 @@ export default function OrderPage() {
     setShowConfirm(true);
   };
 
-  console.log(pendingOrder)
 
   const confirmCourierSend = async () => {
     if (!pendingOrder) return;
@@ -222,7 +220,6 @@ export default function OrderPage() {
     const toastId = toast.loading("Sending order to courier...");
     const result = await sendOrderToCourier(pendingOrder._id, selectedCourier as CourierName);
 
-    console.log(result);
 
     if (result.success) {
       toast.success("Order sent to courier", { id: toastId });
@@ -410,8 +407,8 @@ export default function OrderPage() {
 
                       <option value="">Select a courier</option>
                       <option value="steadfast">Steadfast</option>
-                      <option value="Pathao">Pathao</option>
-                      <option value="redx">Redx</option>
+                      {/* <option value="Pathao">Pathao</option>
+                      <option value="redx">Redx</option> */}
                     </select>
                   </td>
                   <td className="py-3 px-4 text-gray-600">

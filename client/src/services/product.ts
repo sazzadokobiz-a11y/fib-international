@@ -87,7 +87,7 @@ export const getImportProducts = async(query: ProductQuery = {}): Promise<ApiRes
         }
 
         const res = await fetch(`${baseUrl}/import-product/get?${buildQuery(query)}`, {
-            cache: "no-store"
+            next: { revalidate: 60 }
         });
 
         if (!res.ok) {

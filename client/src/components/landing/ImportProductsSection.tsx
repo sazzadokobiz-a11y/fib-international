@@ -12,7 +12,7 @@ const ImportProductsSection = async () => {
   }
 
   return (
-    <section className="py-32 bg-gradient-to-b from-[#f5f0e6] to-white">
+    <section className="py-32 bg-linear-to-b from-[#f5f0e6] to-white">
       <Container>
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div>

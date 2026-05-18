@@ -111,7 +111,6 @@ export function CreateProductForm() {
             isFeatured: isFeatured as boolean
           }
           const result = await addImportProduct(fullData as unknown as Product);
-          console.log(result);
           if (result.success) {
             toast.success("Product created successfully", { id: toastId })
             setIsSubmitting(false)

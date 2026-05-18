@@ -82,7 +82,6 @@ export default function UpdateProductForm({category: categoryParams, id}: {categ
                     isFeatured: isFeatured as boolean
                 }
                 const result = await updateImportProduct(id, fullData);
-                console.log(result);
                 if (result.success) {
                     toast.success("Product updated successfully", { id: toastId })
                     setIsSubmitting(false)

@@ -33,8 +33,6 @@ export default function RequestQuotePage() {
         try {
             await new Promise(res => setTimeout(res, 1200))
 
-            console.log("Quote Request:", form)
-
             setSuccess(true)
 
             setForm({
@@ -56,7 +54,7 @@ export default function RequestQuotePage() {
     }
 
     return (
-        <section className="py-16 bg-gradient-to-b from-white via-[#f7f5f0] to-white min-h-screen">
+        <section className="py-16 bg-linear-to-b from-white via-[#f7f5f0] to-white min-h-screen">
 
             <Container className="max-w-5xl">
 

@@ -28,7 +28,7 @@ export default function CheckoutPage() {
     const { showToast } = useToast();
     const { items, subtotal, shipping, total, clearCart, removeItem } = useCart();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [couponCode, setCouponCode] = useState("");
+    // const [couponCode, setCouponCode] = useState("");
     const [termsAgreed, setTermsAgreed] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
     const discount = 0;
@@ -41,14 +41,14 @@ export default function CheckoutPage() {
         district: ""
     });
 
-    const handleCoupon = () => {
-        if (!couponCode.trim()) {
-            showToast("Enter a coupon code first", "error");
-            return;
-        }
+    // const handleCoupon = () => {
+    //     if (!couponCode.trim()) {
+    //         showToast("Enter a coupon code first", "error");
+    //         return;
+    //     }
 
-        showToast("Coupon is not available right now", "info");
-    }
+    //     showToast("Coupon is not available right now", "info");
+    // }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -209,7 +209,9 @@ export default function CheckoutPage() {
                                 </div>
                             </div>
 
-                            <div className="mt-6">
+
+                            {/* Coupon Code? */}
+                            {/* <div className="mt-6">
                                 <label className="text-sm font-bold text-gray-950">
                                     Got any Coupon Code?
                                 </label>
@@ -225,7 +227,7 @@ export default function CheckoutPage() {
                                         Add Coupon
                                     </button>
                                 </div>
-                            </div>
+                            </div> */}
 
                             <label className="mt-5 flex items-start gap-2 text-sm text-gray-900">
                                 <input

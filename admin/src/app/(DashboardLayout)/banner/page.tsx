@@ -151,7 +151,6 @@ export default function BannerPage() {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this banner?")) return;
         const toastId = toast.loading("Deleting banner...");
         const result = await deleteBanner(id);
         if (result.success) {

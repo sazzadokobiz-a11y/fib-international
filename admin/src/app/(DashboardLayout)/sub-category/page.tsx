@@ -58,7 +58,6 @@ export default function SubCategoryPage() {
     try {
       const data = {name: subCategoryName as string, categoryId: parentCategoryId as string}
       const result = await addSubCategory(data);
-      console.log(result);
       if (result.success) {
         const newSubCategory: TSubCategory = {
           ...result.data,

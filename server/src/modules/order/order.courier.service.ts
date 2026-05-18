@@ -34,8 +34,9 @@ const sendToSteadfast = async (payload: OrderPayload) => {
         })
     });
 
-
+    
     const text = await response.text();
+    console.log("Steadfast raw response:", text);
 
     try {
         return JSON.parse(text);

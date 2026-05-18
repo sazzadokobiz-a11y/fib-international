@@ -16,7 +16,7 @@ export default {
 
   // Courier
   steadfast: {
-    baseUrl: "https://portal.packzy.com/api/v1",
+    baseUrl: process.env.STEADFAST_API_BASE_URL || "",
     apiKey: process.env.STEADFAST_API_KEY || "",
     secretKey: process.env.STEADFAST_SECRET_KEY || "",
   }

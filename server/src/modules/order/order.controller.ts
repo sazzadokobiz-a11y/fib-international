@@ -94,6 +94,7 @@ const sendCourier = async(req: Request, res: Response, next: NextFunction)=>{
             data: result
         })
     } catch (error) {
+        console.error("Controller error:", error);
         next(error)
     }
 }

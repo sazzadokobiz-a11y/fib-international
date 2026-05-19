@@ -75,7 +75,7 @@ const ImportSection = () => {
                         <div className="group bg-white rounded-2xl p-6 flex sm:flex-row flex-col items-center gap-6 shadow-md hover:shadow-xl transition cursor-pointer">
 
                             <div className="sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0">
-                                <Image width={500} height={500} src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxp7WYd0_cXpwCnehIJIxgQuHgWY21Ysv5gmJMfUgs3P5FYUxlLQunTMRCuHeefx4EHFKRNiZa6tuKA0RbubSWkmRDC56SOpVPYtfFAdZZPO49vSYDZNhj95oQP4o7kfEsXpP11zpsJvvVkP0f95GqRnqcaMeMgCn2zGuH_cImfx4kgGuOX4QApV4R6Z89RvdkJ7L37vA614EwJ1PUviqDRY9MA9DADS0OI2pdS-nfxgbAnb2KmkvZd0dcEK76m2xiWOC0fGk2M7w"
+                                <Image width={500} height={500} src="https://khalispur.pk/cdn/shop/articles/1762508551.jpg?v=1762508552"
                                     className="w-full h-full object-cover group-hover:scale-110 transition" alt='lorem5' />
 
                             </div>
@@ -95,7 +95,7 @@ const ImportSection = () => {
                         <div className="group bg-white rounded-2xl p-6 flex sm:flex-row flex-col items-center gap-6 shadow-md hover:shadow-xl transition cursor-pointer">
 
                             <div className="sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0">
-                                <Image width={500} height={500} src="https://lh3.googleusercontent.com/aida-public/AB6AXuDS6YHII5aAFnw1XosBTNeGH2Ya3V1OWBHCKpgVsb_mPRLhGu239EqpwnjMSIOLG0GGXVxONokukdXqhAVly8JUmFoCez11xSOX73hNUlRlz4SD5F4N4ig18W9ytQCtslFMlRxPGRpBT-RPLFSZHpUuH1JvX_YQsF8YtwPGZB9bwtGb_VyMW5vod3xZ__GAxhZXTJphej8yxcGs8g2OL00RCzO6uEW87eWoFe4-_o3KUPkvi44i1HvtCr-k0Ap2LwEHJwC7uiB7_aE"
+                                <Image width={500} height={500} src="https://static.wixstatic.com/media/44c54d_0140f81fe13648eb9d60add74c5e6670~mv2.jpg/v1/fill/w_568,h_568,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/44c54d_0140f81fe13648eb9d60add74c5e6670~mv2.jpg"
                                 className="w-full h-full object-cover group-hover:scale-110 transition" alt='lorem5' />
 
                             </div>

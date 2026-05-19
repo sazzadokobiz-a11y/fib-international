@@ -54,9 +54,6 @@ export default function ImportProductCard({ product }: { product: ImportProduct 
                             <p className="text-sm text-gray-500 line-through">{formatPrice(product.price)}</p>
                         )}
                     </div>
-                    <span className={`rounded-full px-3 py-1 text-xs font-medium ${inStock ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
-                        Stock: {Number(product.stock || 0)}
-                    </span>
                 </div>
 
                 <button

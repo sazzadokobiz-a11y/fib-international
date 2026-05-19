@@ -149,7 +149,7 @@ export default function ImportProductDetailClient({
                                     <span className="text-lg text-gray-500 line-through">{formatPrice(product.price)}</span>
                                 )}
                                 <span className={`rounded-full px-3 py-1 text-sm font-medium ${inStock ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
-                                    {inStock ? `${product.stock} in stock` : "Out of stock"}
+                                    {inStock ? `in stock` : "Out of stock"}
                                 </span>
                             </div>
 

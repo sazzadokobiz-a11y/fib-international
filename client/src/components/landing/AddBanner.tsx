@@ -71,7 +71,7 @@ function AddBanner() {
         if (banners.length === 0) return
         const interval = setInterval(nextSlide, 6000)
         return () => clearInterval(interval)
-    }, [banners.length, next])
+    }, [banners.length])
 
     const active = banners[current]
 

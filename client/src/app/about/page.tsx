@@ -52,12 +52,12 @@ const AboutPage = () => {
                             <li><strong>Type:</strong> Limited Company</li>
                             <li><strong>Email:</strong> rmatiur777@yahoo.com</li>
                             <li><strong>Phone:</strong> +88-01730-437306</li>
-                            <li><strong>Website:</strong> www.fib-bd.com</li>
+                            {/* <li><strong>Website:</strong> www.fib-bd.com</li> */}
                         </ul>
                         <div className="mt-4 pt-4 border-t text-xs text-slate-600">
-                            <p className="mb-2"><strong>HQ:</strong> 50 Purana Paltan Lane, Dhaka</p>
-                            <p className="mb-2"><strong>USA:</strong> Buena Park, CA (+1-562-274-5662)</p>
-                            <p><strong>Warehouse:</strong> Mirpur, Dhaka (+88-01868-355555)</p>
+                            <p className="mb-2"><strong>HQ:</strong> 50 Purana Paltan Lane, Dhaka, Bangladesh</p>
+                            <p className="mb-2"><strong>USA:</strong> 7661 Stage rd Buena Park, CA 90621, USA</p>
+                            <p><strong>Warehouse:</strong> 464/2 west shewrapara, Mirpur, Dhaka-1216 <strong>Tel: </strong>+880-1784-378375</p>
                         </div>
                     </div>
                 </div>

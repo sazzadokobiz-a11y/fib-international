@@ -71,7 +71,7 @@ function AddBanner() {
         if (banners.length === 0) return
         const interval = setInterval(nextSlide, 6000)
         return () => clearInterval(interval)
-    }, [banners.length])
+    }, [banners.length, next])
 
     const active = banners[current]
 
@@ -104,10 +104,6 @@ function AddBanner() {
                             <Stat icon={Truck} label="Fast Shipping" />
                             <Stat icon={ShieldCheck} label="Verified Trade" />
                         </div>
-                    </div>
-
-                    <div className="mt-6 text-sm text-gray-500">
-                        Updated daily by admin dashboard
                     </div>
                 </div>
 
@@ -179,7 +175,7 @@ function AddBanner() {
                     </div>
 
                     {/* PROGRESS BAR */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/20">
+                    <div className="absolute bottom-0 left-0 right-0 h-0.75 bg-white/20">
                         <div
                             className="h-full bg-white transition-all duration-500"
                             style={{

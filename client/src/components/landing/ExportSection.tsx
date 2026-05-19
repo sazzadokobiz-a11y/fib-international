@@ -43,7 +43,7 @@ const ExportSection = async() => {
                             </div>
                             <div className="p-8">
                                 <h3 className="font-headline font-semibold text-xl text-primary mb-3">{prod.name.length > 20 ? prod?.name?.slice(0, 20) + "..." : prod.name}</h3>
-                                <p className="font-body text-on-surface-variant text-sm leading-relaxed mb-6">{prod.description.length > 150 ? prod?.description?.slice(0, 150) + "..." : prod.description}</p>
+                                <p className="font-body text-on-surface-variant text-sm leading-relaxed mb-6">{prod.description.length > 150 ? prod?.description?.slice(0, 150) + "... See more" : prod.description}</p>
                                 <div className="h-1 w-8 bg-surface-variant group-hover:bg-secondary transition-colors duration-300"></div>
                             </div>
                         </div>)

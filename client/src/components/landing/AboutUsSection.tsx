@@ -17,8 +17,8 @@ const AboutUsSection = () => {
                                 height={800}
                                 src="https://images.unsplash.com/photo-1718289518008-2a6e78a87488?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
                             {/* Glassmorphic accent overlay */}
-                            <div className="absolute -bottom-8 -right-8 bg-surface/80 backdrop-blur-sm p-8 rounded-xl max-w-[280px] shadow-[0_20px_40px_-10px_rgba(27,27,30,0.08)] hidden md:block">
-                                <span className="text-4xl font-headline font-bold text-primary block mb-2">25+</span>
+                            <div className="absolute -bottom-8 -right-8 bg-surface/80 backdrop-blur-sm p-8 rounded-xl max-w-70 shadow-[0_20px_40px_-10px_rgba(27,27,30,0.08)] hidden md:block">
+                                <span className="text-4xl font-headline font-bold text-primary block mb-2">8+</span>
                                 <span className="text-on-surface-variant text-sm font-medium">Years of unyielding excellence in global markets.</span>
                             </div>
                         </div>
@@ -33,10 +33,9 @@ const AboutUsSection = () => {
                             <p className="font-body text-on-surface-variant text-base leading-[1.8] mb-12">
                                 Our commitment is absolute: to deliver meticulous curation, ironclad compliance, and strategic foresight in every container we move. We partner with sovereign entities and private enterprises alike to ensure that goods flow not just seamlessly, but beautifully.
                             </p>
-                            <a className="inline-flex items-center gap-3 text-primary font-semibold border-b-2 border-outline-variant pb-1 hover:border-primary transition-colors" href="#">
-                                Discover Our Heritage
-                                <span className="material-symbols-outlined text-sm" data-icon="east">east</span>
-                            </a>
+                            <p className="inline-flex items-center gap-3 text-primary font-semibold border-b-2 border-outline-variant pb-1 hover:border-primary transition-colors">
+                                Join us in shaping the future of global trade.
+                            </p>
                         </div>
                     </div>
                 </div>

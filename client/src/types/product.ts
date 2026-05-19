@@ -8,8 +8,8 @@ export type ProductDimensions = {
 export type BaseProduct = {
     _id: string;
     name: string;
-    thumbnail?: string;
-    image?: string;
+    thumbnail: string;
+    image: string;
     images: string[];
     description: string;
     brand: string;

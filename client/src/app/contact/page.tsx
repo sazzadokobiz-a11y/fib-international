@@ -56,7 +56,7 @@ const ContactPage = () => {
     }
 
     //  WhatsApp link
-    const whatsappNumber = "8801973590937" // replace with number
+    const whatsappNumber = "+880-1730-437306" // replace with number
     const whatsappMessage = `Hello, I'm ${formData.fullName}. ${formData.message}`
     const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`
 
@@ -89,7 +89,7 @@ const ContactPage = () => {
                             <Mail className="text-secondary" />
                             <div>
                                 <h4 className="font-semibold">Email</h4>
-                                <p className="text-slate-600">info.okobiz@gmail.com</p>
+                                <p className="text-slate-600">rmatiur777@yahoo.com</p>
                             </div>
                         </div>
 
@@ -97,7 +97,7 @@ const ContactPage = () => {
                             <Phone className="text-secondary" />
                             <div>
                                 <h4 className="font-semibold">Phone</h4>
-                                <p className="text-slate-600">+8801973 590937</p>
+                                <p className="text-slate-600">+8801973 590937, +8801868 355555</p>
                             </div>
                         </div>
 
@@ -108,16 +108,6 @@ const ContactPage = () => {
                                 <p className="text-slate-600">Dhaka, Bangladesh</p>
                             </div>
                         </div>
-
-                        {/* WhatsApp Button */}
-                        <a
-                            href={whatsappLink}
-                            target="_blank"
-                            className="flex items-center justify-center gap-2 bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition"
-                        >
-                            <MessageCircle size={18} />
-                            Chat on WhatsApp
-                        </a>
 
                     </div>
 
@@ -176,15 +166,6 @@ const ContactPage = () => {
                             </button>
 
                         </form>
-
-                        {/* Alternative WhatsApp send */}
-                        <a
-                            href={whatsappLink}
-                            target="_blank"
-                            className="mt-4 block text-center text-green-600 hover:underline"
-                        >
-                            Or send directly via WhatsApp -&gt;
-                        </a>
                     </div>
 
                 </div>

@@ -4,7 +4,7 @@ import Container from "@/components/shared/Container";
 import { useToast } from "@/components/shared/ToastProvider";
 import { useCart } from "@/context/CartContext";
 import { createOrder, mapCartItemsToOrderProducts } from "@/services/order";
-import { Edit2, Trash2, Truck } from "lucide-react";
+import { Edit2, Trash2, Truck, CreditCard } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -205,6 +205,7 @@ export default function CheckoutPage() {
                                     <label className="flex h-11 cursor-not-allowed items-center gap-2 rounded border border-gray-300 bg-white px-3 opacity-60">
                                         <input type="radio" name="payment" disabled />
                                         <span className="text-xs font-semibold text-gray-600">Online Payment</span>
+                                        <CreditCard className="text-orange-500" />
                                     </label>
                                 </div>
                             </div>

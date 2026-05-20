@@ -4,7 +4,7 @@ import Container from "@/components/shared/Container";
 import { useToast } from "@/components/shared/ToastProvider";
 import { useCart } from "@/context/CartContext";
 import { createOrder, mapCartItemsToOrderProducts } from "@/services/order";
-import { Edit2, Trash2, Truck, CreditCard } from "lucide-react";
+import { Edit2, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -198,14 +198,12 @@ export default function CheckoutPage() {
                                             checked={paymentMethod === "Cash on Delivery"}
                                             onChange={() => setPaymentMethod("Cash on Delivery")}
                                         />
-                                        <span className="font-bold text-gray-800">CASH</span>
-                                        <Truck className="text-orange-500" size={24} />
+                                        <Image src="/assets/cash-on-delivery.webp" alt="transport" width={100} height={100}/>
                                     </label>
 
-                                    <label className="flex h-11 cursor-not-allowed items-center gap-2 rounded border border-gray-300 bg-white px-3 opacity-60">
+                                    <label className="flex h-11 cursor-not-allowed items-center gap-2 rounded border border-gray-300 bg-white px-3 opacity-60 overflow-hidden">
                                         <input type="radio" name="payment" disabled />
-                                        <span className="text-xs font-semibold text-gray-600">Online Payment</span>
-                                        <CreditCard className="text-orange-500" />
+                                        <Image src="/assets/payment.jpg" alt="payment gateway" width={80} height={120}/>
                                     </label>
                                 </div>
                             </div>
